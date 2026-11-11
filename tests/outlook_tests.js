@@ -29,7 +29,7 @@ module.exports = function (h) {
     p = plan({ opening: 190e6, endDate: '2027-02-14' }); a.eq(p.status, 'PLAN', 'depleting exactly on the contract end day is still inside the contract');
     p = plan({ opening: 92e6 }); a.eq(p.daysUntilTopUp, -5, 'balance 2M is 2 days of cover, the request date has passed'); a.eq(p.urgency, 'NOW');
     p = plan({ opening: 90e6 }); a.eq(p.status, 'DEPLETED'); a.eq(p.urgency, 'NOW'); a.eq(p.topUpByDate, '2026-11-06');
-    p = plan({ opening: 190e6, scoresAll: 1 }); a.eq(p.status, 'HOLD', 'a D grade holds further top-ups, but the date is still shown'); a.ok(p.holdReasons.includes('GRADE_D_NO_PREPAY')); a.eq(p.depletionDate, '2027-02-14');
+    p = plan({ opening: 190e6, facts: { counterpartyVerification: 'FAILED' } }); a.eq(p.status, 'HOLD', 'a D grade holds further top-ups, but the date is still shown'); a.ok(p.holdReasons.includes('GRADE_D_NO_PREPAY')); a.eq(p.depletionDate, '2027-02-14');
     p = plan({ opening: 190e6, endDate: '2026-12-31' }); a.eq(p.status, 'NOT_NEEDED'); a.deepEq(p.reasons, ['BEYOND_CONTRACT_END']);
     p = plan({ opening: 190e6, cons: [0, 0, 0] }); a.eq(p.status, 'NO_CONSUMPTION'); a.eq(p.topUpByDate, null);
     p = plan({ opening: 190e6, cons: [null, null, null] }); a.eq(p.status, 'NO_DATA', 'no ledger and no ELLIS: nothing to calculate from');
@@ -65,9 +65,9 @@ module.exports = function (h) {
   t('OU05', 'cooperation recommendation: continue, continue with conditions, undecided, wind down, with the reasons that fired', ['OUT-3'], a => {
     const rel = o => env.synth(o).view().relationship; const codes = r => r.reasons.map(x => x.code + (x.reason ? ':' + x.reason : ''));
     let r = rel({ opening: 150e6 }); a.eq(r.verdict, 'CONTINUE'); a.deepEq(r.reasons, []);
-    r = rel({ opening: 150e6, scoresAll: 3 }); a.eq(r.verdict, 'CONDITIONS'); a.ok(codes(r).includes('GRADE_C'), codes(r) + '');
-    r = rel({ opening: 150e6, scoresAll: 1 }); a.eq(r.verdict, 'WIND_DOWN'); a.ok(codes(r).includes('GRADE_D'));
-    r = rel({ opening: 150e6, scores: {} }); a.eq(r.verdict, 'REVIEW'); a.ok(codes(r).includes('NOT_RATED'));
+    r = rel({ opening: 150e6, hotelFacts: { ownershipChange: 'PENDING' } }); a.eq(r.verdict, 'CONDITIONS'); a.ok(codes(r).includes('GRADE_C'), codes(r) + '');
+    r = rel({ opening: 150e6, facts: { counterpartyVerification: 'FAILED' } }); a.eq(r.verdict, 'WIND_DOWN'); a.ok(codes(r).includes('GRADE_D'));
+    r = rel({ opening: 150e6, facts: { counterpartyVerification: 'UNKNOWN', counterpartyEvidence: null }, hotelFacts: { ownershipChange: 'UNKNOWN' }, strictCoverage: true }); a.eq(r.verdict, 'REVIEW'); a.ok(codes(r).includes('NOT_RATED'));
     r = rel({ opening: 150e6, hotelFacts: { closure: { claimed: true, source: 'SCM', note: '', verified: { by: 'Kim', at: '2026-11-01', evidenceRef: 'DOC-1' } } } }); a.eq(r.verdict, 'WIND_DOWN'); a.ok(r.reasons.some(x => x.code === 'CRITICAL_FACT' && x.flag === 'CLOSURE_CONFIRMED'));
     r = rel({ opening: 150e6, refund: { requested: true, requestedAmountMinor: 50e6, requestedAt: '2026-09-01', dueDate: '2026-10-15' } }); a.eq(r.verdict, 'WIND_DOWN'); a.ok(codes(r).includes('REFUND_OVERDUE'));
     r = rel({ opening: 150e6, refund: { requested: true, requestedAmountMinor: 50e6, requestedAt: '2026-10-20', dueDate: '2026-12-15' } }); a.eq(r.verdict, 'WIND_DOWN'); a.ok(codes(r).includes('REFUND_IN_PROGRESS'), 'a refund that is on its way is also a wind-down, but not an overdue one');

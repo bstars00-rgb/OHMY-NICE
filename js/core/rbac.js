@@ -13,6 +13,8 @@
     'alert.update': ['SCM', 'CEO', 'ADMIN'], 'alert.dismiss': ['CEO', 'ADMIN'],
     'approval.create': ['SCM', 'ADMIN'], 'approval.submit': ['SCM', 'ADMIN'],
     'approval.review': ['CEO'],                               // ONLY the CEO role reviews and gives feedback — ADMIN deliberately excluded
+    'limit.set': ['SCM', 'CEO', 'ADMIN'],                      // a hotel-level cap may be set or lowered by anyone in charge of the contract
+    'limit.relax': ['CEO', 'ADMIN'],                           // raising or lifting an existing cap needs the CEO or an admin
     'ai.run': ['SCM', 'CEO', 'ADMIN'], 'config.edit': ['ADMIN'], 'data.reset': ['ADMIN'], 'data.export': ['SCM', 'CEO', 'ADMIN'], 'audit.read': ['CEO', 'ADMIN'],
   };
   const can = (role, perm) => !!(PERMS[perm] && PERMS[perm].includes(role));

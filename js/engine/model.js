@@ -48,10 +48,11 @@
       consumptionCollapse: !!(f.velocity && f.velocity.pct != null && f.velocity.pct <= -(ccRule && ccRule.params ? ccRule.params.dropPct : 50)),
       expiryBeforeDepletion: f.depletesBeforeEnd === false && balance.closingMinor > 0 && !!contract.endDate,
     };
-    const rec = (state.ratings || {})[contract.contractId] || { scores: {}, history: [] };
-    const rating = Rating.evaluate({ scores: rec.scores, hotel, contract, derived, cfg });
+    const rec = (state.ratings || {})[contract.contractId] || { history: [] };
+    const auto = Rating.autoScores({ contract, hotel, balance, forecast: f, recon, derived, cfg });                  // nobody enters these: they follow from the data
+    const rating = Rating.evaluate({ scores: auto.scores, hotel, contract, derived, cfg });
     const ratingDrop = Rating.dropNotches(rec.history, rating.grade, asOf, (cfg.alertRules.RATING_DROP.params || {}).windowDays || 90, Dates);
-    const recov = Rating.recoverability(contract, balance.closingMinor, rating, rec.scores);
+    const recov = Rating.recoverability(contract, balance.closingMinor, rating, auto.scores);
     const detected = Alerts.detect({ hotel, contract, balance, recon, forecast: f, rating, derived, ratingDrop, asOf, cfg });
     const persisted = {}; for (const p of state.alerts || []) persisted[p.alertId] = p;
     const alerts = detected.map(d => Object.assign({}, d, { status: persisted[d.alertId] ? persisted[d.alertId].status : 'OPEN', persisted: persisted[d.alertId] || null }));
@@ -61,7 +62,7 @@
     const ellisOutlook = Ellis.outlook(state, contract.contractId, { cmp: pre.ellisCmp });                                  // what the ELLIS bookings say about the consumption speed (indicator, never written to the ledger)
     const topupPlan = Outlook.topupPlan({ forecast: f, limit, contract, balance }, ellisOutlook, cfg, asOf);              // section 7: when the next top-up has to be requested
     const relationship = Outlook.relationship({ rating, forecast: f, limit, contract, balance, derived });               // section 8: should the cooperation go on (a recommendation for the CEO)
-    return { contractId: contract.contractId, hotelId: contract.hotelId, hotel, contract, balance, recon, forecast: f, derived, rating, ratingRecord: rec, ratingDrop, recoverability: recov,
+    return { contractId: contract.contractId, hotelId: contract.hotelId, hotel, contract, balance, recon, forecast: f, derived, rating, ratingScores: auto.scores, ratingBasis: auto.basis, ratingRecord: rec, ratingDrop, recoverability: recov,
       alerts, liveAlerts: live, limit, plannedSim, nextCheck: nextCheck(rating.grade, live, asOf), ellisOutlook, topupPlan, relationship, currency: contract.currency };
   }
 

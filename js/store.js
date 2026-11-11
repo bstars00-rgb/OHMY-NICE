@@ -27,6 +27,7 @@
     if (!s.ratings || typeof s.ratings !== 'object') return false;
     for (const c of s.contracts) {
       if (!c || typeof c.contractId !== 'string' || own(byId, c.contractId) || !hotels.has(c.hotelId) || !Money.isSupported(c.currency) || !own(s.ratings, c.contractId)) return false;
+      if (c.limitCap && (!Number.isSafeInteger(c.limitCap.amountMinor) || c.limitCap.amountMinor < 0)) return false;
       byId[c.contractId] = c;
     }
     const replay = []; const index = Ledger.makeIndex(replay);
@@ -61,6 +62,11 @@
       if (['SUBMITTED_MOCK', 'CEO_REVIEWED'].includes(ap.status)) { const sub = last(e => e.action === 'PORTAL_SUBMIT_MOCK' && e.outcome === 'OK' && e.entity === ap.approvalId); if (!sub || sub.seq < draft.seq || !ap.ack || sub.detail.ref !== ap.ack.ref) return false; }
       if (ap.status === 'CEO_REVIEWED') { const dec = last(e => e.action === 'PORTAL_REVIEW' && e.outcome === 'OK' && e.entity === ap.approvalId); const sb = last(e => e.action === 'PORTAL_SUBMIT_MOCK' && e.outcome === 'OK' && e.entity === ap.approvalId); if (!dec || !sb || dec.seq < sb.seq || dec.detail.status !== ap.status || !ap.feedback || !String(ap.feedback.text || '').trim() || ap.feedback.by !== dec.actor) return false; }
       else if (ap.status !== 'DRAFT' && ap.status !== 'SUBMITTED_MOCK') return false;
+    }
+    for (const c of s.contracts) {                                                                              // a hotel-level cap must come from the latest recorded cap command (a reset of the sample starts over)
+      const e = last(x => x.outcome === 'OK' && (x.action === 'DATA_RESET_SAMPLE' || (x.entity === c.contractId && /^LIMIT_CAP_/.test(x.action)))); const cap = c.limitCap ? c.limitCap.amountMinor : null;
+      if (cap == null) { if (e && e.action === 'LIMIT_CAP_SET') return false; }
+      else if (!e || e.action !== 'LIMIT_CAP_SET' || !e.detail || e.detail.amountMinor !== cap || e.actor !== c.limitCap.by) return false;
     }
     for (const a of s.alerts || []) if (a.status === 'DISMISSED') {                                              // the latest recorded action on this alert must be its dismissal
       const e = last(x => x.outcome === 'OK' && x.entity === a.alertId && /^ALERT_/.test(x.action)); if (!e || e.action !== 'ALERT_DISMISSED') return false;
@@ -216,14 +222,36 @@
           return { ok: true, audit: { amountMinor: c.amountMinor, confirmedAt: c.confirmedAt } };
         });
       },
-      setScores(contractId, scores, evidence) {
-        return mutate('rating.edit', 'RATING_SET_SCORES', contractId, s => {
-          const errs = scores && typeof scores === 'object' ? Rating.validateScores(scores) : ['E_ARGUMENT']; if (!contractOf(contractId) || !has(s.ratings, contractId)) errs.push('E_CONTRACT_UNKNOWN');
+      /** Records contract terms that the rating reads: whether the prepayment is refundable and the documented collateral amount (null = none).
+       *  Needs the signed-in person and an evidence reference (clause, guarantee document number). Old values stay in the contract's terms history. */
+      setContractTerms(contractId, terms, evidenceRef) {
+        return mutate('rating.edit', 'CONTRACT_TERMS', contractId, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] };
+          if (!terms || typeof terms !== 'object') return { ok: false, errors: ['E_ARGUMENT'] };
+          const ev = { by: session.actor, at: s.config.asOf, evidenceRef: String(evidenceRef == null ? '' : evidenceRef).trim() }; if (!Rating.hasEvidence(ev)) return { ok: false, errors: ['E_EVIDENCE_REQUIRED'] };
+          const hasR = has(terms, 'refundable'), hasC = has(terms, 'collateralMinor'); const errs = [];
+          if (!hasR && !hasC) errs.push('E_ARGUMENT');
+          if (hasR && !(terms.refundable === true || terms.refundable === false || terms.refundable === null)) errs.push('E_STATUS_INVALID');
+          if (hasC && !(terms.collateralMinor === null || (Number.isSafeInteger(terms.collateralMinor) && terms.collateralMinor >= 0 && terms.collateralMinor <= 1e15))) errs.push('E_AMOUNT_INVALID');
           if (errs.length) return { ok: false, errors: errs };
-          const before = clone(s.ratings[contractId].scores);
-          s.ratings[contractId].scores = Object.assign({}, s.ratings[contractId].scores, scores);
-          if (evidence) s.ratings[contractId].evidence = Object.assign({}, s.ratings[contractId].evidence, evidence);
-          return { ok: true, audit: { before, after: scores } };
+          const before = { refundable: c.refund.refundable, collateralMinor: c.collateral ? c.collateral.amountMinor : null };
+          const after = { refundable: hasR ? terms.refundable : before.refundable, collateralMinor: hasC ? (terms.collateralMinor || null) : before.collateralMinor };
+          if (before.refundable === after.refundable && before.collateralMinor === after.collateralMinor) return { ok: false, errors: ['E_NO_CHANGE'] };
+          c.termsHistory = (c.termsHistory || []).concat([{ at: s.config.asOf, by: session.actor, evidenceRef: ev.evidenceRef, before, after }]);
+          if (hasR) { c.refund.refundable = terms.refundable; c.refund.evidence = ev; }
+          if (hasC) c.collateral = terms.collateralMinor ? { type: 'DOCUMENTED', amountMinor: terms.collateralMinor, currency: c.currency, verified: true, evidence: ev } : null;
+          return { ok: true, audit: { before, after, evidenceRef: ev.evidenceRef } };      // terms never create a ledger row
+        });
+      },
+      /** Records whether the operator or owner of a hotel changed. Any status but UNKNOWN needs the signed-in person and an evidence reference. */
+      setOwnership(hotelId, status, evidenceRef) {
+        return mutate('rating.edit', 'OWNERSHIP_STATUS', hotelId, s => {
+          const h = typeof hotelId === 'string' ? s.hotels.find(x => x.hotelId === hotelId) : null; if (!h) return { ok: false, errors: ['E_TARGET_UNKNOWN'] };
+          if (!['NONE', 'COMPLETED_RESOLVED', 'PENDING', 'COMPLETED_UNRESOLVED', 'UNKNOWN'].includes(status)) return { ok: false, errors: ['E_STATUS_INVALID'] };
+          const ev = status === 'UNKNOWN' ? null : { by: session.actor, at: s.config.asOf, evidenceRef: String(evidenceRef == null ? '' : evidenceRef).trim() }; if (ev && !Rating.hasEvidence(ev)) return { ok: false, errors: ['E_EVIDENCE_REQUIRED'] };
+          const before = h.facts.ownershipChange; if (before === status) return { ok: false, errors: ['E_NO_CHANGE'] };
+          h.factHistory = (h.factHistory || []).concat([{ key: 'ownershipChange', at: s.config.asOf, by: session.actor, before }]);
+          h.facts.ownershipChange = status; h.facts.ownershipEvidence = ev; return { ok: true, audit: { status, before } };
         });
       },
       /** Only whitelisted claim types; claims are superseded (old value kept in factHistory), never deleted. */
@@ -267,7 +295,7 @@
           if (!(reason || '').trim()) return { ok: false, errors: ['E_REASON_REQUIRED'] };
           const v = contractOf(contractId) && view(contractId); if (!v) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] };
           const rec = s.ratings[contractId];
-          rec.history.push({ at: s.config.asOf, grade: v.rating.grade, score: v.rating.score, confidencePct: v.rating.confidence.pct, flags: v.rating.flags.map(f => f.id), by: session.actor, reason, scores: clone(rec.scores) });
+          rec.history.push({ at: s.config.asOf, grade: v.rating.grade, score: v.rating.score, confidencePct: v.rating.confidence.pct, flags: v.rating.flags.map(f => f.id), by: session.actor, reason, scores: clone(v.ratingScores) });
           return { ok: true, audit: { grade: v.rating.grade, score: v.rating.score } };
         });
       },
@@ -275,6 +303,23 @@
         return mutate('opinion.write', 'SCM_OPINION', contractId, s => {
           if (!contractOf(contractId) || !has(s.ratings, contractId)) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] };
           s.ratings[contractId].scmOpinion = { text: String(text || '').slice(0, 2000), by: session.actor, at: s.config.asOf }; return { ok: true };
+        });
+      },
+      /** A hotel-level cap on the prepayment limit, entered by a person (the CEO's decision goes into the reason). It can only lower the recommended limit; amountMinor null lifts it.
+       *  Setting or lowering needs 'limit.set'; raising or lifting an existing cap needs 'limit.relax'. Every change is kept in the contract's cap history and in the audit log. */
+      setLimitCap(contractId, amountMinor, reason) {
+        const ct = contractOf(contractId); const cur = ct && ct.limitCap ? ct.limitCap.amountMinor : null; const lift = amountMinor == null;
+        const loosen = cur != null && (lift || (Number.isSafeInteger(amountMinor) && amountMinor > cur));
+        return mutate(loosen ? 'limit.relax' : 'limit.set', lift ? 'LIMIT_CAP_CLEAR' : 'LIMIT_CAP_SET', contractId, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] };
+          const why = String(reason == null ? '' : reason).trim(); const errs = []; const before = c.limitCap ? c.limitCap.amountMinor : null;
+          if (!why) errs.push('E_REASON_REQUIRED');
+          if (!lift && (!Number.isSafeInteger(amountMinor) || amountMinor < 0 || amountMinor > 1e15)) errs.push('E_AMOUNT_INVALID');
+          if (!errs.length && (lift ? before == null : amountMinor === before)) errs.push('E_NO_CHANGE');
+          if (errs.length) return { ok: false, errors: errs };
+          c.limitCapHistory = (c.limitCapHistory || []).concat([{ at: s.config.asOf, by: session.actor, before, after: lift ? null : amountMinor, reason: why.slice(0, 300) }]);
+          c.limitCap = lift ? null : { amountMinor, currency: c.currency, reason: why.slice(0, 300), by: session.actor, at: s.config.asOf };
+          return { ok: true, audit: { before, amountMinor: lift ? null : amountMinor, currency: c.currency } };      // a cap never creates a ledger row
         });
       },
       updateAlert(alertId, status, note) {

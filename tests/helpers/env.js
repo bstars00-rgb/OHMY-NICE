@@ -17,15 +17,15 @@ env.as = (st, role) => { st.setSession('test.' + role.toLowerCase(), role); retu
 
 /** Single synthetic contract state for boundary tests. cons = [Aug, Sep, Oct] confirmed (null = no record). */
 env.synth = function (o) {
-  o = Object.assign({ ccy: 'KRW', cons: [30e6, 30e6, 30e6], opening: 100e6, topups: [], endDate: '2030-12-31', refundable: true, transfer: false, collateral: 0, scoresAll: 4, scores: null,
+  o = Object.assign({ ccy: 'KRW', cons: [30e6, 30e6, 30e6], opening: 100e6, topups: [], endDate: '2030-12-31', refundable: true, transfer: false, collateral: 0, strictCoverage: false,
     asOf: '2026-11-06', facts: {}, hotelFacts: {}, conf: null, type: 'FLOATING', entity: 'OMH-KR', history: [], refund: null, renewal: null }, o || {});
   const { Config, Ledger, Rating, Model } = env; const cfg = Config.defaults(); cfg.asOf = o.asOf;
-  const scores = o.scores || Object.fromEntries(Rating.CRITERIA_IDS.map(i => [i, o.scoresAll]));
+  if (!o.strictCoverage) { cfg.minCoverage = 0.3; cfg.lowConfidenceCoverage = 0.4; }      // the synthetic contract has no outside information; the coverage rules are tested on their own (R05)
   const hotel = { hotelId: 'HT', ellisHotelId: 'E-T', name: { ko: '테스트', en: 'Test' }, country: 'KR', city: { ko: '서울', en: 'Seoul' }, operatingCompany: 'T Co', owner: null, status: 'ACTIVE', assignedScm: 'SCM-T', lastVerifiedDate: '2026-10-01', facts: Object.assign({ closure: null, ownershipChange: 'NONE' }, o.hotelFacts), isSample: true };
   const contract = { contractId: 'CT-T', hotelId: 'HT', omhEntity: o.entity, counterparty: { legalName: 'T Co', bizRegNo: 'X' }, prepaymentType: o.type, currency: o.ccy, startDate: '2025-01-01', endDate: o.endDate, assignedScm: 'SCM-T',
     refund: Object.assign({ refundable: o.refundable, requested: false }, o.refund || {}), transfer: { eligible: o.transfer }, collateral: o.collateral ? { type: 'BG', amountMinor: o.collateral, currency: o.ccy, verified: true } : null,
     renewal: o.renewal, facts: Object.assign({ counterpartyVerification: 'VERIFIED', counterpartyEvidence: { by: 'Kim', at: '2026-10-01', evidenceRef: 'REG-0001' }, refundRefused: null, legalRecoveryCritical: null }, o.facts) };
-  const state = { schemaVersion: 1, isSample: true, config: cfg, hotels: [hotel], contracts: [contract], ledger: [], confirmations: [], sales: {}, ratings: { 'CT-T': { scores, evidence: {}, history: o.history, scmOpinion: null } },
+  const state = { schemaVersion: 1, isSample: true, config: cfg, hotels: [hotel], contracts: [contract], ledger: [], confirmations: [], sales: {}, ratings: { 'CT-T': { evidence: {}, history: o.history, scmOpinion: null } },
     alerts: [], approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [] };
   const cx = { contractsById: { 'CT-T': contract }, asOf: o.asOf };
   const add = tx => { const r = Ledger.append(state.ledger, Object.assign({ contractId: 'CT-T', currency: o.ccy }, tx), cx); if (!r.ok) throw new Error('synth ledger: ' + r.errors); };

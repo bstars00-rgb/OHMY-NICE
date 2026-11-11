@@ -38,7 +38,7 @@ module.exports = function register(h) {
     a.eq(c.recordFact('hotel', 'H001', 'closure', claim && { claimed: true, source: 'SCM', verified: { by: sess, evidenceRef: 'x' } }).errors[0], 'E_EVIDENCE_REQUIRED', 'a 1-character evidence reference is not evidence');
     a.ok(c.recordFact('hotel', 'H001', 'closure', claim).ok); a.eq(c.recordFact('hotel', 'H001', 'closure', null).errors[0], 'E_CLAIM_REQUIRED', 'claims cannot be deleted'); a.eq(st.model().byContract['CT-KR-001'].rating.grade, 'D');
     a.eq(c.recordFact('hotel', 'H001', 'closure', { claimed: true, source: 'NEWS', verified: null }).errors[0], 'E_VERIFIED_FACT_LOCKED'); st.setSession('test.scm2', 'SCM'); a.ok(c.recordFact('hotel', 'H001', 'closure', { retract: true, verified: { by: 'test.scm2', evidenceRef: 'DOC-RETRACT' } }).ok); st.setSession('test.scm', 'SCM'); const h = st.state.hotels[0]; a.eq(h.factHistory.length, 2); a.eq(h.factHistory[1].before.verified.evidenceRef, 'DOC-777'); a.ok(st.state.audit.filter(e => e.action === 'FACT_RECORD' && e.outcome === 'OK').pop().detail.before.verified === true, 'audit keeps the before-value');
-    const k = st.model().byContract['CT-KR-001'].rating.grade; a.eq(k, 'A'); const before = st.model().byContract['CT-KR-002'].rating.grade; a.eq(before, 'B');
+    const k = st.model().byContract['CT-KR-001'].rating.grade; a.eq(k, 'B'); const before = st.model().byContract['CT-KR-002'].rating.grade; a.eq(before, 'B');
     a.eq(c.setCounterparty('CT-KR-002', 'VERIFIED', '').errors[0], 'E_EVIDENCE_REQUIRED'); a.ok(c.setCounterparty('CT-KR-002', 'UNKNOWN', '').ok); a.eq(st.model().byContract['CT-KR-002'].rating.grade, 'C', 'unknown entity caps at C'); a.ok(c.setCounterparty('CT-KR-002', 'VERIFIED', 'REG-2026-55').ok); a.eq(st.model().byContract['CT-KR-002'].rating.grade, 'B');
     const raw = st.state.contracts.find(x => x.contractId === 'CT-KR-002'); raw.facts.counterpartyVerification = 'VERIFIED'; raw.facts.counterpartyEvidence = null; a.eq(st.model().byContract['CT-KR-002'].rating.grade, 'C', 'a VERIFIED string without evidence does not lift the cap');
     a.eq(c.setCounterparty('CT-KR-002', 'MAYBE', 'REG-1111').errors[0], 'E_STATUS_INVALID'); a.eq(c.setCounterparty('NOPE', 'VERIFIED', 'REG-1111').errors[0], 'E_CONTRACT_UNKNOWN');
@@ -57,7 +57,7 @@ module.exports = function register(h) {
   t('D06', 'Prototype keys and unknown IDs are rejected everywhere (no pollution, no phantom state)', ['D-4'], a => {
     const st = fresh(); const c = st.commands;
     for (const id of ['__proto__', 'constructor', 'toString', 'NOPE', 123, null, undefined]) {
-      a.eq(c.setOpinion(id, 'pwn').ok, false, String(id)); a.eq(c.setScores(id, { scmOps: 1 }).ok, false); a.eq(c.commitRating(id, 'r').ok, false); a.eq(c.createApproval(id, 1).ok, false); a.eq(c.runAi(id).ok, false);
+      a.eq(c.setOpinion(id, 'pwn').ok, false, String(id)); a.eq(c.setOwnership(id, 'PENDING', 'EVD-0001').ok, false); a.eq(c.setContractTerms(id, { refundable: true }, 'EVD-0001').ok, false); a.eq(c.commitRating(id, 'r').ok, false); a.eq(c.createApproval(id, 1).ok, false); a.eq(c.runAi(id).ok, false);
     }
     a.eq(({}).scmOpinion, undefined, 'Object.prototype untouched');
     a.eq(st.model().byContract['__proto__'], undefined, 'null-prototype lookup map');
@@ -159,6 +159,89 @@ module.exports = function register(h) {
     a.eq(c.recordFact('contract', 'CT-KR-002', 'refundRefused', { retract: true, verified: { by: 'test.scm', evidenceRef: 'EML-5003' } }).errors[0], 'E_VERIFIED_FACT_LOCKED'); a.eq(c.recordFact('contract', 'CT-KR-001', 'refundRefused', { retract: true, verified: { by: 'test.scm', evidenceRef: 'EML-5003' } }).errors[0], 'E_CLAIM_REQUIRED', 'nothing to retract');
     a.eq(st.model().byContract['CT-KR-002'].rating.grade, 'D');
   });
+  t('F06', 'Hotel-level cap: it can only hold the limit lower; raising or lifting needs the CEO or an admin; every change is audited, kept in history, never touches the ledger and is checked on load', ['M04-5', 'D-3', 'D-4'], a => {
+    const st = fresh('SCM'); const c = st.commands; const lim = () => st.model().byContract['CT-KR-001'].limit; const before = JSON.stringify(st.state.ledger); const base = lim().recommendedLimitMinor; a.eq(base, 30000000, 'computed limit of the sample contract (grade B x 1 month)');
+    a.eq(c.setLimitCap('CT-KR-001', 50000000, '').errors[0], 'E_REASON_REQUIRED'); a.eq(c.setLimitCap('CT-KR-001', -1, 'x').errors[0], 'E_AMOUNT_INVALID'); a.eq(c.setLimitCap('CT-KR-001', 1.5, 'x').errors[0], 'E_AMOUNT_INVALID'); a.eq(c.setLimitCap('CT-KR-001', '5', 'x').errors[0], 'E_AMOUNT_INVALID'); a.eq(c.setLimitCap('NOPE', 5, 'x').errors[0], 'E_CONTRACT_UNKNOWN');
+    a.eq(c.setLimitCap('CT-KR-001', null, 'x').errors[0], 'E_NO_CHANGE', 'nothing to lift'); a.eq(lim().manualCapMinor, undefined);
+    a.ok(c.setLimitCap('CT-KR-001', 20000000, 'CEO instruction 2026-11-06').ok); a.eq(lim().recommendedLimitMinor, 20000000, 'the cap holds the limit lower'); a.eq(lim().preCapLimitMinor, base); a.eq(lim().manualCapMinor, 20000000);
+    const g = lim().guards.find(x => x.id === 'G_MANUAL_CAP'); a.ok(g && g.binding && g.capMinor === 20000000); a.eq(lim().overLimitMinor, 25000000, 'the balance of 45,000,000 is over the capped limit'); a.eq(lim().availableTopupMinor, 0);
+    a.eq(c.setLimitCap('CT-KR-001', 20000000, 'again').errors[0], 'E_NO_CHANGE'); a.ok(c.setLimitCap('CT-KR-001', 10000000, 'lower still').ok, 'lowering is open to the person in charge'); a.eq(lim().recommendedLimitMinor, 10000000);
+    a.throws(() => c.setLimitCap('CT-KR-001', 15000000, 'raise'), 'E_FORBIDDEN', 'SCM cannot raise a cap'); a.throws(() => c.setLimitCap('CT-KR-001', null, 'lift'), 'E_FORBIDDEN', 'SCM cannot lift a cap'); a.eq(lim().manualCapMinor, 10000000);
+    a.eq(lim().overLimitMinor, 35000000); a.ok(c.setLimitCap('CT-KR-001', 1000, 'hold hard').ok);
+    env.as(st, 'VIEWER'); a.throws(() => c.setLimitCap('CT-KR-002', 1000, 'x'), 'E_FORBIDDEN'); env.as(st, 'CEO'); a.ok(c.setLimitCap('CT-KR-001', 70000000, 'CEO raises').ok, 'the CEO may raise'); a.eq(lim().manualCapMinor, 70000000); a.eq(lim().recommendedLimitMinor, base, 'a cap above the computed limit never raises it'); a.eq(lim().guards.find(x => x.id === 'G_MANUAL_CAP').binding, false);
+    a.ok(c.setLimitCap('CT-KR-001', null, 'CEO lifts').ok); a.eq(lim().manualCapMinor, undefined); a.ok(!lim().guards.some(x => x.id === 'G_MANUAL_CAP'));
+    a.eq(JSON.stringify(st.state.ledger), before, 'a cap never writes the ledger'); const h = st.state.contracts.find(x => x.contractId === 'CT-KR-001').limitCapHistory; a.deepEq(h.map(x => [x.before, x.after]), [[null, 20000000], [20000000, 10000000], [10000000, 1000], [1000, 70000000], [70000000, null]]);
+    const au = st.state.audit.filter(e => /^LIMIT_CAP_/.test(e.action)); a.deepEq(au.map(e => e.action + ':' + e.outcome), ['LIMIT_CAP_SET:REJECTED', 'LIMIT_CAP_SET:REJECTED', 'LIMIT_CAP_SET:REJECTED', 'LIMIT_CAP_SET:REJECTED', 'LIMIT_CAP_SET:REJECTED', 'LIMIT_CAP_CLEAR:REJECTED', 'LIMIT_CAP_SET:OK', 'LIMIT_CAP_SET:REJECTED', 'LIMIT_CAP_SET:OK', 'LIMIT_CAP_SET:DENIED', 'LIMIT_CAP_CLEAR:DENIED', 'LIMIT_CAP_SET:OK', 'LIMIT_CAP_SET:DENIED', 'LIMIT_CAP_SET:OK', 'LIMIT_CAP_CLEAR:OK']);
+    const kr4 = () => env.Model.kpis(st.model().views, {}).limitExceeded.includes('CT-KR-004'); a.ok(!kr4(), 'CT-KR-004 has room under its limit'); env.as(st, 'SCM'); a.ok(c.setLimitCap('CT-KR-004', 1000000, 'tight cap').ok); a.ok(kr4(), 'a cap below the balance counts as over the limit');
+    // persistence: a stored cap must come from the latest recorded cap command; editing it by hand is caught on load
+    const keep = fresh('SCM'); keep.commands.setLimitCap('CT-KR-001', 50000000, 'CEO instruction'); const raw = JSON.parse(JSON.stringify(keep.state));
+    const load = mut => { const s = env.clone(raw); mut(s); const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(s)); return env.newStore({ storage: stg }); };
+    a.eq(load(() => {}).loadStatus, 'OK'); a.eq(load(s => { s.contracts.find(x => x.contractId === 'CT-KR-001').limitCap.amountMinor = 59000000; }).loadStatus, 'AUDIT_BROKEN', 'cap edited by hand'); a.eq(load(s => { s.contracts.find(x => x.contractId === 'CT-KR-001').limitCap = null; }).loadStatus, 'AUDIT_BROKEN', 'cap removed by hand');
+    a.eq(load(s => { s.contracts.find(x => x.contractId === 'CT-KR-002').limitCap = { amountMinor: 1, currency: 'KRW', reason: 'forged', by: 'test.scm', at: '2026-11-06' }; }).loadStatus, 'AUDIT_BROKEN', 'cap with no command behind it');
+    a.eq(load(s => { s.contracts.find(x => x.contractId === 'CT-KR-001').limitCap.amountMinor = -5; }).loadStatus, 'CORRUPT_RESET', 'a negative stored cap is not trusted');
+    const stg = Store.memoryStorage(); const s1 = env.as(env.newStore({ storage: stg }), 'SCM'); s1.commands.setLimitCap('CT-KR-001', 50000000, 'CEO instruction'); a.eq(env.newStore({ storage: stg }).state.contracts.find(x => x.contractId === 'CT-KR-001').limitCap.amountMinor, 50000000, 'the cap survives a reload');
+    env.as(s1, 'ADMIN'); a.ok(s1.commands.resetSample().ok); a.eq(env.newStore({ storage: stg }).loadStatus, 'OK', 'after a reset of the sample the stored state is clean again');
+  });
+  t('AS01', 'Data-driven scores: every criterion is read off the data by a fixed rule (cover months, refund clause, collateral share, reconciliation, refund record, country table, verified entity, recorded ownership); missing data is Unknown and names what would settle it', ['SCORE-1', 'M03-1', 'M03-2'], a => {
+    const sc = (o, mut) => { const f = env.synth(o); if (mut) mut(f); const v = f.view(); return { s: v.ratingScores, b: v.ratingBasis, v }; };
+    const base = sc({}); a.deepEq([base.s.consumptionVsPrepay, base.s.refundability, base.s.collateral, base.s.reconAccuracy, base.s.settlementHistory, base.s.countryLegal, base.s.legalEntity, base.s.ownershipChange], [5, 5, 1, null, null, 4, 5, 5]);
+    a.eq(base.b.consumptionVsPrepay.code, 'COVER'); a.eq(base.b.collateral.need, 'COLLATERAL_DOC'); a.eq(base.b.reconAccuracy.need, 'HOTEL_CONFIRMATION'); a.eq(base.b.settlementHistory.need, 'SETTLEMENT_RECORD');
+    for (const k of ['operatingStability', 'financialHealth', 'continuity']) { a.eq(base.s[k], null, k); a.eq(base.b[k].need, 'EXTERNAL_INFO', k); } a.eq(base.s.scmOps, null); a.eq(base.b.scmOps.code, 'SCM_EXCLUDED'); a.eq(base.v.rating.confidence.pct, 59); a.ok(!base.v.rating.confidence.unknownIds.includes('scmOps'));
+    // consumption: balance as months of the average (30,000,000 a month)
+    for (const [opening, score] of [[90e6, 5], [150e6, 5], [160e6, 4], [190e6, 4], [220e6, 3], [280e6, 2], [530e6, 1]]) a.eq(sc({ opening }).s.consumptionVsPrepay, score, 'opening ' + opening);
+    a.eq(sc({ opening: 90e6 }).b.consumptionVsPrepay.code, 'NO_BALANCE'); a.eq(sc({ opening: 90e6 }).s.collateral, 5, 'no balance, no exposure');
+    a.eq(sc({ opening: 220e6, endDate: '2026-12-31' }).s.consumptionVsPrepay, 2, 'one point off when the balance cannot be used up before the contract ends'); a.eq(sc({ opening: 220e6, endDate: '2026-12-31' }).b.consumptionVsPrepay.code, 'COVER_END');
+    a.eq(sc({ cons: [0, 0, 0] }).s.consumptionVsPrepay, 1); a.eq(sc({ cons: [0, 0, 0] }).b.consumptionVsPrepay.code, 'NO_CONSUMPTION'); a.eq(sc({ cons: [null, null, null] }).s.consumptionVsPrepay, null); a.eq(sc({ cons: [null, null, null] }).b.consumptionVsPrepay.need, 'CONSUMPTION_DATA');
+    // refund clause
+    a.eq(sc({ refundable: false }).s.refundability, 1); a.eq(sc({ refundable: null }).s.refundability, null); a.eq(sc({ refundable: null }).b.refundability.need, 'REFUND_TERMS');
+    // collateral against the 10,000,000 balance
+    for (const [collateral, score] of [[10e6, 5], [5e6, 4], [3e6, 3], [1e6, 2]]) a.eq(sc({ collateral }).s.collateral, score, 'collateral ' + collateral);
+    a.eq(sc({ collateral: 5e6 }, f => { f.contract.collateral.verified = false; }).s.collateral, null, 'collateral that no document backs is Unknown');
+    // reconciliation with the hotel's confirmed balance
+    a.eq(sc({ conf: [10e6, '2026-10-31'] }).s.reconAccuracy, 5); a.eq(sc({ conf: [9.9e6, '2026-10-31'] }).s.reconAccuracy, 3); a.eq(sc({ conf: [5e6, '2026-10-31'] }).s.reconAccuracy, 1); a.eq(sc({ conf: [10e6, '2026-09-01'] }).s.reconAccuracy, null, 'a stale confirmation is not counted'); a.eq(sc({ conf: [10e6, '2026-09-01'] }).b.reconAccuracy.code, 'RECON_STALE');
+    // refund record
+    const rf = (due, repaid) => sc({ refund: { requested: true, requestedAt: '2026-09-20', requestedAmountMinor: 10e6, dueDate: due } }, f => { if (repaid) f.add({ type: 'REFUND', amountMinor: 10e6, occurredAt: '2026-10-25T10:00:00+09:00', externalRef: 'RF1' }); });
+    a.eq(rf('2026-10-20').s.settlementHistory, 1, 'overdue'); a.eq(rf('2026-12-01').s.settlementHistory, 3, 'in progress'); a.eq(rf('2026-12-01', true).s.settlementHistory, 5, 'repaid in full');
+    // country table, verified entity, recorded ownership
+    a.eq(sc({}, f => { f.hotel.country = 'VN'; }).s.countryLegal, 3); a.eq(sc({}, f => { f.hotel.country = 'XX'; }).s.countryLegal, null); a.eq(sc({}, f => { f.hotel.country = 'constructor'; }).s.countryLegal, null, 'prototype names are not countries');
+    a.eq(sc({ facts: { counterpartyVerification: 'FAILED' } }).s.legalEntity, 1); a.eq(sc({ facts: { counterpartyVerification: 'UNKNOWN', counterpartyEvidence: null } }).s.legalEntity, null); a.eq(sc({ facts: { counterpartyEvidence: { by: 'AI-bot', at: '2026-10-01', evidenceRef: 'REG-0001' } } }).s.legalEntity, null, 'an AI verifier does not count');
+    for (const [st, score] of [['NONE', 5], ['COMPLETED_RESOLVED', 4], ['PENDING', 2], ['COMPLETED_UNRESOLVED', 1], ['UNKNOWN', null]]) a.eq(sc({ hotelFacts: { ownershipChange: st } }).s.ownershipChange, score, st);
+  });
+  t('AS02', 'Nobody types a score: no command sets one, stored data carries none, the same data gives the same scores for every user, and opinions never move the score', ['SCORE-1', 'D-4'], a => {
+    const st = fresh('SCM'); a.eq(typeof st.commands.setScores, 'undefined'); a.ok(Object.values(st.state.ratings).every(r => !('scores' in r)), 'stored ratings hold no scores');
+    const json = s => JSON.stringify(s.model().views.map(v => [v.contractId, v.ratingScores, v.rating.score, v.rating.grade]));
+    const before = json(st); env.as(st, 'CEO'); a.eq(json(st), before, 'the role of the viewer does not matter'); env.as(st, 'SCM'); a.eq(json(fresh('ADMIN')), before, 'another store with the same data gives the same scores');
+    a.ok(st.commands.setOpinion('CT-KR-001', 'excellent partner, give top marks').ok); a.eq(json(st), before, 'an opinion is text only'); a.ok(st.commands.commitRating('CT-KR-001', 'snapshot').ok); a.eq(json(st), before, 'a snapshot does not change the scores');
+    const snap = st.state.ratings['CT-KR-001'].history.slice(-1)[0]; a.deepEq(snap.scores, st.model().byContract['CT-KR-001'].ratingScores, 'the snapshot keeps the scores it was based on');
+    const raw = JSON.parse(JSON.stringify(st.state)); raw.ratings['CT-KR-001'].scores = { legalEntity: 5, financialHealth: 5, operatingStability: 5, continuity: 5 }; const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(raw)); const forged = env.newStore({ storage: stg });
+    a.eq(forged.loadStatus, 'AUDIT_BROKEN', 'scores slipped into the stored file are flagged'); a.eq(JSON.stringify(forged.model().byContract['CT-KR-001'].ratingScores), JSON.stringify(st.model().byContract['CT-KR-001'].ratingScores), 'and never read');
+  });
+  t('AS03', 'Recording the data the scores read: ownership status, refund clause and collateral need the signed-in person and an evidence reference, are audited and kept in history, and move the score', ['SCORE-2', 'D-3', 'D-4'], a => {
+    const st = fresh('SCM'); const c = st.commands; const v = () => st.model().byContract['CT-KR-001']; const ledger = JSON.stringify(st.state.ledger);
+    a.eq(v().ratingScores.ownershipChange, null); a.eq(c.setOwnership('NOPE', 'NONE', 'EVD-1001').errors[0], 'E_TARGET_UNKNOWN'); a.eq(c.setOwnership('H001', 'MAYBE', 'EVD-1001').errors[0], 'E_STATUS_INVALID'); a.eq(c.setOwnership('H001', 'NONE', '').errors[0], 'E_EVIDENCE_REQUIRED'); a.eq(c.setOwnership('H001', 'NONE', 'ab').errors[0], 'E_EVIDENCE_REQUIRED');
+    a.eq(c.setOwnership('H001', 'UNKNOWN', '').errors[0], 'E_NO_CHANGE', 'already unknown'); a.ok(c.setOwnership('H001', 'PENDING', 'EVD-1001').ok); a.eq(v().ratingScores.ownershipChange, 2); a.eq(v().rating.grade, 'C', 'a change in progress caps the grade at C'); a.eq(c.setOwnership('H001', 'PENDING', 'EVD-1002').errors[0], 'E_NO_CHANGE');
+    a.ok(c.setOwnership('H001', 'NONE', 'EVD-1003').ok); a.eq(v().ratingScores.ownershipChange, 5); const hh = st.state.hotels.find(x => x.hotelId === 'H001'); a.deepEq(hh.factHistory.filter(x => x.key === 'ownershipChange').map(x => x.before), ['UNKNOWN', 'PENDING']); a.eq(hh.facts.ownershipEvidence.by, 'test.scm'); a.eq(hh.facts.ownershipEvidence.evidenceRef, 'EVD-1003');
+    a.ok(c.setOwnership('H001', 'UNKNOWN', '').ok, 'going back to unknown needs no evidence'); a.eq(hh.facts.ownershipEvidence, null); a.eq(v().ratingScores.ownershipChange, null);
+    // contract terms
+    a.eq(v().ratingScores.collateral, 3); a.eq(c.setContractTerms('CT-KR-001', { collateralMinor: 45e6 }, '').errors[0], 'E_EVIDENCE_REQUIRED'); a.eq(c.setContractTerms('CT-KR-001', {}, 'GRT-0001').errors[0], 'E_ARGUMENT'); a.eq(c.setContractTerms('CT-KR-001', { refundable: 'yes' }, 'GRT-0001').errors[0], 'E_STATUS_INVALID');
+    for (const bad of [-1, 1.5, '5', 1e16]) a.eq(c.setContractTerms('CT-KR-001', { collateralMinor: bad }, 'GRT-0001').errors[0], 'E_AMOUNT_INVALID', String(bad)); a.eq(c.setContractTerms('NOPE', { refundable: true }, 'GRT-0001').errors[0], 'E_CONTRACT_UNKNOWN'); a.eq(c.setContractTerms('CT-KR-001', { refundable: true }, 'CL-0001').errors[0], 'E_NO_CHANGE');
+    a.ok(c.setContractTerms('CT-KR-001', { collateralMinor: 45e6 }, 'GRT-0001').ok); a.eq(v().ratingScores.collateral, 5); a.eq(v().contract.collateral.evidence.evidenceRef, 'GRT-0001'); a.eq(v().recoverability.tier, 'HIGH', 'a fully collateralised balance is highly recoverable');
+    a.ok(c.setContractTerms('CT-KR-001', { refundable: false }, 'CL-0002').ok); a.eq(v().ratingScores.refundability, 1); a.ok(c.setContractTerms('CT-KR-001', { collateralMinor: null }, 'GRT-0002').ok); a.eq(v().contract.collateral, null); a.eq(v().ratingScores.collateral, 1);
+    a.deepEq(v().contract.termsHistory.map(x => [x.before.refundable, x.after.refundable, x.before.collateralMinor, x.after.collateralMinor]), [[true, true, 20e6, 45e6], [true, false, 45e6, 45e6], [false, false, 45e6, null]]);
+    env.as(st, 'VIEWER'); a.throws(() => c.setOwnership('H001', 'NONE', 'EVD-1009'), 'E_FORBIDDEN'); a.throws(() => c.setContractTerms('CT-KR-001', { refundable: true }, 'CL-0009'), 'E_FORBIDDEN'); env.as(st, 'CEO'); a.throws(() => c.setOwnership('H001', 'NONE', 'EVD-1009'), 'E_FORBIDDEN', 'the CEO decides, the people in charge record');
+    a.eq(JSON.stringify(st.state.ledger), ledger, 'recording data never writes the ledger'); const au = st.state.audit.filter(e => ['OWNERSHIP_STATUS', 'CONTRACT_TERMS'].includes(e.action) && e.outcome === 'OK'); a.eq(au.length, 6);
+    // what is stored must stay what the commands wrote
+    const raw = JSON.parse(JSON.stringify(st.state)); const load = mut => { const s = env.clone(raw); mut(s); const g = Store.memoryStorage(); g.setItem('omh_hfr_v1', JSON.stringify(s)); return env.newStore({ storage: g }).loadStatus; };
+    a.eq(load(() => {}), 'OK'); a.eq(load(s => { s.contracts.find(x => x.contractId === 'CT-KR-001').refund.refundable = true; }), 'AUDIT_BROKEN', 'refund clause edited by hand'); a.eq(load(s => { s.hotels.find(x => x.hotelId === 'H001').facts.ownershipChange = 'NONE'; }), 'AUDIT_BROKEN', 'ownership edited by hand');
+  });
+  t('AS04', 'Scoring settings: validated, audited, and a change recalculates every hotel', ['SCORE-3', 'M03-1'], a => {
+    const st = fresh('ADMIN'); const c = st.commands; const cfg = () => JSON.parse(JSON.stringify(st.state.config)); const bad = (mut, code) => { const x = cfg(); mut(x); a.ok(c.setConfig(x, 'try').errors.includes(code), code); };
+    bad(x => { x.scoring.coverMonths = [2, 2, 6, 12]; }, 'E_RANGE:scoring.coverMonths'); bad(x => { x.scoring.coverMonths = [2, 4, 6]; }, 'E_RANGE:scoring.coverMonths'); bad(x => { x.scoring.endShortfallPenalty = 5; }, 'E_RANGE:scoring.endShortfallPenalty'); bad(x => { x.scoring.collateralRatios = [0.5, 1, 0.25]; }, 'E_RANGE:scoring.collateralRatios');
+    bad(x => { x.scoring.reconScores = { MATCH: 3, MINOR: 4, MAJOR: 1 }; }, 'E_RANGE:scoring.reconScores'); bad(x => { x.scoring.countryLegal.KR = 6; }, 'E_RANGE:scoring.countryLegal'); bad(x => { delete x.scoring.countryLegal.VN; }, 'E_RANGE:scoring.countryLegal'); bad(x => { delete x.scoring; }, 'E_CONFIG_SECTION:scoring');
+    a.eq(st.model().byContract['CT-KR-001'].ratingScores.countryLegal, 4); const x = cfg(); x.scoring.countryLegal.KR = 5; x.scoring.coverMonths = [1, 2, 3, 4]; a.ok(c.setConfig(x, 'CEO table (test)').ok);
+    a.eq(st.model().byContract['CT-KR-001'].ratingScores.countryLegal, 5); a.eq(st.model().byContract['CT-KR-001'].ratingScores.consumptionVsPrepay, 4, '45M balance is 1.5 months: past the new first cut-off of 1'); a.eq(st.model().byContract['CT-KR-001'].ratingBasis.countryLegal.code, 'COUNTRY');
+    a.ok(st.state.configHistory[0].changes.some(ch => ch.path === 'scoring.countryLegal.KR' && ch.from === 4 && ch.to === 5));
+  });
   t('F05', 'Load check: approvals and dismissed alerts recorded in storage must be backed by an audit entry', ['D-3', 'D-5'], a => {
     const base = fresh('SCM'); base.commands.createApproval('CT-KR-001', 1000); const raw = JSON.parse(JSON.stringify(base.state));
     const load = mut => { const s = env.clone(raw); mut(s); const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(s)); return env.newStore({ storage: stg }); };
@@ -234,7 +317,7 @@ module.exports = function register(h) {
     const base = fresh('SCM'); const c = base.commands; c.createApproval('CT-KR-001', 1000); c.submitApproval('AP-0001'); base.setSession('test.ceo', 'CEO'); c.reviewApproval('AP-0001', 'ok'); base.setSession('test.scm', 'SCM');
     c.addTx({ contractId: 'CT-KR-001', type: 'TOPUP', amountMinor: 3000, currency: 'KRW', occurredAt: '2026-11-02T10:00:00+09:00', externalRef: 'H4-1' });
     c.recordFact('hotel', 'H006', 'closure', { claimed: true, source: 'SCM', verified: { by: 'test.scm', evidenceRef: 'DOC-4444' } });
-    const csv = 'contractId,type,amount,currency,occurredAt,externalRef\nCT-KR-002,TOPUP,500,KRW,2026-11-03T10:00:00+09:00,H4-CSV\n'; a.ok(c.importCsv(csv, 'h4.csv').ok); c.setScores('CT-KR-002', { scmOps: 2 }); c.setOpinion('CT-KR-002', 'last');
+    const csv = 'contractId,type,amount,currency,occurredAt,externalRef\nCT-KR-002,TOPUP,500,KRW,2026-11-03T10:00:00+09:00,H4-CSV\n'; a.ok(c.importCsv(csv, 'h4.csv').ok); c.setOwnership('H002', 'NONE', 'EVD-0003'); c.setOpinion('CT-KR-002', 'last');
     const mk = (storage, mut) => { const raw = JSON.parse(storage.getItem('omh_hfr_v1')); mut(raw); const g = Store.memoryStorage(); g.setItem('omh_hfr_v1', JSON.stringify(raw)); g.setItem('omh_hfr_v1.anchor', storage.getItem('omh_hfr_v1.anchor')); return env.newStore({ storage: g }).loadStatus; };
     const stg = base.storage; a.eq(mk(stg, () => {}), 'OK', 'legitimate history (approval, CSV, scores, facts) reloads cleanly');
     a.eq(mk(stg, s => { const old = s.approvals[0]; s.approvals = [Object.assign(JSON.parse(JSON.stringify(old)), { contractId: 'CT-KR-002' })]; }), 'AUDIT_BROKEN', 'approval moved to another contract');
@@ -244,7 +327,7 @@ module.exports = function register(h) {
     a.eq(mk(stg, s => { s.ledger.pop(); }), 'AUDIT_BROKEN', 'last ledger row deleted');
     a.eq(mk(stg, s => { const x = s.ledger[3]; s.ledger[3] = s.ledger[4]; s.ledger[4] = x; }), 'AUDIT_BROKEN', 'rows reordered');
     a.eq(mk(stg, s => { const h = s.hotels.find(x => x.hotelId === 'H006'); h.facts.closure = null; h.factHistory = []; }), 'AUDIT_BROKEN', 'verified closure erased');
-    a.eq(mk(stg, s => { for (const k of Object.keys(s.ratings['CT-KR-002'].scores)) s.ratings['CT-KR-002'].scores[k] = 5; }), 'AUDIT_BROKEN', 'rating scores rewritten');
+    a.eq(mk(stg, s => { s.hotels.find(x => x.hotelId === 'H002').facts.ownershipChange = 'COMPLETED_RESOLVED'; }), 'AUDIT_BROKEN', 'ownership status rewritten');
     a.eq(mk(stg, s => { s.config.minCoverage = 0.4; }), 'AUDIT_BROKEN', 'valid-looking config value changed');
     a.eq(mk(stg, s => { s.confirmations.pop(); }), 'AUDIT_BROKEN', 'hotel confirmation removed');
     // reset then replay: a stale approval must not back a new one

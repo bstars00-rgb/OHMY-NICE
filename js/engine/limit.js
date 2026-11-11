@@ -17,6 +17,7 @@
   function compute(input) {
     const { grade, forecast: f, outstandingMinor, contract, recoverability, alerts, cfg } = input; const ratingFlags = input.ratingFlags || [];
     const mult = multiplier(grade, cfg); const out = { grade, multiplier: mult, outstandingMinor, currency: contract.currency, guards: [], holdReasons: [], notes: [], dataQuality: f.quality };
+    if (contract.limitCap && Number.isSafeInteger(contract.limitCap.amountMinor) && contract.limitCap.amountMinor >= 0) out.manualCapMinor = contract.limitCap.amountMinor;   // hotel-level cap entered by a person
     if (f.status === 'NOT_APPLICABLE') return Object.assign(out, { status: 'UNAVAILABLE', baseLimitMinor: null, recommendedLimitMinor: null, availableTopupMinor: 0, overLimitMinor: null, topupHold: true, holdReasons: ['NOT_APPLICABLE_DEPOSIT'], notes: ['보증금은 소진 대상이 아니라 한도 산정 제외 / Security deposit: no consumption-based limit'] });
     if (f.status === 'UNCERTAIN_ZERO') return Object.assign(out, { status: 'UNAVAILABLE', baseLimitMinor: null, recommendedLimitMinor: null, availableTopupMinor: 0, overLimitMinor: null, topupHold: true, holdReasons: ['PARTIAL_CONSUMPTION_DATA'], notes: ['일부 월만 확정이고 소진 0을 단정할 수 없어 한도 산정 불가 / Limit unavailable: only some months confirmed, zero not assertable'] });
     if (f.quality === 'NONE' || f.avgMinor == null) {
@@ -39,6 +40,9 @@
     else if (refundable == null) cap('G_REFUND_UNKNOWN', Money.mulFloor(f.avgMinor, cfg.guards.unknownRefundMonths), 'REFUND_TERMS_UNKNOWN');
     // G3 low recoverability
     if (recoverability && recoverability.tier === 'LOW') cap('G_LOW_RECOVERY', Money.mulFloor(f.avgMinor, cfg.guards.lowRecoveryMonths), 'RECOVERABILITY_LOW');
+    // G5 hotel-level cap entered by a person (the CEO's decision for this hotel). It can only lower the limit, never raise it.
+    out.preCapLimitMinor = Math.max(0, rec);
+    if (out.manualCapMinor != null) cap('G_MANUAL_CAP', out.manualCapMinor, 'MANUAL_CAP');
     // G4 holds
     if (f.velocity && f.velocity.pct != null && f.velocity.pct <= -cfg.guards.velocityHoldDropPct) out.holdReasons.push('CONSUMPTION_COLLAPSE');
     if ((alerts || []).some(a => a.severity === 'CRITICAL')) out.holdReasons.push('CRITICAL_ALERT_OPEN');

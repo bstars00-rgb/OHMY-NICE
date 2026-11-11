@@ -146,63 +146,63 @@ module.exports = function register(h) {
   /* ---------------- RATING ---------------- */
   t('R01', '12 criteria, weights sum to 100, each with a rationale (KO+EN)', ['M03-1'], a => {
     a.eq(Rating.CRITERIA.length, 12); const cfg = Config.defaults(); a.eq(Object.values(cfg.weights).reduce((x, y) => x + y, 0), 100);
-    for (const c of Rating.CRITERIA) { a.ok(c.why.ko && c.why.en && c.name.ko && c.name.en, c.id); a.ok(cfg.weights[c.id] > 0, c.id); }
+    for (const c of Rating.CRITERIA) { a.ok(c.why.ko && c.why.en && c.name.ko && c.name.en, c.id); a.ok(c.id === 'scmOps' ? cfg.weights[c.id] === 0 : cfg.weights[c.id] > 0, c.id); }
     a.eq(Rating.CRITERIA.length, Config.CRITERIA_IDS.length); a.ok(cfg.provisional === true, 'provisional flag set');
   });
   t('R02', 'Unknown is excluded (not mid-scored): score unchanged, confidence reduced, unknown listed', ['M03-2'], a => {
     const cfg = Config.defaults(); const all4 = Object.fromEntries(Rating.CRITERIA_IDS.map(i => [i, 4]));
     const full = Rating.evaluate({ scores: all4, cfg, hotel: { facts: {} }, contract: { facts: VER }, derived: {} }); a.eq(full.score, 80); a.eq(full.confidence.pct, 100);
     const part = Object.assign({}, all4, { financialHealth: null, continuity: undefined, scmOps: null }); const r = Rating.evaluate({ scores: part, cfg, hotel: { facts: {} }, contract: { facts: VER }, derived: {} });
-    a.eq(r.score, 80, 'unknowns do not drag the score toward 3'); a.eq(r.confidence.pct, 80); a.deepEq(r.confidence.unknownIds.sort(), ['continuity', 'financialHealth', 'scmOps']); a.eq(r.confidence.level, 'MEDIUM');
+    a.eq(r.score, 80, 'unknowns do not drag the score toward 3'); a.eq(r.confidence.pct, 86); a.deepEq(r.confidence.unknownIds.sort(), ['continuity', 'financialHealth'], 'scmOps has weight 0 and is not listed'); a.eq(r.confidence.level, 'HIGH');
     const mid = Object.assign({}, all4, { financialHealth: 3, continuity: 3, scmOps: 3 }); a.ok(Rating.evaluate({ scores: mid, cfg, hotel: { facts: {} }, contract: { facts: VER }, derived: {} }).score < 80, 'treating unknown as 3 would differ');
   });
   t('R03', 'Grade boundaries: exactly-at-threshold is inclusive; just below drops a grade', ['M03-4', 'T06'], a => {
     const base = { hotel: { facts: {} }, contract: { facts: VER }, derived: {} };
     const mk = (cfg, scores) => Rating.evaluate(Object.assign({ cfg, scores }, base));
     const all4 = Object.fromEntries(Rating.CRITERIA_IDS.map(i => [i, 4])); const cfg = Config.defaults();
-    a.eq(mk(cfg, all4).grade, 'A', '80.0 -> A'); a.eq(mk(cfg, Object.assign({}, all4, { scmOps: 3 })).score, 78.8); a.eq(mk(cfg, Object.assign({}, all4, { scmOps: 3 })).grade, 'B');
+    a.eq(mk(cfg, all4).grade, 'A', '80.0 -> A'); a.eq(mk(cfg, Object.assign({}, all4, { reconAccuracy: 3 })).score, 78.2); a.eq(mk(cfg, Object.assign({}, all4, { reconAccuracy: 3 })).grade, 'B');
     const b68 = Object.fromEntries(Rating.CRITERIA_IDS.map(i => [i, 3])); b68.legalEntity = 4; b68.settlementHistory = 4; b68.consumptionVsPrepay = 5; const raw = Weighted.weightedScore(Rating.CRITERIA_IDS.map(i => ({ score: b68[i], weight: cfg.weights[i] })), 5).score;
     for (const g of ['A', 'B', 'C']) { const c2 = Config.defaults(); c2.ratingThresholds = { A: 99, B: 98, C: 97 }; c2.ratingThresholds[g] = raw; if (g === 'A') { c2.ratingThresholds.B = raw - 1; c2.ratingThresholds.C = raw - 2; } if (g === 'B') { c2.ratingThresholds.A = raw + 5; c2.ratingThresholds.C = raw - 1; } if (g === 'C') { c2.ratingThresholds.A = raw + 6; c2.ratingThresholds.B = raw + 5; }
       a.eq(mk(c2, b68).scoreGrade, g, 'threshold == score -> ' + g); const c3 = JSON.parse(JSON.stringify(c2)); c3.ratingThresholds[g] = raw + 1e-6; a.ok(Rating.ORDER.indexOf(mk(c3, b68).scoreGrade) > Rating.ORDER.indexOf(g), 'score just below ' + g); }
     const d = mk(cfg, Object.fromEntries(Rating.CRITERIA_IDS.map(i => [i, 2]))); a.eq(d.score, 40); a.eq(d.grade, 'D'); a.ok(!['E'].includes(d.grade), 'hotel scale has no E');
   });
   t('R04', 'Red flags cap the grade regardless of score (score stays visible)', ['M03-3', 'T07'], a => {
-    const closed = env.synth({ scoresAll: 5, hotelFacts: { closure: { claimed: true, source: 'SCM', verified: { by: 'Kim', at: '2026-10-01', evidenceRef: 'DOC-1' } } } }).view(); a.eq(closed.rating.score, 100); a.eq(closed.rating.scoreGrade, 'A'); a.eq(closed.rating.grade, 'D'); a.ok(closed.rating.capped);
-    a.eq(env.synth({ scoresAll: 5, facts: { counterpartyVerification: 'FAILED' } }).view().rating.grade, 'D');
-    a.eq(env.synth({ scoresAll: 5, facts: { refundRefused: { claimed: true, source: 'SCM', verified: { by: 'Lee', at: '2026-10-01', evidenceRef: 'EML-1' } } } }).view().rating.grade, 'D');
-    a.eq(env.synth({ scoresAll: 5, hotelFacts: { ownershipChange: 'PENDING' } }).view().rating.grade, 'C'); a.eq(env.synth({ scoresAll: 5, hotelFacts: { ownershipChange: 'COMPLETED_RESOLVED' } }).view().rating.grade, 'A');
-    a.eq(env.synth({ scoresAll: 5, facts: { counterpartyVerification: 'UNKNOWN' } }).view().rating.grade, 'C', 'unverified entity -> C cap');
-    a.eq(env.synth({ scoresAll: 5, conf: [90e6, '2026-10-31'], opening: 100e6, cons: [0, 0, 0] }).view().rating.flags.some(f => f.id === 'RECON_MAJOR_MISMATCH'), true, '10% diff is major'); a.eq(env.synth({ scoresAll: 5, conf: [50e6, '2026-10-31'] }).view().rating.grade, 'C');
-    a.eq(env.synth({ scoresAll: 5, cons: [30e6, 30e6, 10e6] }).view().rating.grade, 'B', 'collapse (-50%) caps at B');
-    const s = seedState(); a.eq(view(s, 'CT-JP-003').rating.scoreGrade, 'B'); a.eq(view(s, 'CT-JP-003').rating.grade, 'C'); a.eq(view(s, 'CT-KR-001').rating.grade, 'A');
+    const closed = env.synth({ hotelFacts: { closure: { claimed: true, source: 'SCM', verified: { by: 'Kim', at: '2026-10-01', evidenceRef: 'DOC-1' } } } }).view(); a.ok(closed.rating.score >= 80); a.eq(closed.rating.scoreGrade, 'A'); a.eq(closed.rating.grade, 'D'); a.ok(closed.rating.capped);
+    a.eq(env.synth({ facts: { counterpartyVerification: 'FAILED' } }).view().rating.grade, 'D');
+    a.eq(env.synth({ facts: { refundRefused: { claimed: true, source: 'SCM', verified: { by: 'Lee', at: '2026-10-01', evidenceRef: 'EML-1' } } } }).view().rating.grade, 'D');
+    a.eq(env.synth({ hotelFacts: { ownershipChange: 'PENDING' } }).view().rating.grade, 'C'); a.eq(env.synth({ hotelFacts: { ownershipChange: 'COMPLETED_RESOLVED' } }).view().rating.grade, 'A');
+    a.eq(env.synth({ facts: { counterpartyVerification: 'UNKNOWN' } }).view().rating.grade, 'C', 'unverified entity -> C cap');
+    a.eq(env.synth({ conf: [90e6, '2026-10-31'], opening: 100e6, cons: [0, 0, 0] }).view().rating.flags.some(f => f.id === 'RECON_MAJOR_MISMATCH'), true, '10% diff is major'); a.eq(env.synth({ conf: [50e6, '2026-10-31'] }).view().rating.grade, 'C');
+    a.eq(env.synth({ cons: [30e6, 30e6, 10e6] }).view().rating.grade, 'B', 'collapse (-50%) caps at B');
+    const s = seedState(); a.eq(view(s, 'CT-JP-003').rating.scoreGrade, 'B'); a.eq(view(s, 'CT-JP-003').rating.grade, 'C'); a.eq(view(s, 'CT-KR-001').rating.grade, 'B', 'no sample hotel reaches A while the outside information is missing'); a.ok(view(s, 'CT-KR-001').rating.flags.some(f => f.id === 'LOW_CONFIDENCE'));
   });
   t('R05', 'Low evidence: coverage < 50% → NR (despite a high raw score); 50–70% → capped at B', ['M03-2', 'M03-4'], a => {
     const cfg = Config.defaults(); const base = { cfg, hotel: { facts: {} }, contract: { facts: VER }, derived: {} };
     const s5 = Object.fromEntries(Rating.CRITERIA_IDS.map(i => [i, 5])); const nr = Object.assign({}, s5); ['financialHealth', 'ownershipChange', 'settlementHistory', 'consumptionVsPrepay', 'collateral', 'continuity'].forEach(k => { nr[k] = null; });
-    const r1 = Rating.evaluate(Object.assign({ scores: nr }, base)); a.eq(r1.confidence.pct, 48); a.eq(r1.score, 100); a.eq(r1.grade, 'NR'); a.eq(r1.confidence.level, 'LOW');
-    const cap = Object.assign({}, s5); ['financialHealth', 'ownershipChange', 'continuity', 'scmOps', 'reconAccuracy'].forEach(k => { cap[k] = null; }); const r2 = Rating.evaluate(Object.assign({ scores: cap }, base)); a.eq(r2.confidence.pct, 66); a.eq(r2.scoreGrade, 'A'); a.eq(r2.grade, 'B'); a.ok(r2.flags.some(f => f.id === 'LOW_CONFIDENCE'));
+    const r1 = Rating.evaluate(Object.assign({ scores: nr }, base)); a.eq(r1.confidence.pct, 45); a.eq(r1.score, 100); a.eq(r1.grade, 'NR'); a.eq(r1.confidence.level, 'LOW');
+    const cap = Object.assign({}, s5); ['financialHealth', 'ownershipChange', 'continuity', 'scmOps', 'reconAccuracy'].forEach(k => { cap[k] = null; }); const r2 = Rating.evaluate(Object.assign({ scores: cap }, base)); a.eq(r2.confidence.pct, 69); a.eq(r2.scoreGrade, 'A'); a.eq(r2.grade, 'B'); a.ok(r2.flags.some(f => f.id === 'LOW_CONFIDENCE'));
     const none = Rating.evaluate(Object.assign({ scores: {} }, base)); a.eq(none.grade, 'NR'); a.eq(none.score, null); a.eq(view(seedState(), 'CT-JP-007').rating.grade, 'NR');
     const critical = Rating.evaluate({ cfg, scores: {}, hotel: { facts: {} }, contract: { facts: Object.assign({}, VER, { counterpartyVerification: 'FAILED' }) }, derived: {} }); a.eq(critical.grade, 'D', 'a known critical flag beats NR');
   });
   t('R06', 'Unverified closure / news / AI claims never confirm a closure or cap the grade', ['M06-3', 'M03-3'], a => {
     const claims = [{ claimed: true, source: 'NEWS/AI', verified: null }, { claimed: true, source: 'SCM', verified: { by: 'Kim', at: '2026-10-01', evidenceRef: '' } }, { claimed: true, source: 'AI', verified: { by: 'AI-bot', at: '2026-10-01', evidenceRef: 'URL' } },
       { claimed: true, source: 'SCM', verified: { by: '', at: '2026-10-01', evidenceRef: 'D' } }, { claimed: true, source: 'SCM', verified: { by: 'mock-agent', at: '2026-10-01', evidenceRef: 'D' } }];
-    for (const c of claims) { const f = env.synth({ scoresAll: 5, hotelFacts: { closure: c } }); const v = f.view(); a.eq(v.rating.grade, 'A', JSON.stringify(c)); a.ok(!v.alerts.some(x => x.ruleId === 'CLOSURE_CONFIRMED')); a.ok(v.alerts.some(x => x.ruleId === 'UNVERIFIED_SIGNAL' && x.severity === 'MEDIUM')); a.eq(v.rating.unverifiedSignals.length, 1); }
+    for (const c of claims) { const f = env.synth({ hotelFacts: { closure: c } }); const v = f.view(); a.eq(v.rating.grade, 'A', JSON.stringify(c)); a.ok(!v.alerts.some(x => x.ruleId === 'CLOSURE_CONFIRMED')); a.ok(v.alerts.some(x => x.ruleId === 'UNVERIFIED_SIGNAL' && x.severity === 'MEDIUM')); a.eq(v.rating.unverifiedSignals.length, 1); }
     const v = view(seedState(), 'CT-JP-006'); a.eq(v.rating.grade, 'B'); a.ok(!v.liveAlerts.some(x => x.severity === 'CRITICAL')); a.ok(v.liveAlerts.some(x => x.ruleId === 'UNVERIFIED_SIGNAL'));
     a.ok(Rating.isVerified({ claimed: true, verified: { by: 'Kim', at: 'x', evidenceRef: 'DOC-1' } }));
   });
   t('R07', 'Recoverability is a separate axis from credit grade', ['M03-5'], a => {
-    const nonref = env.synth({ scoresAll: 5, refundable: false }).view(); a.eq(nonref.rating.grade, 'A'); a.eq(nonref.recoverability.tier, 'LOW');
-    const unk = env.synth({ scoresAll: 5, refundable: null }).view(); a.eq(unk.recoverability.tier, 'UNKNOWN'); const med = env.synth({ scoresAll: 5 }).view(); a.eq(med.recoverability.tier, 'MEDIUM'); a.eq(med.recoverability.unsecuredMinor, med.balance.closingMinor);
-    const coll = env.synth({ scoresAll: 2, collateral: 500e6, hotelFacts: { ownershipChange: 'NONE' } }).view(); a.eq(coll.rating.grade, 'D'); a.eq(coll.recoverability.tier, 'HIGH'); a.eq(coll.recoverability.unsecuredMinor, 0);
-    const part = env.synth({ scoresAll: 4, collateral: 5e6 }).view(); a.eq(part.recoverability.unsecuredMinor, part.balance.closingMinor - 5e6);
-    const diffCcy = env.synth({ scoresAll: 4, ccy: 'JPY', collateral: 5e6 }); diffCcy.contract.collateral.currency = 'KRW'; a.eq(diffCcy.view().recoverability.collateralMinor, 0, 'collateral in another currency is not netted');
+    const nonref = env.synth({ refundable: false }).view(); a.eq(nonref.rating.grade, 'B', 'no refund clause lowers the score by itself'); a.eq(nonref.recoverability.tier, 'LOW');
+    const unk = env.synth({ refundable: null }).view(); a.eq(unk.recoverability.tier, 'UNKNOWN'); const med = env.synth({}).view(); a.eq(med.recoverability.tier, 'MEDIUM'); a.eq(med.recoverability.unsecuredMinor, med.balance.closingMinor);
+    const coll = env.synth({ collateral: 500e6 }).view(); a.eq(coll.recoverability.tier, 'HIGH'); a.eq(coll.recoverability.unsecuredMinor, 0);
+    const part = env.synth({ collateral: 5e6 }).view(); a.eq(part.recoverability.unsecuredMinor, part.balance.closingMinor - 5e6);
+    const diffCcy = env.synth({ ccy: 'JPY', collateral: 5e6 }); diffCcy.contract.collateral.currency = 'KRW'; a.eq(diffCcy.view().recoverability.collateralMinor, 0, 'collateral in another currency is not netted');
   });
   t('R08', 'Rating history is preserved (append-only snapshots with reason and scores)', ['M03-6'], a => {
     const st = env.as(env.newStore(), 'SCM'); const before = st.state.ratings['CT-KR-002'].history.length; const first = JSON.stringify(st.state.ratings['CT-KR-002'].history);
     a.eq(st.commands.commitRating('CT-KR-002', '').ok, false, 'reason required'); a.ok(st.commands.commitRating('CT-KR-002', 'Q4 review').ok);
-    st.commands.setScores('CT-KR-002', { scmOps: 1 }); a.ok(st.commands.commitRating('CT-KR-002', 'SCM downgrade').ok);
-    const h = st.state.ratings['CT-KR-002'].history; a.eq(h.length, before + 2); a.eq(JSON.stringify(h.slice(0, before)), first, 'earlier entries untouched'); a.ok(h[h.length - 1].reason && h[h.length - 1].by && h[h.length - 1].scores.scmOps === 1 && h[h.length - 2].scores.scmOps !== 1);
+    a.ok(st.commands.setOwnership('H002', 'PENDING', 'EVD-2001').ok); a.ok(st.commands.commitRating('CT-KR-002', 'ownership change recorded').ok);
+    const h = st.state.ratings['CT-KR-002'].history; a.eq(h.length, before + 2); a.eq(JSON.stringify(h.slice(0, before)), first, 'earlier entries untouched'); a.ok(h[h.length - 1].reason && h[h.length - 1].by && h[h.length - 1].scores.ownershipChange === 2 && h[h.length - 2].scores.ownershipChange !== 2, 'each snapshot keeps the computed scores it was based on');
   });
   t('R09', 'Hotel scale is A–D (+NR) and distinct from partner A–E; D/NR multipliers are zero', ['M03-4'], a => {
     a.deepEq(Config.GRADES, ['A', 'B', 'C', 'D']); const cfg = Config.defaults(); a.eq(cfg.gradeMultipliers.D, 0); a.eq(cfg.gradeMultipliers.NR, 0); a.ok(cfg.provisional);
@@ -217,7 +217,7 @@ module.exports = function register(h) {
     a.eq(Limit.multiplier('NR', Config.defaults()), 0);
   });
   t('M02', 'Available top-up, projected exposure and exceed flag at the exact boundary', ['M04-2', 'T08'], a => {
-    const v = view(seedState(), 'CT-KR-001'); a.eq(v.limit.recommendedLimitMinor, 60e6); a.eq(v.limit.availableTopupMinor, 15e6);
+    const v = env.synth({ opening: 135e6 }).view(); a.eq(v.rating.grade, 'A'); a.eq(v.balance.closingMinor, 45e6); a.eq(v.limit.recommendedLimitMinor, 60e6); a.eq(v.limit.availableTopupMinor, 15e6);
     const ok = sim(v, 15e6); a.eq(ok.projectedMinor, 60e6); a.ok(!ok.limitExceeded); a.eq(ok.excessMinor, 0); a.ok(!ok.approvalRequired);
     const over = sim(v, 15e6 + 1); a.ok(over.limitExceeded); a.eq(over.excessMinor, 1); a.ok(over.approvalRequired); a.includes(over.approvalReasons, 'LIMIT_EXCEEDED'); a.eq(over.risk, 'HIGH');
     const near = sim(v, 12e6); a.eq(near.risk, 'MEDIUM', '>=90% of limit'); a.eq(sim(v, 1e6).risk, 'LOW');
@@ -294,7 +294,7 @@ module.exports = function register(h) {
   t('A07', 'Rating drop ≥ 2 notches within 90 days raises a High alert; older history is ignored', ['M06-1'], a => {
     const v = view(seedState(), 'CT-JP-004'); a.eq(v.ratingDrop, 2); a.ok(v.alerts.some(x => x.ruleId === 'RATING_DROP' && x.severity === 'HIGH'));
     const one = view(seedState(), 'CT-KR-003'); a.eq(one.ratingDrop, 1); a.ok(!one.alerts.some(x => x.ruleId === 'RATING_DROP'));
-    const old = env.synth({ scoresAll: 2, history: [{ at: '2026-07-01', grade: 'A', score: 90 }] }).view(); a.eq(old.ratingDrop, 0, '128 days old -> ignored'); const fresh = env.synth({ scoresAll: 2, history: [{ at: '2026-08-10', grade: 'A', score: 90 }] }).view(); a.eq(fresh.ratingDrop, 3); a.eq(Rating.dropNotches([{ at: '2026-08-08', grade: 'A' }], 'D', '2026-11-06', 90, Dates), 3);
+    const old = env.synth({ facts: { counterpartyVerification: 'FAILED' }, history: [{ at: '2026-07-01', grade: 'A', score: 90 }] }).view(); a.eq(old.ratingDrop, 0, '128 days old -> ignored'); const fresh = env.synth({ facts: { counterpartyVerification: 'FAILED' }, history: [{ at: '2026-08-10', grade: 'A', score: 90 }] }).view(); a.eq(fresh.ratingDrop, 3); a.eq(Rating.dropNotches([{ at: '2026-08-08', grade: 'A' }], 'D', '2026-11-06', 90, Dates), 3);
   });
   t('A08', 'Balance-confirmation Medium alerts: never confirmed or stale', ['M06-1'], a => {
     a.ok(env.synth({}).view().alerts.some(x => x.ruleId === 'RECON_UNCONFIRMED')); a.ok(!env.synth({ conf: [100e6 - 90e6, '2026-10-31'] }).view().alerts.some(x => x.ruleId === 'RECON_UNCONFIRMED'));

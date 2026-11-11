@@ -19,7 +19,7 @@
     { id: 'collateral', name: B('보증·담보 확보 수준', 'Guarantee / collateral'), why: B('무담보 노출을 직접 줄임', 'Directly reduces unsecured exposure') },
     { id: 'reconAccuracy', name: B('잔액 대사 정확성', 'Balance reconciliation accuracy'), why: B('양측 장부 불일치는 분쟁·통제 약점의 신호', 'Book mismatch signals dispute / control weakness') },
     { id: 'continuity', name: B('영업 지속 가능성', 'Business continuity outlook'), why: B('리노베이션·매각·임차 만료 등 전망', 'Renovation, sale, lease expiry outlook') },
-    { id: 'scmOps', name: B('SCM 운영 평가', 'SCM operations assessment'), why: B('현장 담당자의 정성 판단(주관 — 가중치 낮게)', 'Field judgement (subjective — kept low weight)') },
+    { id: 'scmOps', name: B('SCM 운영 평가', 'SCM operations assessment'), why: B('현장 담당자의 정성 판단. 주관이라 점수에서 뺐고 SCM 의견란에만 적는다', 'Field judgement. Subjective, so kept out of the score; written only in the SCM opinion') },
     { id: 'countryLegal', name: B('국가·법적 회수 위험', 'Country / legal recovery risk'), why: B('관할별 채권 회수 난이도', 'Jurisdictional collection difficulty') },
   ];
   const CRITERIA_IDS = CRITERIA.map(c => c.id);
@@ -74,6 +74,54 @@
     }
     return errs;
   }
+  /** Scores that follow from the data alone: nobody picks them, so the same data always gives the same score.
+   *  Returns { scores: {criterionId: 1..5 | null}, basis: {criterionId: {code, args, need}} }. A null score = Unknown: the data needed to compute it is missing,
+   *  and `need` names what would settle it. Rules and cut-offs live in cfg.scoring (provisional). */
+  function autoScores(input) {
+    const { contract, hotel, balance, forecast: f, recon, derived, cfg } = input; const sc = cfg.scoring; const scores = {}, basis = {};
+    const set = (id, score, code, args, need) => { scores[id] = score; basis[id] = { code, args: args || [], need: need || null }; };
+    const bal = Math.max(0, (balance && balance.closingMinor) || 0); const cf = (contract && contract.facts) || {}; const hf = (hotel && hotel.facts) || {};
+    // consumption against the prepaid balance
+    if (f.status === 'NOT_APPLICABLE') set('consumptionVsPrepay', null, 'NOT_APPLICABLE');
+    else if (bal === 0) set('consumptionVsPrepay', 5, 'NO_BALANCE');
+    else if (f.status === 'NO_CONSUMPTION') set('consumptionVsPrepay', 1, 'NO_CONSUMPTION');
+    else if (f.monthsOfCover == null) set('consumptionVsPrepay', null, 'NO_DATA', [], 'CONSUMPTION_DATA');
+    else {
+      let s = 1; for (let i = 0; i < sc.coverMonths.length; i++) if (f.monthsOfCover <= sc.coverMonths[i]) { s = 5 - i; break; }
+      const short = f.depletesBeforeEnd === false && !!contract.endDate; if (short) s = Math.max(1, s - sc.endShortfallPenalty);
+      set('consumptionVsPrepay', s, short ? 'COVER_END' : 'COVER', [f.monthsOfCover]);
+    }
+    // refund clause in the contract
+    const rt = contract.refund ? contract.refund.refundable : null;
+    if (rt === true) set('refundability', 5, 'REFUND_YES'); else if (rt === false) set('refundability', 1, 'REFUND_NO'); else set('refundability', null, 'REFUND_UNKNOWN', [], 'REFUND_TERMS');
+    // collateral against the balance
+    const col = contract.collateral;
+    if (bal === 0) set('collateral', 5, 'NO_BALANCE');
+    else if (!col) set('collateral', 1, 'NO_COLLATERAL', [], 'COLLATERAL_DOC');
+    else if (!col.verified || col.currency !== contract.currency) set('collateral', null, 'COLLATERAL_UNVERIFIED', [], 'COLLATERAL_DOC');
+    else { const r = (col.amountMinor || 0) / bal, cr = sc.collateralRatios; set('collateral', r >= cr[0] ? 5 : r >= cr[1] ? 4 : r >= cr[2] ? 3 : r > 0 ? 2 : 1, 'COLLATERAL_RATIO', [Math.round(r * 100)]); }
+    // balance reconciliation with the hotel
+    if (recon.status === 'UNCONFIRMED') set('reconAccuracy', null, 'RECON_NONE', [], 'HOTEL_CONFIRMATION');
+    else if (recon.stale) set('reconAccuracy', null, 'RECON_STALE', [recon.confirmedAt], 'HOTEL_CONFIRMATION');
+    else { const k = recon.status === 'CURRENCY_MISMATCH' ? 'MAJOR' : recon.status; set('reconAccuracy', sc.reconScores[k], 'RECON_' + k, [recon.pctBp == null ? 0 : recon.pctBp / 100]); }
+    // refund / settlement track record: only what the refund tracking of this contract shows
+    const rf = contract.refund || {};
+    if (rf.requested) { if (derived.refundOverdue) set('settlementHistory', 1, 'REFUND_LATE'); else if (derived.refundOutstandingMinor > 0) set('settlementHistory', 3, 'REFUND_PENDING'); else set('settlementHistory', 5, 'REFUND_DONE'); }
+    else set('settlementHistory', null, 'SETTLE_NONE', [], 'SETTLEMENT_RECORD');
+    // legal recovery by country (fixed table)
+    const cs = hotel && Object.prototype.hasOwnProperty.call(sc.countryLegal, hotel.country) ? sc.countryLegal[hotel.country] : null;
+    if (Number.isInteger(cs)) set('countryLegal', cs, 'COUNTRY', [hotel.country]); else set('countryLegal', null, 'COUNTRY_NONE', [], 'COUNTRY_TABLE');
+    // counterparty entity: only a verified status with a named verifier and evidence counts
+    const evOk = hasEvidence(cf.counterpartyEvidence);
+    if (cf.counterpartyVerification === 'VERIFIED' && evOk) set('legalEntity', 5, 'ENTITY_OK'); else if (cf.counterpartyVerification === 'FAILED' && evOk) set('legalEntity', 1, 'ENTITY_FAILED'); else set('legalEntity', null, 'ENTITY_NONE', [], 'ENTITY_EVIDENCE');
+    // operator / owner change: a recorded status only
+    const OWN = { NONE: 5, COMPLETED_RESOLVED: 4, PENDING: 2, COMPLETED_UNRESOLVED: 1 };
+    if (Object.prototype.hasOwnProperty.call(OWN, hf.ownershipChange)) set('ownershipChange', OWN[hf.ownershipChange], 'OWNER_' + hf.ownershipChange); else set('ownershipChange', null, 'OWNER_UNKNOWN', [], 'OWNERSHIP_CHECK');
+    // needs outside information that the program does not have yet
+    for (const id of ['operatingStability', 'financialHealth', 'continuity']) set(id, null, 'EXTERNAL', [], 'EXTERNAL_INFO');
+    set('scmOps', null, 'SCM_EXCLUDED');
+    return { scores, basis };
+  }
   /** Core evaluation. scores: {criterionId: 1..5 | null/missing = Unknown}. */
   function evaluate(input) {
     const cfg = input.cfg; const scores = input.scores || {};
@@ -91,7 +139,7 @@
     const hasDCap = flagDetail.some(f => f.cap === 'D');
     if (notRated && !hasDCap) { grade = 'NR'; reasons.push('NOT_RATED_LOW_COVERAGE'); }
     if (grade == null) grade = hasDCap ? 'D' : 'NR';
-    const unknownIds = items.filter(i => i.score == null).map(i => i.id);
+    const unknownIds = items.filter(i => i.score == null && i.weight > 0).map(i => i.id);
     const level = ws.coverage >= 0.85 ? 'HIGH' : ws.coverage >= cfg.lowConfidenceCoverage ? 'MEDIUM' : 'LOW';
     return {
       score: ws.score == null ? null : Math.round(ws.score * 10) / 10, rawScore: ws.score, scoreGrade, grade, capped: grade !== scoreGrade && grade !== 'NR',
@@ -125,5 +173,5 @@
     else { tier = 'UNKNOWN'; why.push('LEGAL_RECOVERY_UNASSESSED'); }
     return { tier, unsecuredMinor: unsecured, collateralMinor: coll, refundable, why };
   }
-  return { CRITERIA, CRITERIA_IDS, ORDER, FLAG_META, isVerified, hasEvidence, resolveFlags, validateScores, evaluate, dropNotches, recoverability, gradeIndex };
+  return { CRITERIA, CRITERIA_IDS, ORDER, FLAG_META, isVerified, hasEvidence, resolveFlags, validateScores, autoScores, evaluate, dropNotches, recoverability, gradeIndex };
 });

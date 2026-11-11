@@ -29,10 +29,10 @@
     click(q('[data-act="clear-filters"]')); await until(() => rowsN() === 16); doc.getElementById('lang-ko').click();
   });
   t('U03', 'Top-up simulator inside the hotel credit card computes instantly, labels itself a simulation, writes nothing and does not carry an amount over to another contract', ['S04', 'T14', 'M04-2'], async a => {
-    await load('/profile/CT-KR-001'); const n0 = ledgerLen(); const snap = JSON.stringify(store().state.ledger); const r = () => q('#sim-result').innerText;
+    await load('/profile/CT-KR-004'); const n0 = ledgerLen(); const snap = JSON.stringify(store().state.ledger); const r = () => q('#sim-result').innerText;
     a.ok(!qa('nav a, #nav a').some(x => /simulator|시뮬레이터/i.test(x.getAttribute('href') || '')), 'no separate menu entry'); a.ok(q('#sim-panel').innerText.includes('SIMULATION'));
-    setVal(q('#sim-amt'), '15000000'); await until(() => q('#sim-result .sim-res'));
-    a.ok(/60,000,000 KRW/.test(r())); a.ok(/45,000,000 KRW/.test(r())); setVal(q('#sim-amt'), '15000001'); await until(() => /1 KRW/.test(r()) && q('#sim-result .sim-res .bad')); a.ok(r().includes('KRW'));
+    setVal(q('#sim-amt'), '4066666'); await until(() => q('#sim-result .sim-res'));
+    a.ok(/9,766,666 KRW/.test(r())); a.ok(/5,700,000 KRW/.test(r())); setVal(q('#sim-amt'), '4066667'); await until(() => /1 KRW/.test(r()) && q('#sim-result .sim-res .bad')); a.ok(r().includes('KRW'));
     setVal(q('#sim-amt'), 'abc'); await until(() => q('#sim-result .note.bad')); setVal(q('#sim-amt'), '-5'); await until(() => q('#sim-result .note.bad')); a.eq(ledgerLen(), n0); a.eq(JSON.stringify(store().state.ledger), snap);
     await nav('/profile/CT-JP-007'); a.eq(q('#sim-amt').value, '', 'an amount typed for one contract is not applied to another'); setVal(q('#sim-amt'), '1000000'); await until(() => q('#sim-result .sim-res')); a.ok(!BAD.test(r()), 'unavailable limit renders cleanly');
   });
@@ -55,7 +55,7 @@
   });
   t('U07', 'Approval-packet flow in the UI: draft → request CEO review → CEO sends feedback (required); SCM cannot review; the person in charge sees the feedback; ledger never changes', ['M09-2', 'T14', 'S07', 'D-4'], async a => {
     await load('/approval/CT-KR-001'); const snap = JSON.stringify(store().state.ledger); setVal(q('#portal-amt'), '5000000', 'change'); await until(() => q('#portal-report')); const rt = q('#portal-report').innerText;
-    for (const k of ['45,000,000 KRW', '60,000,000 KRW', '5,000,000 KRW', '50,000,000 KRW']) a.ok(rt.includes(k), k); a.ok(q('.mockstamp')); click(q('[data-act="ap-create"]')); await until(() => store().state.approvals.length === 1);
+    for (const k of ['45,000,000 KRW', '30,000,000 KRW', '5,000,000 KRW', '50,000,000 KRW']) a.ok(rt.includes(k), k); a.ok(q('.mockstamp')); click(q('[data-act="ap-create"]')); await until(() => store().state.approvals.length === 1);
     click(q('[data-apsubmit]')); await until(() => store().state.approvals[0].status === 'SUBMITTED_MOCK'); const dec = q('[data-apreview]'); a.ok(dec.disabled, 'SCM cannot review'); await setRole('CEO'); await nav('/approval/CT-KR-001'); const d2 = q('[data-apreview]'); a.ok(!d2.disabled); click(d2); await new Promise(r => setTimeout(r, 150)); a.eq(store().state.approvals[0].status, 'SUBMITTED_MOCK', 'no feedback, no review'); setVal(q('[data-apfb]'), 'Check the unused balance first'); click(q('[data-apreview]')); await until(() => store().state.approvals[0].status === 'CEO_REVIEWED');
     a.eq(JSON.stringify(store().state.ledger), snap); a.ok(txt().includes('MOCK') || txt().includes('모의')); a.ok(txt().includes('Check the unused balance first'), 'the feedback is shown next to the request'); await setRole('ADMIN'); await nav('/approval/CT-KR-001'); a.ok(qa('[data-apreview]').length === 0, 'a reviewed request offers no further review button'); await setRole('SCM'); await nav('/profile/CT-KR-001'); a.ok(q('#content').innerText.includes('Check the unused balance first'), 'the person in charge sees the CEO feedback on the hotel credit card');
   });
@@ -93,7 +93,7 @@
     await load('/admin'); await setRole('ADMIN'); await nav('/admin'); const w = q('[data-cw="legalEntity"]'); setVal(w, '15'); a.ok(q('#content h3 span').className.includes('bad')); setVal(q('#cfg-reason'), 'test'); click(q('[data-act="cfg-save"]')); await until(() => q('#cfg-errs .note.bad')); a.ok(q('#cfg-errs').innerText.includes('100'));
     a.eq(store().state.config.weights.legalEntity, 10); setVal(w, '10'); setVal(q('[data-th="A"]'), '85'); setVal(q('#cfg-reason'), ''); click(q('[data-act="cfg-save"]')); await until(() => q('#cfg-errs .note.bad')); a.ok(store().state.configHistory.length === 0);
     setVal(q('#cfg-reason'), 'raise A threshold to 85 (UI test)'); click(q('[data-act="cfg-save"]')); await until(() => store().state.configHistory.length === 1); await nav('/admin'); a.ok(txt().includes('raise A threshold to 85') && txt().includes('ratingThresholds.A'));
-    a.ok(store().model().byContract['CT-KR-001'].rating.grade === 'A', '87.2 >= 85 stays A'); a.ok(qa('[data-mu="D"]')[0].disabled && qa('[data-mu="NR"]')[0].disabled, 'D/NR multipliers locked at 0');
+    a.ok(store().model().byContract['CT-KR-001'].rating.grade === 'B', 'a score above 85 is still held at B by the low-confidence cap'); a.ok(qa('[data-mu="D"]')[0].disabled && qa('[data-mu="NR"]')[0].disabled, 'D/NR multipliers locked at 0');
   });
   t('U16', 'Risk center: severity filter, status update with note, dismissal blocked for SCM, history lists cleared alerts', ['S05', 'M06-4', 'D-4'], async a => {
     await load('/risk'); const rows = () => qa('#tbl-risk tbody tr'); const all = rows().length; a.ok(all >= 20); setVal(q('[data-rf="sev"]'), 'CRITICAL', 'change'); await until(() => rows().length === 2); a.ok(rows().every(r => /치명|Critical/.test(r.innerText)));
@@ -102,9 +102,11 @@
     const sel2 = q('[data-al="' + id + '"]'); setVal(sel2, 'IN_PROGRESS', 'change'); setVal(q('[data-aln="' + id + '"]'), 'called hotel'); click(q('[data-alsave="' + id + '"]')); await until(() => store().state.alerts.find(x => x.alertId === id).status === 'IN_PROGRESS'); a.eq(store().state.alerts.find(x => x.alertId === id).notes.length, 1);
     a.ok(txt().includes('과거 위험 이력')); a.ok(qa('#tbl-rhist tbody tr').length >= 2);
   });
-  t('U18', 'Hotel profile: editing a score recalculates grade/score; Unknown lowers confidence; commit needs a reason and is shown in history', ['S02', 'M03-2', 'M03-6'], async a => {
-    await load('/profile/CT-KR-001'); a.ok(/A\s*\n/.test(q('.biggrade').innerText + '\n')); const s0 = q('.ph-right').innerText; setVal(q('[data-score="financialHealth"]'), '', 'change'); setVal(q('[data-score="scmOps"]'), '', 'change'); click(q('[data-act="save-scores"]')); await until(() => store().state.ratings['CT-KR-001'].scores.financialHealth === null);
-    a.ok(q('.ph-right').innerText.includes('86%')); a.ok(q('.ph-right').innerText !== s0); click(q('[data-act="commit-rating"]')); await sleep(50); a.eq(store().state.ratings['CT-KR-001'].history.length, 1, 'empty reason rejected'); setVal(q('#commit-reason'), 'UI test snapshot'); click(q('[data-act="commit-rating"]')); await until(() => store().state.ratings['CT-KR-001'].history.length === 2); await nav('/profile/CT-KR-001'); a.ok(txt().includes('UI test snapshot'));
+  t('U18', 'Hotel profile: scores cannot be typed in; recording evidence recalculates grade, score and confidence; a record without evidence is refused; commit needs a reason and is shown in history', ['S02', 'M03-2', 'M03-6', 'SCORE-1', 'SCORE-2'], async a => {
+    await load('/profile/CT-KR-001'); a.ok(/B\s*\n/.test(q('.biggrade').innerText + '\n')); a.ok(!q('[data-score]') && !q('[data-act="save-scores"]'), 'no control lets anyone type a score'); a.ok(q('.ph-right').innerText.includes('60%'), 'confidence from the data alone'); const s0 = q('.ph-right').innerText; const own = () => store().state.hotels.find(h => h.hotelId === 'H001').facts.ownershipChange;
+    setVal(q('#dr-own'), 'NONE', 'change'); click(q('[data-act="dr-own"]')); await sleep(50); a.eq(own(), 'UNKNOWN', 'no evidence reference, no record');
+    setVal(q('#dr-own'), 'NONE', 'change'); setVal(q('#dr-own-ev'), 'EVD-7001'); click(q('[data-act="dr-own"]')); await until(() => own() === 'NONE'); a.ok(q('.ph-right').innerText.includes('68%')); a.ok(q('.ph-right').innerText !== s0); a.ok(txt().includes('EVD-7001'), 'the evidence reference is shown with the record');
+    click(q('[data-act="commit-rating"]')); await sleep(50); a.eq(store().state.ratings['CT-KR-001'].history.length, 1, 'empty reason rejected'); setVal(q('#commit-reason'), 'UI test snapshot'); click(q('[data-act="commit-rating"]')); await until(() => store().state.ratings['CT-KR-001'].history.length === 2); await nav('/profile/CT-KR-001'); a.ok(txt().includes('UI test snapshot'));
     await nav('/profile/CT-JP-004'); a.ok(txt().includes('D') && txt().includes('MOCK')); await nav('/profile/CT-JP-007'); a.ok(q('.biggrade').innerText.trim() === 'NR'); a.ok(q('tr.unk'), 'unknown criteria highlighted');
   });
   t('U19', 'Accessibility basics: every form control has an accessible name; landmarks, lang and live region exist', ['UI-A11Y'], async a => {
@@ -210,6 +212,26 @@
     setVal(q('#pf-country'), '', 'change'); await until(() => allOpts().length === 16); doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
   });
 
+  t('U28', 'Hotel-level cap in the credit card: SCM enters an amount and a reason, the limit in force drops, the status board shows it, SCM cannot raise it, the CEO lifts it, and a reader sees disabled controls', ['M04-5', 'S02'], async a => {
+    await load('/profile/CT-KR-001'); doc.getElementById('lang-en').click(); await nav('/profile/CT-KR-001'); const cap = () => store().state.contracts.find(c => c.contractId === 'CT-KR-001').limitCap; const toast = () => doc.getElementById('toast').textContent;
+    a.ok(q('#cap-amt') && !q('#cap-amt').disabled && !q('[data-act="cap-save"]').disabled && q('[data-act="cap-clear"]').disabled, 'SCM can type and save; the lift button is for the CEO and admin only');
+    setVal(q('#cap-amt'), '20000000'); click(q('[data-act="cap-save"]')); await until(() => /Reason required/.test(toast())); a.ok(!cap(), 'no reason, no cap');
+    setVal(q('#cap-amt'), 'abc'); setVal(q('#cap-reason'), 'CEO instruction 2026-11-06'); click(q('[data-act="cap-save"]')); await until(() => /Invalid amount/.test(toast())); a.ok(!cap());
+    setVal(q('#cap-amt'), '20000000'); setVal(q('#cap-reason'), 'CEO instruction 2026-11-06'); click(q('[data-act="cap-save"]')); await until(() => cap() && cap().amountMinor === 20000000);
+    const box = () => [...qa('.panel')].find(p => p.querySelector('#cap-amt')).innerText; await until(() => /20,000,000 KRW/.test(box()) && /cap is binding/.test(box())); a.ok(/Limit in force/.test(box()) && /CEO instruction 2026-11-06/.test(box()) && /30,000,000 KRW/.test(box()), 'cap, limit before the cap, limit in force and the history row are shown');
+    a.ok(qa('.panel').some(p => p.innerText.includes('Hotel-level cap (entered)')), 'the cap is listed among the safeguards');
+    await nav('/status'); const row = qa('#tbl-dash tbody tr').find(r => r.innerText.includes('CT-KR-001')); a.ok(row && row.innerText.includes('20,000,000 KRW'), 'the status board shows the cap'); a.ok(qa('#tbl-dash thead th').some(th => /Hotel cap/.test(th.innerText)));
+    await nav('/profile/CT-KR-001'); setVal(q('#cap-amt'), '25000000'); setVal(q('#cap-reason'), 'raise'); click(q('[data-act="cap-save"]')); await until(() => /Permission denied/.test(toast())); a.eq(cap().amountMinor, 20000000, 'SCM cannot raise it');
+    await setRole('CEO'); await nav('/profile/CT-KR-001'); setVal(q('#cap-reason'), 'CEO lifts the cap'); click(q('[data-act="cap-clear"]')); await until(() => cap() === null); await until(() => /none/.test(box())); a.ok(/lifted/.test(box()), 'the lift is in the history');
+    await setRole('VIEWER'); await nav('/profile/CT-KR-001'); a.ok(q('#cap-amt').disabled && q('#cap-reason').disabled && q('[data-act="cap-save"]').disabled && q('[data-act="cap-clear"]').disabled, 'a reader sees disabled controls'); a.ok(!BAD.test(txt()));
+    await setRole('SCM'); doc.getElementById('lang-ko').click();
+  });
+  t('U29', 'Credit card: every criterion shows its computed score, the reason and what would raise it; the administrator changes the country table and the score follows', ['SCORE-1', 'SCORE-3'], async a => {
+    await load('/profile/CT-KR-001'); doc.getElementById('lang-en').click(); await nav('/profile/CT-KR-001'); const row = name => qa('tr').find(tr => tr.innerText.includes(name)); const cell = name => row(name).querySelector('td.ctr').innerText.trim();
+    a.ok(txt().includes('The balance is 1.5 months of average consumption.') && txt().includes('To raise it') && txt().includes('Kept out of the score as a personal judgement'), 'reasons and hints are shown'); a.eq(cell('Consumption vs prepaid balance'), '5'); a.eq(cell('Country / legal recovery risk'), '4'); a.eq(cell('Financial health'), 'Unknown'); a.eq(cell('SCM operations assessment'), 'excluded');
+    await setRole('ADMIN'); await nav('/admin'); a.ok(q('[data-sc="cty|KR"]') && !q('[data-sc="cty|KR"]').disabled); setVal(q('[data-sc="cty|KR"]'), '5'); setVal(q('#cfg-reason'), 'country table (UI test)'); click(q('[data-act="cfg-save"]')); await until(() => store().state.configHistory.length === 1);
+    await nav('/profile/CT-KR-001'); a.eq(cell('Country / legal recovery risk'), '5'); a.ok(txt().includes('Value from the country table (Korea).')); a.ok(!BAD.test(txt())); await setRole('SCM'); doc.getElementById('lang-ko').click();
+  });
   t('U27', 'Hotel credit card in nine sections: the ELLIS booking speed next to the ledger, the next top-up date, the cooperation opinion and the next check date', ['S02', 'OUT-1', 'OUT-2', 'OUT-3', 'ELLIS-6'], async a => {
     await load('/admin', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/admin'); click(q('[data-act="ellis-sample"]')); await until(() => q('#ellis-text').value.includes('omh-ellis-snapshot')); click(q('[data-act="ellis-import"]')); await until(() => store().state.ellis);
     await nav('/profile/CT-KR-001'); const heads = qa('#content h2.sec').map(h => h.innerText.replace(/^[0-9]+ */, '').trim()); a.eq(heads.length, 9, heads.join(' | ')); a.ok(qa('#content h2.sec .secn').map(x => x.innerText).join('') === '123456789', 'numbered 1 to 9');

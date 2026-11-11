@@ -14,8 +14,15 @@
       ratingThresholds: { A: 80, B: 65, C: 50 },        // score >= -> grade, else D
       minCoverage: 0.5,                  // known-weight share below this -> NR (not rated)
       lowConfidenceCoverage: 0.7,        // below this -> grade capped (flag LOW_CONFIDENCE)
-      weights: { legalEntity: 10, operatingStability: 8, financialHealth: 8, ownershipChange: 8, settlementHistory: 10, consumptionVsPrepay: 12,
-                 refundability: 10, collateral: 8, reconAccuracy: 6, continuity: 6, scmOps: 6, countryLegal: 8 },
+      weights: { legalEntity: 10, operatingStability: 8, financialHealth: 8, ownershipChange: 8, settlementHistory: 10, consumptionVsPrepay: 15,
+                 refundability: 10, collateral: 8, reconAccuracy: 9, continuity: 6, scmOps: 0, countryLegal: 8 },   // scmOps is a person's judgement: kept out of the score (weight 0), its 6 points went to the two data-driven items
+      scoring: {                         // how the data-driven scores are read off the data (provisional, CEO decides)
+        coverMonths: [2, 4, 6, 12],      // balance ÷ monthly consumption: up to the 1st value 5 points, 2nd 4, 3rd 3, 4th 2, above 1
+        endShortfallPenalty: 1,          // points taken off when the balance cannot be used up before the contract ends
+        collateralRatios: [1, 0.5, 0.25],// verified collateral ÷ balance: at least the 1st 5 points, 2nd 4, 3rd 3; some collateral 2; none 1
+        reconScores: { MATCH: 5, MINOR: 3, MAJOR: 1 },
+        countryLegal: { KR: 4, JP: 4, VN: 3 },   // legal recovery difficulty by country (placeholder until the CEO fixes the table)
+      },
       flagCaps: { CLOSURE_CONFIRMED: 'D', REFUND_REFUSED: 'D', ENTITY_FAILED: 'D', LEGAL_RECOVERY_CRITICAL: 'D', REFUND_OVERDUE: 'C',
                   RECON_MAJOR_MISMATCH: 'C', OWNERSHIP_CHANGE_UNRESOLVED: 'C', ENTITY_UNKNOWN: 'C', CONSUMPTION_COLLAPSE: 'B',
                   EXPIRY_BEFORE_DEPLETION: 'B', LOW_CONFIDENCE: 'B' },
@@ -87,6 +94,15 @@
     if (!isRealDate(c.asOf)) e.push('E_ASOF');
     const D2 = defaults(); for (const k of Object.keys(c)) if (!(k in D2)) e.push('E_CONFIG_SECTION:unknown-key:' + k);
     if (!Number.isInteger(c.version) || c.version < 1) e.push('E_CONFIG_SECTION:version');
+    const sc = c.scoring; if (!sc || typeof sc !== 'object') e.push('E_CONFIG_SECTION:scoring');
+    else {
+      const asc = (a, n) => Array.isArray(a) && a.length === n && a.every(x => isNum(x) && x > 0) && a.every((x, i) => i === 0 || x > a[i - 1]);
+      if (!asc(sc.coverMonths, 4) || sc.coverMonths[3] > 120) e.push('E_RANGE:scoring.coverMonths');
+      if (!(Number.isInteger(sc.endShortfallPenalty) && sc.endShortfallPenalty >= 0 && sc.endShortfallPenalty <= 4)) e.push('E_RANGE:scoring.endShortfallPenalty');
+      const cr = sc.collateralRatios; if (!(Array.isArray(cr) && cr.length === 3 && cr.every(x => isNum(x) && x > 0 && x <= 1) && cr[0] > cr[1] && cr[1] > cr[2])) e.push('E_RANGE:scoring.collateralRatios');
+      const rs = sc.reconScores; const pt = x => Number.isInteger(x) && x >= 1 && x <= 5; if (!(rs && pt(rs.MATCH) && pt(rs.MINOR) && pt(rs.MAJOR) && rs.MATCH >= rs.MINOR && rs.MINOR >= rs.MAJOR)) e.push('E_RANGE:scoring.reconScores');
+      const cl = sc.countryLegal; if (!(cl && typeof cl === 'object' && Object.keys(D.scoring.countryLegal).every(k => pt(cl[k])) && Object.keys(cl).every(k => k in D.scoring.countryLegal))) e.push('E_RANGE:scoring.countryLegal');
+    }
     const range = (v, lo, hi, int, tag) => { if (!isNum(v) || v < lo || v > hi || (int && !Number.isInteger(v))) e.push('E_RANGE:' + tag); };
     if (c.guards) for (const k of ['nonRefundableMonths', 'unknownRefundMonths', 'lowRecoveryMonths']) range(c.guards[k], 0, 24, false, 'guards.' + k);
     if (c.recon) { range(c.recon.staleDays, 1, 365, true, 'recon.staleDays'); range(c.recon.matchBp, 0, 10000, false, 'recon.matchBp'); range(c.recon.minorBp, 0, 10000, false, 'recon.minorBp'); }

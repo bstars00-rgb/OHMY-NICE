@@ -1,14 +1,14 @@
 {
-  "ranAt": "2026-11-11T00:58:28.758Z",
-  "applied": 184,
-  "killed": 184,
+  "ranAt": "2026-11-11T03:54:50.136Z",
+  "applied": 203,
+  "killed": 203,
   "survived": 0,
   "rows": [
     {
       "desc": "grade boundary exclusive instead of inclusive",
       "file": "engine/weighted.js",
       "status": "KILLED",
-      "failedTests": 2,
+      "failedTests": 1,
       "firstFailing": "R03"
     },
     {
@@ -71,7 +71,7 @@
       "desc": "AI / bot verifier accepted",
       "file": "engine/rating.js",
       "status": "KILLED",
-      "failedTests": 2,
+      "failedTests": 3,
       "firstFailing": "D03"
     },
     {
@@ -85,14 +85,14 @@
       "desc": "A multiplier changed",
       "file": "core/config.js",
       "status": "KILLED",
-      "failedTests": 4,
+      "failedTests": 3,
       "firstFailing": "M01"
     },
     {
       "desc": "Unknown scored as 3 (mid)",
       "file": "engine/weighted.js",
       "status": "KILLED",
-      "failedTests": 5,
+      "failedTests": 9,
       "firstFailing": "R02"
     },
     {
@@ -113,7 +113,7 @@
       "desc": "evidence length check removed",
       "file": "engine/rating.js",
       "status": "KILLED",
-      "failedTests": 3,
+      "failedTests": 4,
       "firstFailing": "R06"
     },
     {
@@ -344,15 +344,15 @@
       "desc": "state hash not checked on load",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 1,
-      "firstFailing": "H04"
+      "failedTests": 3,
+      "firstFailing": "AS02"
     },
     {
       "desc": "audit entries carry no state hash",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 1,
-      "firstFailing": "H04"
+      "failedTests": 3,
+      "firstFailing": "AS02"
     },
     {
       "desc": "approval ids reused after reset",
@@ -372,7 +372,7 @@
       "desc": "zero consumption forecast attempted",
       "file": "engine/forecast.js",
       "status": "KILLED",
-      "failedTests": 2,
+      "failedTests": 5,
       "firstFailing": "F02"
     },
     {
@@ -393,7 +393,7 @@
       "desc": "audit hash chain broken",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 11,
+      "failedTests": 13,
       "firstFailing": "X03"
     },
     {
@@ -1291,6 +1291,139 @@
       "status": "KILLED",
       "failedTests": 1,
       "firstFailing": "H02"
+    },
+    {
+      "desc": "CAP: a hotel-level cap is ignored by the limit",
+      "file": "engine/limit.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "CAP: the limit before the cap is reported wrongly",
+      "file": "engine/limit.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "CAP: SCM may raise or lift a cap",
+      "file": "core/rbac.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "CAP: raising or lifting a cap is not gated",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "CAP: a cap without a reason is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "CAP: a negative cap is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "CAP: a cap change that changes nothing is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F06"
+    },
+    {
+      "desc": "SCORE: a refund clause scores 4 instead of 5",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "SCORE: every cover-month band is one point lower",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "R04"
+    },
+    {
+      "desc": "SCORE: no point is taken off when the balance cannot be used up before the end",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "SCORE: collateral equal to the balance does not reach the top score",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "SCORE: a stale hotel confirmation is counted",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "SCORE: collateral without a document or in another currency is counted",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "SCORE: an entity check by a bot or without a reference counts",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "SCORE: the excluded criterion is listed as Unknown",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "R02"
+    },
+    {
+      "desc": "SCORE: an overdue refund scores well",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS01"
+    },
+    {
+      "desc": "RECORD: contract terms are accepted without an evidence reference",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS03"
+    },
+    {
+      "desc": "RECORD: contract terms with nothing to record are accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS03"
+    },
+    {
+      "desc": "RECORD: an ownership status that changes nothing is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AS03"
     }
   ]
 }
