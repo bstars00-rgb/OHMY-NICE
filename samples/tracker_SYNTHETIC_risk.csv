@@ -1,0 +1,7 @@
+Part 3 - Risk-related information (SYNTHETIC SAMPLE)
+"Hotels NOT listed here are treated as ""no known risk""."
+Hotel ID,Hotel Name (auto),PIC (auto),Arrangement (auto),Past refund delay or dispute?,Max delay (days),Amount disputed / delayed (VND),Dispute status,Refund delay / dispute detail,Closure / temporary closure?,Change of operator / owner?,Financial instability?,Known issue detail,Source / evidence,Info date,Hotel unresponsive?,Key contact changed / left?,Booking drop / more cancellations?
+"Must exist in ""Existing""",Auto,Auto,Auto,Yes / No,Days,VND,Open / Resolved / N/A,What happened,Yes / No,Yes / No,Yes / No,Describe,"Contact, news link",dd/mm/yyyy,Yes / No,Yes / No,Yes / No
+123456,,,,Yes,45,50000000,Resolved,Refund of 2025 balance paid 45 days late,No,No,No,,,03/11/2026,No,No,No
+90102,,,,No,,,N/A,,No,No,No,Occupancy down in October,Site visit 04/11/2026,04/11/2026,No,No,Yes
+90104,,,,No,,,N/A,,No,Yes,No,Operator change rumoured,,05/11/2026,No,No,No

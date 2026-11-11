@@ -1,0 +1,2054 @@
+{
+  "ranAt": "2026-11-11T01:02:55.585Z",
+  "node": "v24.14.1",
+  "suite": "node",
+  "total": 188,
+  "passed": 186,
+  "failed": 0,
+  "skipped": 2,
+  "ms": 5567,
+  "results": [
+    {
+      "id": "L01",
+      "name": "Ledger identity holds for all seeded contracts; KR-001 closing = 45,000,000 KRW",
+      "reqs": [
+        "M02-2",
+        "T01"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 25
+    },
+    {
+      "id": "L02",
+      "name": "Duplicate top-up (same content / same external ref / same txId) is rejected and balance is unchanged",
+      "reqs": [
+        "M02-4",
+        "T02"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "L03",
+      "name": "Negative, zero, NaN, wrong-currency, unsupported-currency and over-precise amounts are rejected",
+      "reqs": [
+        "M02-3",
+        "T03"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "L04",
+      "name": "Ledger is append-only: rows are frozen and corrections require a reasoned ADJUSTMENT",
+      "reqs": [
+        "M02-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "L05",
+      "name": "Reconciliation: MATCH / MINOR / MAJOR / UNCONFIRMED / CURRENCY_MISMATCH / stale",
+      "reqs": [
+        "M02-5",
+        "T09"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 22
+    },
+    {
+      "id": "L06",
+      "name": "All five prepayment types exist in sample data and are ledger-capable",
+      "reqs": [
+        "M02-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 18
+    },
+    {
+      "id": "L07",
+      "name": "Refund > balance, future-dated, malformed date, consumption without period; confirmed-zero allowed only for consumption",
+      "reqs": [
+        "M02-3",
+        "T03"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "L08",
+      "name": "Data separation by hotel / contract / entity / currency; cross-currency posting rejected",
+      "reqs": [
+        "M01-3",
+        "T11"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "L09",
+      "name": "KPI exposure is grouped per currency and never summed across currencies",
+      "reqs": [
+        "M04-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "F01",
+      "name": "Average monthly consumption = mean of the last 3 CONFIRMED completed months",
+      "reqs": [
+        "M05-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "F02",
+      "name": "Zero consumption → \"no consumption\", no depletion date, no NaN/Infinity anywhere",
+      "reqs": [
+        "M05-2",
+        "T04"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "F03",
+      "name": "Missing months are MISSING (not zero): partial → average of known months; none → NO_DATA & limit unavailable",
+      "reqs": [
+        "M05-1",
+        "T05"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 19
+    },
+    {
+      "id": "F04",
+      "name": "Depletion date and velocity arithmetic (hand-computed)",
+      "reqs": [
+        "M05-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 32
+    },
+    {
+      "id": "F05",
+      "name": "Contract-expiry feasibility and estimated unused balance at expiry",
+      "reqs": [
+        "M05-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 31
+    },
+    {
+      "id": "F06",
+      "name": "Booking-date sales and PENDING consumption never drive the forecast; basis is explicit",
+      "reqs": [
+        "M05-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "F07",
+      "name": "Security deposits are NOT_APPLICABLE for consumption forecast / limit",
+      "reqs": [
+        "M05-3",
+        "M02-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "F08",
+      "name": "Long-unconsumed detection (> 6 months of cover) and booking-sales trend",
+      "reqs": [
+        "M05-3",
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "R01",
+      "name": "12 criteria, weights sum to 100, each with a rationale (KO+EN)",
+      "reqs": [
+        "M03-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "R02",
+      "name": "Unknown is excluded (not mid-scored): score unchanged, confidence reduced, unknown listed",
+      "reqs": [
+        "M03-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "R03",
+      "name": "Grade boundaries: exactly-at-threshold is inclusive; just below drops a grade",
+      "reqs": [
+        "M03-4",
+        "T06"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "R04",
+      "name": "Red flags cap the grade regardless of score (score stays visible)",
+      "reqs": [
+        "M03-3",
+        "T07"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 19
+    },
+    {
+      "id": "R05",
+      "name": "Low evidence: coverage < 50% → NR (despite a high raw score); 50–70% → capped at B",
+      "reqs": [
+        "M03-2",
+        "M03-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "R06",
+      "name": "Unverified closure / news / AI claims never confirm a closure or cap the grade",
+      "reqs": [
+        "M06-3",
+        "M03-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "R07",
+      "name": "Recoverability is a separate axis from credit grade",
+      "reqs": [
+        "M03-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "R08",
+      "name": "Rating history is preserved (append-only snapshots with reason and scores)",
+      "reqs": [
+        "M03-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 24
+    },
+    {
+      "id": "R09",
+      "name": "Hotel scale is A–D (+NR) and distinct from partner A–E; D/NR multipliers are zero",
+      "reqs": [
+        "M03-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "M01",
+      "name": "Grade multipliers A×2, B×1, C×0.5, D×0 on the 3-month average",
+      "reqs": [
+        "M04-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M02",
+      "name": "Available top-up, projected exposure and exceed flag at the exact boundary",
+      "reqs": [
+        "M04-2",
+        "T08"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "M03",
+      "name": "Already over limit: available 0, over-limit amount reported; any top-up requires approval",
+      "reqs": [
+        "M04-2",
+        "T08"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 29
+    },
+    {
+      "id": "M04",
+      "name": "Extra safeguards: contract end, non-refundable, refund unknown, low recoverability",
+      "reqs": [
+        "M04-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M05",
+      "name": "Holds: grade D/NR, critical/high alerts and consumption collapse zero the available top-up",
+      "reqs": [
+        "M04-4",
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "M06",
+      "name": "Limit unavailable (no data / deposit) → simulation flags approval; never a number",
+      "reqs": [
+        "M04-4",
+        "T05"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "M07",
+      "name": "Exact integer arithmetic for limits (floor, BigInt) incl. very large VND",
+      "reqs": [
+        "M04-1",
+        "T01"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M08",
+      "name": "Simulation is pure: no state mutation, writesLedger=false",
+      "reqs": [
+        "M04-2",
+        "T14"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 18
+    },
+    {
+      "id": "M09",
+      "name": "Simulator rejects zero, negative, fractional and NaN requests",
+      "reqs": [
+        "M04-2",
+        "T03"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "A01",
+      "name": "Seed produces the expected Critical / High / Medium alerts",
+      "reqs": [
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 19
+    },
+    {
+      "id": "A02",
+      "name": "Refund-overdue: past due & unpaid → alert; paid in full or not yet due → none; partial payment keeps it",
+      "reqs": [
+        "M06-1",
+        "T10"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "A03",
+      "name": "Consumption collapse triggers at exactly −50% and not at −49.9%",
+      "reqs": [
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "A04",
+      "name": "Alert severity/enable are configuration-driven",
+      "reqs": [
+        "M06-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "A05",
+      "name": "Every alert carries hotel, title, detection date, evidence, action, SCM owner and status",
+      "reqs": [
+        "M06-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "A06",
+      "name": "Alert persistence: stable IDs, status survives re-detection, auto-clear keeps history, recurrence reopens",
+      "reqs": [
+        "M06-4",
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "A07",
+      "name": "Rating drop ≥ 2 notches within 90 days raises a High alert; older history is ignored",
+      "reqs": [
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 28
+    },
+    {
+      "id": "A08",
+      "name": "Balance-confirmation Medium alerts: never confirmed or stale",
+      "reqs": [
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "A09",
+      "name": "Renewal delay (≤60 days to end, no renewal) and negative-balance High alert",
+      "reqs": [
+        "M06-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "CS01",
+      "name": "CSV parser: quotes, escaped quotes, embedded commas/newlines, CRLF, BOM; unterminated quote errors",
+      "reqs": [
+        "D-2",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "CS02",
+      "name": "CSV validation: bad header, field count, currency, date, negative, unknown contract, long text, thousands separators",
+      "reqs": [
+        "D-2",
+        "T12",
+        "T03"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 30
+    },
+    {
+      "id": "CS03",
+      "name": "Duplicates inside one file and re-uploading the same file are caught; nothing is double-counted",
+      "reqs": [
+        "D-2",
+        "M02-4",
+        "T12",
+        "T02"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 27
+    },
+    {
+      "id": "CS04",
+      "name": "CSV import: fatal errors leave ledger untouched; partial-bad files commit only valid rows",
+      "reqs": [
+        "D-2",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 19
+    },
+    {
+      "id": "CS05",
+      "name": "CSV export neutralises spreadsheet formulas; sample ledger CSV round-trips through the validator",
+      "reqs": [
+        "D-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "X12",
+      "name": "Common weighted engine reproduces legacy compute() score and grade bit-for-bit on all 12 partners",
+      "reqs": [
+        "R-3",
+        "T13"
+      ],
+      "status": "SKIP",
+      "error": "SKIP: the legacy partner module is not part of this repository @ Object.skip (C:\\Users\\LENOVO\\AppData\\Local\\Temp\\claude\\661e47a44b82d5a0\\d8daf08f-ba21-43f7-b0ae-e9c7ced4665c\\scratchpad\\publish\\tests\\harness.js:16:27) <- Object.fn (C:\\Users\\LENOVO\\AppData\\Local\\Temp\\claude\\661e47a44b82d5a0\\d8daf08f-ba21-43f7-b0ae-e9c7ced4665c\\scratchpad\\publish\\tests\\engine_tests.js:348:90)",
+      "ms": 1
+    },
+    {
+      "id": "X01",
+      "name": "RBAC: VIEWER cannot write anything; SCM/CEO/ADMIN limited to their permissions; denied attempts leave data unchanged and are audited",
+      "reqs": [
+        "D-4",
+        "T14"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "X03",
+      "name": "Audit log is hash-chained, records OK/REJECTED/DENIED, and detects tampering",
+      "reqs": [
+        "D-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "X02",
+      "name": "approval packet and CEO review: complete packet, mock submit, CEO-only review with required feedback; ledger and balances never change; execution disabled",
+      "reqs": [
+        "M09-1",
+        "M09-2",
+        "T14"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 26
+    },
+    {
+      "id": "X17",
+      "name": "No code path can send data or run dynamic code: static scan of the prototype sources",
+      "reqs": [
+        "G-1",
+        "D-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 4
+    },
+    {
+      "id": "X06",
+      "name": "No secrets / credentials / real-looking keys in the prototype tree",
+      "reqs": [
+        "D-6",
+        "G-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 28
+    },
+    {
+      "id": "X04",
+      "name": "Reload consistency: state and every derived number are identical after a fresh load from storage",
+      "reqs": [
+        "T15",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 65
+    },
+    {
+      "id": "X05",
+      "name": "Corrupt / foreign storage is quarantined, never silently destroyed; legacy storage key is never touched",
+      "reqs": [
+        "D-5",
+        "D-7",
+        "R-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 46
+    },
+    {
+      "id": "X08",
+      "name": "Stable unique IDs; every row ties to an existing hotel/contract; ledger rows carry currency + valid datetime",
+      "reqs": [
+        "D-1",
+        "M01-1",
+        "M02-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "X13",
+      "name": "Hotel master & contract master carry every required field; owner unknown is explicit; brand ≠ legal counterparty",
+      "reqs": [
+        "M01-1",
+        "M01-2",
+        "M02-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 14
+    },
+    {
+      "id": "X09",
+      "name": "Configuration: validated, reason-required, audited with diff, recalculates grades; invalid sets rejected",
+      "reqs": [
+        "M03-1",
+        "M04-1",
+        "M06-2",
+        "S08"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 29
+    },
+    {
+      "id": "X15",
+      "name": "AI is a labelled mock, cites source/date/confidence, cannot change amounts, grades or limits; contract extraction is heuristic",
+      "reqs": [
+        "M07-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 21
+    },
+    {
+      "id": "X18",
+      "name": "Recording a fact requires the verifier to be the signed-in user and an evidence reference",
+      "reqs": [
+        "M06-3",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 23
+    },
+    {
+      "id": "X11",
+      "name": "Regression: legacy OMH-NICE partner module is byte-identical to repo HEAD 9edba87 and computes the same 12 results",
+      "reqs": [
+        "R-1",
+        "R-2",
+        "T13"
+      ],
+      "status": "SKIP",
+      "error": "SKIP: the legacy partner module is not part of this repository @ Object.skip (C:\\Users\\LENOVO\\AppData\\Local\\Temp\\claude\\661e47a44b82d5a0\\d8daf08f-ba21-43f7-b0ae-e9c7ced4665c\\scratchpad\\publish\\tests\\harness.js:16:27) <- Object.fn (C:\\Users\\LENOVO\\AppData\\Local\\Temp\\claude\\661e47a44b82d5a0\\d8daf08f-ba21-43f7-b0ae-e9c7ced4665c\\scratchpad\\publish\\tests\\system_tests.js:124:68)",
+      "ms": 0
+    },
+    {
+      "id": "X19",
+      "name": "Hotel grades and partner grades are separate scales; the new app never imports or writes legacy state",
+      "reqs": [
+        "M03-4",
+        "D-7"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 3
+    },
+    {
+      "id": "V01",
+      "name": "All 7 screens render for every role in KO and EN without undefined/NaN/[object]/Infinity",
+      "reqs": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "UI-LANG"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 172
+    },
+    {
+      "id": "V02",
+      "name": "Per-contract screens (profile with its top-up simulator, ledger, approval packet) render for all 16 contracts incl. NR / D / deposit / no-data cases, KO and EN",
+      "reqs": [
+        "S02",
+        "S03",
+        "S04",
+        "S07",
+        "UI-EMPTY"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 55
+    },
+    {
+      "id": "V03",
+      "name": "Dashboard filters (country/entity/currency/type) drive KPIs; empty filter combination yields empty state; control labels show currency & as-of date",
+      "reqs": [
+        "S01",
+        "UI-FILTER",
+        "UI-EMPTY"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "V03b",
+      "name": "Grade distribution counts hotels, not contracts: a hotel with several contracts is counted once at its lowest grade",
+      "reqs": [
+        "S01",
+        "UI-FILTER"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "V03c",
+      "name": "Country card: the prepayment balance is shown as a total split into prebuy, hard block and other, in the one currency of the country",
+      "reqs": [
+        "S01",
+        "S02"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "V04",
+      "name": "XSS: hostile text from CSV / notes / names is HTML-escaped everywhere it is rendered",
+      "reqs": [
+        "D-8",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 21
+    },
+    {
+      "id": "V05",
+      "name": "Read-only roles see disabled controls; writers see enabled ones",
+      "reqs": [
+        "D-4",
+        "S03",
+        "S08"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 178
+    },
+    {
+      "id": "P01",
+      "name": "Performance: 208-contract portfolio computes < 2 s; 2,000-row CSV validates + commits < 3 s; no state growth on recompute",
+      "reqs": [
+        "PERF"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 114
+    },
+    {
+      "id": "P02",
+      "name": "Math robustness: BigInt-safe on very large amounts; no float drift on repeated postings",
+      "reqs": [
+        "M02-2",
+        "PERF"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 707
+    },
+    {
+      "id": "D01",
+      "name": "Duplicate detection survives case, width, zero-width and time-zone variants of the same transaction",
+      "reqs": [
+        "M02-4",
+        "T02",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 21
+    },
+    {
+      "id": "D02",
+      "name": "Reconciliation compares the ledger AS OF the hotel confirmation date; later legitimate postings do not create a false MAJOR",
+      "reqs": [
+        "M02-5",
+        "T09"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "D03",
+      "name": "Real people whose names start with \"Ai\"/\"Bot\"/\"Auto\" can verify; service-account names cannot",
+      "reqs": [
+        "M06-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "D04",
+      "name": "Facts: whitelisted keys, evidence mandatory, no deletion (superseded with history), counterparty status needs evidence",
+      "reqs": [
+        "D-4",
+        "M06-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 26
+    },
+    {
+      "id": "D05",
+      "name": "Config validation covers every section; a rejected/failed change can never brick the app; all-or-nothing rollback",
+      "reqs": [
+        "S08",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 32
+    },
+    {
+      "id": "D06",
+      "name": "Prototype keys and unknown IDs are rejected everywhere (no pollution, no phantom state)",
+      "reqs": [
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 30
+    },
+    {
+      "id": "D07",
+      "name": "Storage write failure rolls the command back: memory never diverges from what is persisted",
+      "reqs": [
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "D08",
+      "name": "Loading validates ledger rows and config: corrupt amounts are quarantined instead of silently inflating balances",
+      "reqs": [
+        "D-5",
+        "UI-ERR"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 136
+    },
+    {
+      "id": "D09",
+      "name": "One confirmed-zero month with two unknown months is NOT \"no consumption\": no depletion claim, no expiry alert, no refund classification",
+      "reqs": [
+        "M05-2",
+        "T05"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "D10",
+      "name": "Alert lifecycle: dismissed alerts reopen on recurrence, manual RESOLVED with a persisting condition is reopened, dismissals are disclosed in the approval packet",
+      "reqs": [
+        "M06-4",
+        "M09-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 18
+    },
+    {
+      "id": "D11",
+      "name": "Contracts with a balance but no computable limit are counted as \"limit unknown\" (not silently ignored)",
+      "reqs": [
+        "S01",
+        "M04-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 30
+    },
+    {
+      "id": "D12",
+      "name": "Consumption period must be a real, plausible month; timezone is mandatory; absurd amounts and balance overflow are rejected",
+      "reqs": [
+        "T03",
+        "M02-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "D14",
+      "name": "Segregation of duties: the creator of a review request cannot review it, and the review needs feedback; malformed arguments are denied by RBAC first; huge requests rejected",
+      "reqs": [
+        "D-4",
+        "T14",
+        "M09-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 51
+    },
+    {
+      "id": "E01",
+      "name": "Loading replays every ledger row through the posting validator: currency/contract/uniqueness/opening/refund/date tampering is quarantined",
+      "reqs": [
+        "D-5",
+        "M02-2",
+        "M02-4",
+        "UI-ERR"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 333
+    },
+    {
+      "id": "E02",
+      "name": "A broken audit chain is surfaced (AUDIT_BROKEN) without destroying the data",
+      "reqs": [
+        "D-3",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "E03",
+      "name": "The 'provisional' flag cannot be cleared by an administrator (only a CEO-approved release may)",
+      "reqs": [
+        "M03-4",
+        "S08",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "E04",
+      "name": "Service-style verifier names (automation, aibot, svc-*, gpt-*, claude…) cannot verify facts; human names still can",
+      "reqs": [
+        "M06-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "E05",
+      "name": "CSV export neutralises formula injection incl. leading whitespace, tab/CR and full-width operators; negative numbers stay numeric",
+      "reqs": [
+        "D-2",
+        "D-8"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "F01",
+      "name": "Duplicate guard covers reference-vs-no-reference postings of one transaction (manual + CSV) but keeps genuinely different references distinct",
+      "reqs": [
+        "M02-4",
+        "T02",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 22
+    },
+    {
+      "id": "F02",
+      "name": "Reconciliation cut-off uses the transaction instant in the business day (KST), not the offset it was written in",
+      "reqs": [
+        "M02-5",
+        "T09"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "F03",
+      "name": "A critical alert backed by a verified fact cannot be dismissed, and the top-up hold follows the fact itself",
+      "reqs": [
+        "M06-3",
+        "M06-4",
+        "M04-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    },
+    {
+      "id": "F04",
+      "name": "Verified facts: only an evidenced retraction by a different person can lift them; unverified or same-person replacement is refused",
+      "reqs": [
+        "M06-3",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "F05",
+      "name": "Load check: approvals and dismissed alerts recorded in storage must be backed by an audit entry",
+      "reqs": [
+        "D-3",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 50
+    },
+    {
+      "id": "F07",
+      "name": "Config: unknown keys and out-of-range values are rejected",
+      "reqs": [
+        "S08"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "F08",
+      "name": "Integration-status text and key hold reasons exist in both languages",
+      "reqs": [
+        "UI-LANG"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "F09",
+      "name": "Hostile strings posted through commands are escaped in every view (regression guard for the escaping)",
+      "reqs": [
+        "D-8",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 26
+    },
+    {
+      "id": "H01",
+      "name": "Duplicates: period/status on non-consumption rows and exotic minus/invisible characters do not create a second transaction",
+      "reqs": [
+        "M02-4",
+        "T02",
+        "T12"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "H02",
+      "name": "Load check v2: forged approval status/packet/contract, re-dismissal, historical-flag escape, duplicate ids and audit truncation are all flagged",
+      "reqs": [
+        "D-3",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 55
+    },
+    {
+      "id": "H03",
+      "name": "Very slow consumption never yields an overflowed \"NaN\" date; version is locked; integration names are bilingual",
+      "reqs": [
+        "M05-3",
+        "S08",
+        "UI-LANG"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "S10",
+      "name": "Scale: 20,000-row ledger computes < 3 s and loads < 6 s; indexed and unindexed posting agree; running balances equal a full recomputation",
+      "reqs": [
+        "PERF",
+        "M02-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 523
+    },
+    {
+      "id": "H04",
+      "name": "Load check v3: approval replay after reset, and edits to ledger/facts/ratings/config made outside the commands are detected",
+      "reqs": [
+        "D-3",
+        "D-5",
+        "M02-2",
+        "T15"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 97
+    },
+    {
+      "id": "H05",
+      "name": "References: variation selectors and other default-ignorable code points are ignored when comparing",
+      "reqs": [
+        "M02-4",
+        "T02"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "D15",
+      "name": "Test-suite hygiene: BigInt path is exercised with amounts beyond double precision",
+      "reqs": [
+        "M02-2",
+        "PERF"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "I01",
+      "name": "Language packs cover every UI string (ja, vi) and contain no stale keys",
+      "reqs": [
+        "UI-LANG",
+        "I18N"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "I02",
+      "name": "Translations keep placeholders, leading/trailing spaces and untranslatable tokens; no Korean left; scripts look right",
+      "reqs": [
+        "UI-LANG",
+        "I18N"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 4
+    },
+    {
+      "id": "I03",
+      "name": "LF templates fill every placeholder; language switching is validated and persisted by the core",
+      "reqs": [
+        "UI-LANG",
+        "I18N"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "I04",
+      "name": "All screens render in Japanese and Vietnamese for every role: no missing translations, no leftover Korean labels, no unfilled placeholders",
+      "reqs": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "UI-LANG",
+        "I18N"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 226
+    },
+    {
+      "id": "I05",
+      "name": "Japanese and Vietnamese key terms are used consistently (glossary check)",
+      "reqs": [
+        "UI-LANG",
+        "I18N"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M01",
+      "name": "hotel code normalisation and decimal-to-minor conversion",
+      "reqs": [
+        "ELLIS-3",
+        "ELLIS-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M02",
+      "name": "month windows respect the 30-day limit and the fixture enforces the same rules as the tool",
+      "reqs": [
+        "ELLIS-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M03",
+      "name": "collect pages through more than one page and totals match the source exactly",
+      "reqs": [
+        "ELLIS-2",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 6
+    },
+    {
+      "id": "M04",
+      "name": "an incompletely paged result is flagged truncated and refused, never totalled",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 25
+    },
+    {
+      "id": "M05",
+      "name": "call validation: wrong basis, long window, bad hotel code and non-booking tools are refused",
+      "reqs": [
+        "ELLIS-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M06",
+      "name": "duplicates, rows without ids, rows outside the window and wrong-hotel rows are not counted",
+      "reqs": [
+        "ELLIS-2",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M07",
+      "name": "currencies stay separate; decimals, cancelled rows, restricted and unusable amounts are handled without guessing",
+      "reqs": [
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M08",
+      "name": "the snapshot keeps aggregates only: no guest, booking or seller references",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M09",
+      "name": "snapshot validation rejects tampering and malformed content",
+      "reqs": [
+        "ELLIS-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 50
+    },
+    {
+      "id": "M10",
+      "name": "covered months: adjacent windows merge, partial months do not count, empty covered month means zero",
+      "reqs": [
+        "ELLIS-2",
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M11",
+      "name": "hotel mapping: ELLIS-<code> and plain codes match, duplicates and missing ids are reported, unknown hotels are dropped",
+      "reqs": [
+        "ELLIS-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 29
+    },
+    {
+      "id": "M12",
+      "name": "import command: permission, audit, only matched hotels stored, ledger and balances untouched",
+      "reqs": [
+        "ELLIS-5",
+        "ELLIS-7"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 57
+    },
+    {
+      "id": "M13",
+      "name": "preview is a dry run: same rules, no state change, no audit row",
+      "reqs": [
+        "ELLIS-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 19
+    },
+    {
+      "id": "M14",
+      "name": "import rejects a repeat, an older snapshot and a snapshot with no known hotel; a newer one replaces the older",
+      "reqs": [
+        "ELLIS-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 24
+    },
+    {
+      "id": "M15",
+      "name": "real ELLIS data never enters the sample state and sample data never enters a real one",
+      "reqs": [
+        "ELLIS-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 18
+    },
+    {
+      "id": "M16",
+      "name": "comparison statuses: match, tolerance edge, zero cases, missing months, currency mismatch, stale, deposits",
+      "reqs": [
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 2
+    },
+    {
+      "id": "M17",
+      "name": "stored ELLIS data is integrity-checked on load: edited amounts, forged imports and malformed sections are caught",
+      "reqs": [
+        "ELLIS-7"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 212
+    },
+    {
+      "id": "M18",
+      "name": "the synthetic sample is valid, fully synthetic, and shows each comparison case it is meant to demonstrate",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-6",
+        "ELLIS-8"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 28
+    },
+    {
+      "id": "M19",
+      "name": "the integration panel reports the snapshot adapter honestly and the tool contract lists only what is implemented",
+      "reqs": [
+        "ELLIS-8",
+        "X-ELLIS"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M20",
+      "name": "a large snapshot (50 hotels x 36 months) validates, imports and compares quickly",
+      "reqs": [
+        "ELLIS-5",
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 143
+    },
+    {
+      "id": "M21",
+      "name": "a month that was only partly collected is \"not collected\", never a false divergence",
+      "reqs": [
+        "ELLIS-6",
+        "ELLIS-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M22",
+      "name": "unknown fields are refused wherever they appear; nothing outside the schema is stored",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 145
+    },
+    {
+      "id": "M23",
+      "name": "time stamps must be real and carry a zone; equal or unreadable times never count as newer",
+      "reqs": [
+        "ELLIS-5",
+        "ELLIS-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 23
+    },
+    {
+      "id": "M24",
+      "name": "a window in which rows were dropped before their month was known is not \"covered\"",
+      "reqs": [
+        "ELLIS-2",
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M25",
+      "name": "covered months must be provable from complete hotel-level pulls inside the window",
+      "reqs": [
+        "ELLIS-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M26",
+      "name": "the fingerprint does not depend on key order, so a re-ordered copy is recognised as the same snapshot",
+      "reqs": [
+        "ELLIS-5",
+        "ELLIS-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 22
+    },
+    {
+      "id": "M27",
+      "name": "negative amounts (refunds, adjustments) are skipped and flagged, never netted into a month",
+      "reqs": [
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M28",
+      "name": "cancel detection is anchored; stored ELLIS data must match the state kind and its import history",
+      "reqs": [
+        "ELLIS-3",
+        "ELLIS-7"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 101
+    },
+    {
+      "id": "M29",
+      "name": "bookings in other currencies are converted through the booking-time KRW rate and marked as converted",
+      "reqs": [
+        "ELLIS-6",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M30",
+      "name": "months outside the contract period are not compared; a month holding the start or end cannot be split",
+      "reqs": [
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M31",
+      "name": "two contracts at one hotel: same currency is shared (not compared), different currencies never take each other's bookings",
+      "reqs": [
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M32",
+      "name": "NET needs the revenue; when it is hidden the default basis reports incomplete and BILLING still works",
+      "reqs": [
+        "ELLIS-6",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M34",
+      "name": "review regressions in the comparison: shared hotels are decided per month, unjudged contracts are not OK, same-currency mode counts only own bookings, the tolerance is exact",
+      "reqs": [
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M35",
+      "name": "a snapshot whose KRW figures disagree with the original-currency figures is refused",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M36",
+      "name": "second review: the KRW equivalent of revenue is checked too, tiny amounts may round to 0 KRW, and the tolerance option is validated",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 2
+    },
+    {
+      "id": "M37",
+      "name": "hotel scope (the tracker definition): no clipping to the contract period, no shared-hotel skipping, every currency converted; contract scope stays the default",
+      "reqs": [
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "M38",
+      "name": "check-out basis: bookings go to the month they check out in, the pull uses CHECK_OUT_DATE, and one snapshot never mixes bases",
+      "reqs": [
+        "ELLIS-2",
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 2
+    },
+    {
+      "id": "M39",
+      "name": "a contract that starts mid-month is compared on the since-start aggregate of that month, and only then",
+      "reqs": [
+        "ELLIS-6",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 2
+    },
+    {
+      "id": "M40",
+      "name": "a forged or inconsistent since-start aggregate is refused",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "M33",
+      "name": "the snapshot keeps KRW equivalents; a non-KRW booking without a rate is skipped and flagged; the new fields are validated",
+      "reqs": [
+        "ELLIS-1",
+        "ELLIS-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "A01",
+      "name": "accounts: every role has one, ids are unique, passwords are checked exactly, odd names never match",
+      "reqs": [
+        "AUTH-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "A02",
+      "name": "before login nothing can be read-modified: every command is refused and the refusal is audited as anonymous",
+      "reqs": [
+        "AUTH-1",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 18
+    },
+    {
+      "id": "A03",
+      "name": "the role comes from the account: callers cannot pick or raise it",
+      "reqs": [
+        "AUTH-1",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 19
+    },
+    {
+      "id": "A04",
+      "name": "a failed login is audited without the password, says the same for unknown and wrong, and opens nothing",
+      "reqs": [
+        "AUTH-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "A05",
+      "name": "five wrong passwords lock that name for 30 seconds, also for unknown names; other names are not affected",
+      "reqs": [
+        "AUTH-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "A06",
+      "name": "logout ends the session, is audited, and everything is refused afterwards",
+      "reqs": [
+        "AUTH-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 15
+    },
+    {
+      "id": "A07",
+      "name": "a login expires after 8 hours; a stored login is restored only if it is genuine, and its role is looked up again",
+      "reqs": [
+        "AUTH-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 31
+    },
+    {
+      "id": "A08",
+      "name": "login and logout rows keep the audit chain and the stored state valid across a reload",
+      "reqs": [
+        "AUTH-2",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 20
+    },
+    {
+      "id": "A09",
+      "name": "separation of duties through accounts: SCM drafts and submits, only the CEO account decides",
+      "reqs": [
+        "AUTH-1",
+        "M09-2",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 23
+    },
+    {
+      "id": "A10",
+      "name": "the permission table: matrix agrees with can(), every permission has a label, only the CEO role decides approvals",
+      "reqs": [
+        "AUTH-3",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "A11",
+      "name": "the app has no role switcher and does not use the test hook; it starts logged out",
+      "reqs": [
+        "AUTH-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "TR01",
+      "name": "cell parsing: dates in the formats PICs use, amounts with separators and brackets, and what is unreadable",
+      "reqs": [
+        "TRK-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "TR02",
+      "name": "columns are found by their heading text: any order, hidden or extra columns, title rows, guidance and example rows",
+      "reqs": [
+        "TRK-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 4
+    },
+    {
+      "id": "TR03",
+      "name": "arrangement types: the five of the system map; Commit / Hybrid and blanks are reported and not converted",
+      "reqs": [
+        "TRK-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "TR04",
+      "name": "input checks on the synthetic sample: each built-in problem is found, the healthy row is clean",
+      "reqs": [
+        "TRK-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 2
+    },
+    {
+      "id": "TR05",
+      "name": "every threshold of the checks: confirmation age, mismatch size, ending, long unused, no booking, over-funded, planned top-up",
+      "reqs": [
+        "TRK-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 7
+    },
+    {
+      "id": "TR06",
+      "name": "the converted ledger passes the system import rules and ends on the tracker balance",
+      "reqs": [
+        "TRK-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 3
+    },
+    {
+      "id": "TR07",
+      "name": "top-up log: rows inside the window become ledger rows, older ones fold into the opening; bad rows are refused; a missing log is flagged",
+      "reqs": [
+        "TRK-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "TR08",
+      "name": "blank usage is unknown, not zero; a derived opening that would be negative is refused instead of invented",
+      "reqs": [
+        "TRK-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "TR09",
+      "name": "risk register: yes/no columns, example row skipped, evidence and open disputes noted",
+      "reqs": [
+        "TRK-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "TR10",
+      "name": "the unified CSV files: layouts, formula-injection safety, commas and line breaks in text, and the contract fields of the system",
+      "reqs": [
+        "TRK-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "TR11",
+      "name": "preview command: SCM/Admin only, changes nothing, rejects oversized input, uses the state as-of date",
+      "reqs": [
+        "TRK-5",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 80
+    },
+    {
+      "id": "TR12",
+      "name": "command-line tool: real data may not be written into the project; exit codes; files written outside",
+      "reqs": [
+        "TRK-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 206
+    },
+    {
+      "id": "TR14",
+      "name": "review regressions: usage columns must be readable, distinct and past; blocking is per sheet and per hotel; negative opening or usage converts nothing; ambiguous log rows are refused",
+      "reqs": [
+        "TRK-1",
+        "TRK-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 4
+    },
+    {
+      "id": "TR15",
+      "name": "second review: no-usage arrangements, month names, ordering, duplicates, field limits, minor/major units and the rest",
+      "reqs": [
+        "TRK-1",
+        "TRK-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 8
+    },
+    {
+      "id": "TR16",
+      "name": "the tracker Usage is sales production, not the deducted amount: every converted consumption row says so and the check list carries one note",
+      "reqs": [
+        "TRK-3",
+        "TRK-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 2
+    },
+    {
+      "id": "TR13",
+      "name": "the shipped sample is synthetic and identical in both copies; no real-looking ids or names",
+      "reqs": [
+        "TRK-7",
+        "D-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "OU01",
+      "name": "next check date: the 1st of next month; a D / NR grade or a live critical / high alert is looked at again within 7 days",
+      "reqs": [
+        "OUT-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "OU02",
+      "name": "top-up timing: depletion date minus the lead time, urgency, hold, and the cases without a date",
+      "reqs": [
+        "OUT-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "OU03",
+      "name": "the speed comes from ELLIS when the ledger has none, and both speeds are shown with their gap",
+      "reqs": [
+        "OUT-2",
+        "ELLIS-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "OU04",
+      "name": "ELLIS outlook: last completed months as compared, plus the stays already on the books for this and later months",
+      "reqs": [
+        "ELLIS-6",
+        "OUT-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "OU05",
+      "name": "cooperation recommendation: continue, continue with conditions, undecided, wind down, with the reasons that fired",
+      "reqs": [
+        "OUT-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "OU06",
+      "name": "every sample contract gets a plan and an opinion; nothing is written to the ledger",
+      "reqs": [
+        "OUT-1",
+        "OUT-2",
+        "OUT-3",
+        "D-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 16
+    },
+    {
+      "id": "LO01",
+      "name": "an offset reduces the balance, needs a reason, cannot exceed the balance, and keeps the identity",
+      "reqs": [
+        "LEDGER-OFFSET"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "LO02",
+      "name": "an offset is not consumption: forecast, average usage and refund tracking ignore it",
+      "reqs": [
+        "LEDGER-OFFSET"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "LO03",
+      "name": "CSV import and the store accept offsets with the same rules, and permissions are those of ledger entry",
+      "reqs": [
+        "LEDGER-OFFSET",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 54
+    },
+    {
+      "id": "LO04",
+      "name": "planned top-up: checked against the limit on the view, carried into the approval packet, never written to the ledger",
+      "reqs": [
+        "TOPUP-TERMS",
+        "M04-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 17
+    }
+  ]
+}

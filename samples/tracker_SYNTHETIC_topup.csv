@@ -1,0 +1,10 @@
+Top-up / refund history (SYNTHETIC SAMPLE)
+"Add EVERY initial prepayment, top-up, refund and offset."
+Hotel ID,Hotel Name (auto),Date,Type,Amount (VND),Reference / invoice no.,Note
+"Must exist in ""Existing""",Auto,dd/mm/yyyy,Initial / Top-up / Refund / Offset / Adjustment,Positive number,Payment ref,Optional
+123456,,10/06/2026,Top-up,100000000,PAY-2026-0810,
+90101,,15/08/2026,Top-up,200000000,PAY-90101-0815,
+90101,,20/10/2026,Offset,15000000,INV-90101-1020,Deducted against the October invoice
+90102,,15/05/2026,Initial,500000000,PAY-90102-0515,
+90103,,18/05/2026,Initial,100000000,PAY-90103-0518,
+90999,,01/09/2026,Top-up,50000000,PAY-90999,hotel not in Existing

@@ -1,0 +1,2108 @@
+{
+ "schema": "omh-ellis-snapshot",
+ "version": 3,
+ "provenance": {
+  "source": "ELLIS_MCP",
+  "collector": "FIXTURE",
+  "collectedBy": "make_ellis_sample.js",
+  "collectedAt": "2026-11-06T08:30:00+09:00",
+  "synthetic": true,
+  "tools": [
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90001",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90001",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90001",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90001",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90001",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90002",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90002",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90002",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90002",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90002",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90003",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90003",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90003",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90003",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90003",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90004",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 8,
+    "totalCount": 8,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90004",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 9,
+    "totalCount": 9,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90004",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 9,
+    "totalCount": 9,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90004",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 10,
+    "totalCount": 10,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90004",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 8,
+    "totalCount": 8,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90005",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90005",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90005",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90005",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90005",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90006",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90006",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90006",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90006",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90006",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90007",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90007",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90007",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90007",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90007",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90008",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 7,
+    "totalCount": 7,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90008",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90008",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 7,
+    "totalCount": 7,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90008",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90008",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90009",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90009",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90009",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90009",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90009",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90010",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90010",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90010",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90010",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90010",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90011",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90011",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90011",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90011",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90011",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90012",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90012",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90012",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90012",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90012",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90013",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90013",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90013",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90013",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90013",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90014",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90014",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90014",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90014",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90014",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "90015",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "90015",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 6,
+    "totalCount": 6,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "90015",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 5,
+    "totalCount": 5,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "90015",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "90015",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 4,
+    "totalCount": 4,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-08-01",
+    "toDate": "2026-08-31",
+    "hotelCode": "99999",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-09-01",
+    "toDate": "2026-09-30",
+    "hotelCode": "99999",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-10-01",
+    "toDate": "2026-10-31",
+    "hotelCode": "99999",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 1,
+    "totalCount": 1,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-11-01",
+    "toDate": "2026-11-30",
+    "hotelCode": "99999",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   },
+   {
+    "tool": "get_hotel_bookings",
+    "dateBasis": "CHECK_IN_DATE",
+    "fromDate": "2026-12-01",
+    "toDate": "2026-12-31",
+    "hotelCode": "99999",
+    "countryCode": null,
+    "pages": 1,
+    "rows": 0,
+    "totalCount": 0,
+    "complete": true
+   }
+  ],
+  "rowStats": {
+   "rows": 296,
+   "duplicates": 0,
+   "rejected": {}
+  },
+  "truncated": false,
+  "warnings": []
+ },
+ "window": {
+  "basis": "CHECK_IN_DATE",
+  "from": "2026-08-01",
+  "to": "2026-12-31"
+ },
+ "hotels": [
+  {
+   "hotelCode": "90001",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 32563449,
+       "revenueMinor": 2605075,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 32563449,
+       "krwRevenueMinor": 2605075
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 33412775,
+       "revenueMinor": 2673020,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 33412775,
+       "krwRevenueMinor": 2673020
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 31750792,
+       "revenueMinor": 2540064,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 31750792,
+       "krwRevenueMinor": 2540064
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 17916621,
+       "revenueMinor": 1433331,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 17916621,
+       "krwRevenueMinor": 1433331
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 6515134,
+       "revenueMinor": 521210,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 6515134,
+       "krwRevenueMinor": 521210
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90002",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 22353693,
+       "revenueMinor": 1788295,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 22353693,
+       "krwRevenueMinor": 1788295
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 21980390,
+       "revenueMinor": 1758432,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 21980390,
+       "krwRevenueMinor": 1758432
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 10869564,
+       "revenueMinor": 869564,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 10869564,
+       "krwRevenueMinor": 869564
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 10120670,
+       "revenueMinor": 809655,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 10120670,
+       "krwRevenueMinor": 809655
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 3680244,
+       "revenueMinor": 294420,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 3680244,
+       "krwRevenueMinor": 294420
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90003",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 26661716,
+       "revenueMinor": 2132937,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 26661716,
+       "krwRevenueMinor": 2132937
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 24195330,
+       "revenueMinor": 1935628,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 24195330,
+       "krwRevenueMinor": 1935628
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 8921929,
+       "revenueMinor": 713755,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 8921929,
+       "krwRevenueMinor": 713755
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 10959479,
+       "revenueMinor": 876759,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 10959479,
+       "krwRevenueMinor": 876759
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 3985265,
+       "revenueMinor": 318821,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 3985265,
+       "krwRevenueMinor": 318821
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90004",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 6,
+       "roomNights": 12,
+       "billingMinor": 6232312,
+       "revenueMinor": 498585,
+       "cancelledBookings": 2,
+       "krwBillingMinor": 56090808,
+       "krwRevenueMinor": 4487265
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 7,
+       "roomNights": 13,
+       "billingMinor": 6459494,
+       "revenueMinor": 516759,
+       "cancelledBookings": 2,
+       "krwBillingMinor": 58135446,
+       "krwRevenueMinor": 4650831
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 7,
+       "roomNights": 13,
+       "billingMinor": 6219670,
+       "revenueMinor": 497573,
+       "cancelledBookings": 2,
+       "krwBillingMinor": 55977030,
+       "krwRevenueMinor": 4478157
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 8,
+       "roomNights": 15,
+       "billingMinor": 3467107,
+       "revenueMinor": 277371,
+       "cancelledBookings": 2,
+       "krwBillingMinor": 31203963,
+       "krwRevenueMinor": 2496339
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 6,
+       "roomNights": 12,
+       "billingMinor": 1260767,
+       "revenueMinor": 100863,
+       "cancelledBookings": 2,
+       "krwBillingMinor": 11346903,
+       "krwRevenueMinor": 907767
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90005",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 4434845,
+       "revenueMinor": 354786,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 39913605,
+       "krwRevenueMinor": 3193074
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 4869565,
+       "revenueMinor": 389565,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 43826085,
+       "krwRevenueMinor": 3506085
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 4465991,
+       "revenueMinor": 357280,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 40193919,
+       "krwRevenueMinor": 3215520
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 2524572,
+       "revenueMinor": 201964,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 22721148,
+       "krwRevenueMinor": 1817676
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 918025,
+       "revenueMinor": 73440,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 8262225,
+       "krwRevenueMinor": 660960
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90006",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": []
+  },
+  {
+   "hotelCode": "90007",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": []
+  },
+  {
+   "hotelCode": "90008",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "USD",
+       "bookings": 1,
+       "roomNights": 2,
+       "billingMinor": 203578,
+       "revenueMinor": 16286,
+       "cancelledBookings": 0,
+       "krwBillingMinor": 2809376,
+       "krwRevenueMinor": 224747
+      },
+      {
+       "currency": "VND",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 650320558,
+       "revenueMinor": 52025645,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 35117310,
+       "krwRevenueMinor": 2809385
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 663043477,
+       "revenueMinor": 53043477,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 35804348,
+       "krwRevenueMinor": 2864348
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "USD",
+       "bookings": 1,
+       "roomNights": 2,
+       "billingMinor": 212946,
+       "revenueMinor": 17036,
+       "cancelledBookings": 0,
+       "krwBillingMinor": 2938655,
+       "krwRevenueMinor": 235097
+      },
+      {
+       "currency": "VND",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 680241935,
+       "revenueMinor": 54419355,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 36733064,
+       "krwRevenueMinor": 2938645
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 365904685,
+       "revenueMinor": 29272374,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 19758853,
+       "krwRevenueMinor": 1580708
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 133056250,
+       "revenueMinor": 10644501,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 7185038,
+       "krwRevenueMinor": 574803
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90009",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 424137996,
+       "revenueMinor": 33931041,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 22903452,
+       "krwRevenueMinor": 1832276
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 445036304,
+       "revenueMinor": 35602905,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 24031960,
+       "krwRevenueMinor": 1922557
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 423699287,
+       "revenueMinor": 33895944,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 22879761,
+       "krwRevenueMinor": 1830381
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 237026823,
+       "revenueMinor": 18962145,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 12799448,
+       "krwRevenueMinor": 1023956
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 86191571,
+       "revenueMinor": 6895325,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 4654345,
+       "krwRevenueMinor": 372348
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90010",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": []
+  },
+  {
+   "hotelCode": "90011",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 6695802,
+       "revenueMinor": 535665,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 60262218,
+       "krwRevenueMinor": 4820985
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 6561904,
+       "revenueMinor": 524952,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 59057136,
+       "krwRevenueMinor": 4724568
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 6342688,
+       "revenueMinor": 507414,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 57084192,
+       "krwRevenueMinor": 4566726
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 3593404,
+       "revenueMinor": 287471,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 32340636,
+       "krwRevenueMinor": 2587239
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "JPY",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 1306694,
+       "revenueMinor": 104536,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 11760246,
+       "krwRevenueMinor": 940824
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90012",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": []
+  },
+  {
+   "hotelCode": "90013",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 10951782,
+       "revenueMinor": 876144,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 10951782,
+       "krwRevenueMinor": 876144
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 10390389,
+       "revenueMinor": 831231,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 10390389,
+       "krwRevenueMinor": 831231
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 10558259,
+       "revenueMinor": 844660,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 10558259,
+       "krwRevenueMinor": 844660
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 5848413,
+       "revenueMinor": 467874,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 5848413,
+       "krwRevenueMinor": 467874
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 2126695,
+       "revenueMinor": 170135,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 2126695,
+       "krwRevenueMinor": 170135
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90014",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 96232030,
+       "revenueMinor": 7698564,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 5196530,
+       "krwRevenueMinor": 415722
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 66635320,
+       "revenueMinor": 5330826,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 3598307,
+       "krwRevenueMinor": 287865
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 16304348,
+       "revenueMinor": 1304348,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 880435,
+       "krwRevenueMinor": 70435
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 44788522,
+       "revenueMinor": 3583083,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 2418580,
+       "krwRevenueMinor": 193486
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "VND",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 16286736,
+       "revenueMinor": 1302940,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 879484,
+       "krwRevenueMinor": 70359
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "90015",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-08",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 529132,
+       "revenueMinor": 42332,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 529132,
+       "krwRevenueMinor": 42332
+      }
+     ]
+    },
+    {
+     "month": "2026-09",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 5,
+       "roomNights": 9,
+       "billingMinor": 541317,
+       "revenueMinor": 43305,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 541317,
+       "krwRevenueMinor": 43305
+      }
+     ]
+    },
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 4,
+       "roomNights": 7,
+       "billingMinor": 530666,
+       "revenueMinor": 42452,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 530666,
+       "krwRevenueMinor": 42452
+      }
+     ]
+    },
+    {
+     "month": "2026-11",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 293539,
+       "revenueMinor": 23484,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 293539,
+       "krwRevenueMinor": 23484
+      }
+     ]
+    },
+    {
+     "month": "2026-12",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 3,
+       "roomNights": 6,
+       "billingMinor": 106740,
+       "revenueMinor": 8538,
+       "cancelledBookings": 1,
+       "krwBillingMinor": 106740,
+       "krwRevenueMinor": 8538
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "hotelCode": "99999",
+   "legacyHotelCode": null,
+   "coveredMonths": [
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+   ],
+   "months": [
+    {
+     "month": "2026-10",
+     "skippedRows": 0,
+     "byCurrency": [
+      {
+       "currency": "KRW",
+       "bookings": 1,
+       "roomNights": 1,
+       "billingMinor": 123000,
+       "revenueMinor": 80,
+       "cancelledBookings": 0,
+       "krwBillingMinor": 123000,
+       "krwRevenueMinor": 80
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "hash": "01353441d4bc74"
+}

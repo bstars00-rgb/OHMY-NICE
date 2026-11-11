@@ -1,0 +1,1296 @@
+{
+  "ranAt": "2026-11-11T00:58:28.758Z",
+  "applied": 184,
+  "killed": 184,
+  "survived": 0,
+  "rows": [
+    {
+      "desc": "grade boundary exclusive instead of inclusive",
+      "file": "engine/weighted.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "R03"
+    },
+    {
+      "desc": "limit-exceeded boundary off by one",
+      "file": "engine/limit.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M02"
+    },
+    {
+      "desc": "duplicate detection disabled",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 10,
+      "firstFailing": "L02"
+    },
+    {
+      "desc": "negative top-up/refund accepted",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 5,
+      "firstFailing": "L03"
+    },
+    {
+      "desc": "negative opening accepted",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "L03"
+    },
+    {
+      "desc": "cross-currency posting accepted",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 5,
+      "firstFailing": "L03"
+    },
+    {
+      "desc": "reconciliation tolerance halved",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "L05"
+    },
+    {
+      "desc": "ceil division became floor",
+      "file": "core/money.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "F04"
+    },
+    {
+      "desc": "refund overdue off by one day",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "A02"
+    },
+    {
+      "desc": "AI / bot verifier accepted",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "D03"
+    },
+    {
+      "desc": "ADMIN may review",
+      "file": "core/rbac.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "X01"
+    },
+    {
+      "desc": "A multiplier changed",
+      "file": "core/config.js",
+      "status": "KILLED",
+      "failedTests": 4,
+      "firstFailing": "M01"
+    },
+    {
+      "desc": "Unknown scored as 3 (mid)",
+      "file": "engine/weighted.js",
+      "status": "KILLED",
+      "failedTests": 5,
+      "firstFailing": "R02"
+    },
+    {
+      "desc": "formula escape disabled",
+      "file": "engine/csv.js",
+      "status": "KILLED",
+      "failedTests": 4,
+      "firstFailing": "CS01"
+    },
+    {
+      "desc": "verifier-name rule reverted to prefix match",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "D03"
+    },
+    {
+      "desc": "evidence length check removed",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "R06"
+    },
+    {
+      "desc": "VERIFIED without evidence accepted",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D04"
+    },
+    {
+      "desc": "external-ref normalisation removed",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "D01"
+    },
+    {
+      "desc": "instant normalisation removed",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D01"
+    },
+    {
+      "desc": "reconciliation uses today's balance",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "D02"
+    },
+    {
+      "desc": "D multiplier rule removed",
+      "file": "core/config.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "X09"
+    },
+    {
+      "desc": "asOf validation removed",
+      "file": "core/config.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D05"
+    },
+    {
+      "desc": "partial zero treated as firm zero",
+      "file": "engine/forecast.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D09"
+    },
+    {
+      "desc": "dismissed alert not reopened",
+      "file": "engine/alerts.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D10"
+    },
+    {
+      "desc": "a request can be reviewed by its own creator",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D14"
+    },
+    {
+      "desc": "no rollback on failure",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "D05"
+    },
+    {
+      "desc": "fact whitelist removed",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "D04"
+    },
+    {
+      "desc": "load-time ledger replay removed",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "E01"
+    },
+    {
+      "desc": "audit chain not checked on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "E02"
+    },
+    {
+      "desc": "forged approval status accepted on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F05"
+    },
+    {
+      "desc": "forged dismissal accepted on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "F05"
+    },
+    {
+      "desc": "reference-vs-no-reference duplicate allowed",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "F01"
+    },
+    {
+      "desc": "format/control characters not stripped",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "D01"
+    },
+    {
+      "desc": "reconciliation cut by written date instead of instant",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F02"
+    },
+    {
+      "desc": "verified fact can be replaced freely",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "X18"
+    },
+    {
+      "desc": "critical alert dismissal allowed despite verified fact",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F03"
+    },
+    {
+      "desc": "hold no longer follows the verified fact",
+      "file": "engine/limit.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F03"
+    },
+    {
+      "desc": "unknown config keys accepted",
+      "file": "core/config.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F07"
+    },
+    {
+      "desc": "provisional flag unlocked",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "E03"
+    },
+    {
+      "desc": "formula guard reduced to tab/CR",
+      "file": "engine/csv.js",
+      "status": "KILLED",
+      "failedTests": 4,
+      "firstFailing": "CS01"
+    },
+    {
+      "desc": "compound service names allowed",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "E04"
+    },
+    {
+      "desc": "period counts for non-consumption identity",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H01"
+    },
+    {
+      "desc": "minus-sign variants not normalised",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H01"
+    },
+    {
+      "desc": "filler / variation-selector characters not stripped",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H01"
+    },
+    {
+      "desc": "approval packet content not verified on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H02"
+    },
+    {
+      "desc": "approval contract binding not checked",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "H02"
+    },
+    {
+      "desc": "stale dismissal accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H02"
+    },
+    {
+      "desc": "audit head anchor ignored on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H02"
+    },
+    {
+      "desc": "state hash not checked on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H04"
+    },
+    {
+      "desc": "audit entries carry no state hash",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H04"
+    },
+    {
+      "desc": "approval ids reused after reset",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H04"
+    },
+    {
+      "desc": "approval creator not matched",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H04"
+    },
+    {
+      "desc": "zero consumption forecast attempted",
+      "file": "engine/forecast.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "F02"
+    },
+    {
+      "desc": "non-refundable safeguard removed",
+      "file": "engine/limit.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M04"
+    },
+    {
+      "desc": "unverified signal escalated to closure",
+      "file": "engine/alerts.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "R06"
+    },
+    {
+      "desc": "audit hash chain broken",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 11,
+      "firstFailing": "X03"
+    },
+    {
+      "desc": "ELLIS: fewer rows than totalCount accepted (truncation undetected)",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M04"
+    },
+    {
+      "desc": "ELLIS: repeated booking rows counted twice",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M06"
+    },
+    {
+      "desc": "ELLIS: cancelled bookings added to billing",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M07"
+    },
+    {
+      "desc": "ELLIS: edited snapshot (hash mismatch) accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M09"
+    },
+    {
+      "desc": "ELLIS: guest / booking identifier fields accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M08"
+    },
+    {
+      "desc": "ELLIS: tolerance boundary exclusive",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "M16"
+    },
+    {
+      "desc": "ELLIS: partially collected month treated as fully covered",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "M10"
+    },
+    {
+      "desc": "ELLIS: ELLIS- prefix not stripped when mapping hotels",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 28,
+      "firstFailing": "M01"
+    },
+    {
+      "desc": "ELLIS: fractional minor units rounded silently",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M01"
+    },
+    {
+      "desc": "ELLIS: every currency treated as the contract currency",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 6,
+      "firstFailing": "M16"
+    },
+    {
+      "desc": "ELLIS: a basis other than check-in / check-out accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M05"
+    },
+    {
+      "desc": "ELLIS: real data accepted into the sample state",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M15"
+    },
+    {
+      "desc": "ELLIS: same snapshot importable twice",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M14"
+    },
+    {
+      "desc": "ELLIS: older snapshot replaces a newer one",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M14"
+    },
+    {
+      "desc": "LEDGER: offset larger than the balance accepted",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "LO01"
+    },
+    {
+      "desc": "LEDGER: offset without a reason accepted",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "LO01"
+    },
+    {
+      "desc": "LEDGER: offset does not reduce the balance",
+      "file": "engine/ledger.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "LO03"
+    },
+    {
+      "desc": "TOPUP: a zero planned top-up is simulated",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "LO04"
+    },
+    {
+      "desc": "ELLIS: default basis is gross billing instead of net",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 4,
+      "firstFailing": "M16"
+    },
+    {
+      "desc": "ELLIS: other currencies added without conversion",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M29"
+    },
+    {
+      "desc": "ELLIS: a sibling contract currency converted into this one",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "M31"
+    },
+    {
+      "desc": "ELLIS: two same-currency contracts at one hotel compared",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "M31"
+    },
+    {
+      "desc": "ELLIS: months before the contract start compared",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "M30"
+    },
+    {
+      "desc": "ELLIS: a non-KRW booking without a rate accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "TRACKER: derived opening adds the top-ups instead of subtracting",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 5,
+      "firstFailing": "TR06"
+    },
+    {
+      "desc": "TRACKER: usage months not put in order",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "TR02"
+    },
+    {
+      "desc": "TRACKER: copied hotel balance not flagged",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR04"
+    },
+    {
+      "desc": "TRACKER: usage before the contract start not flagged",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR04"
+    },
+    {
+      "desc": "TRACKER: the template example row is imported",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 12,
+      "firstFailing": "TR02"
+    },
+    {
+      "desc": "TRACKER: preview open to every role",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR11"
+    },
+    {
+      "desc": "AUTH: password not checked",
+      "file": "core/auth.js",
+      "status": "KILLED",
+      "failedTests": 4,
+      "firstFailing": "A01"
+    },
+    {
+      "desc": "AUTH: lockout disabled",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "A05"
+    },
+    {
+      "desc": "AUTH: restored login runs as admin",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "A07"
+    },
+    {
+      "desc": "AUTH: expired login keeps working",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "A07"
+    },
+    {
+      "desc": "AUTH: failed logins not audited",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "A04"
+    },
+    {
+      "desc": "AUTH: logout not audited",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "A06"
+    },
+    {
+      "desc": "AUTH: app store starts signed in",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "A02"
+    },
+    {
+      "desc": "ELLIS: partly collected month compared as if complete",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M21"
+    },
+    {
+      "desc": "ELLIS: window with dropped rows still marked covered",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M24"
+    },
+    {
+      "desc": "ELLIS: unknown fields (hidden identifiers) accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M22"
+    },
+    {
+      "desc": "ELLIS: negative billing netted silently",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M27"
+    },
+    {
+      "desc": "ELLIS: fingerprint depends on key order",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 11,
+      "firstFailing": "M09"
+    },
+    {
+      "desc": "ELLIS: stored snapshot not tied to a recorded import",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M17"
+    },
+    {
+      "desc": "ELLIS: import open to every role",
+      "file": "core/rbac.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M12"
+    },
+    {
+      "desc": "TRACKER: a usage column of unknown month does not block the rows",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: two usage columns for one month accepted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: usage of the running month accepted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: negative usage accepted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: an arrangement with a negative opening is still converted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "TR08"
+    },
+    {
+      "desc": "TRACKER: a log row of a hotel with two arrangements is not flagged",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: an error row of another sheet blocks an Existing row",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "TR07"
+    },
+    {
+      "desc": "TRACKER: a hotel with a rejected log row is still converted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "TR07"
+    },
+    {
+      "desc": "TRACKER: a minus in the middle or at the end of a number is dropped",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: leading zeros make a different hotel",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: the window starts at an unknown usage month",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR08"
+    },
+    {
+      "desc": "ELLIS: an expired sibling contract still shares the hotel",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M34"
+    },
+    {
+      "desc": "ELLIS: a contract with no judgeable month reported OK",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M32"
+    },
+    {
+      "desc": "ELLIS: bookings of another currency counted in same-currency mode",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M34"
+    },
+    {
+      "desc": "ELLIS: tolerance judged on the rounded ratio",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M34"
+    },
+    {
+      "desc": "ELLIS: KRW figures that disagree with the original amount accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 3,
+      "firstFailing": "M35"
+    },
+    {
+      "desc": "ELLIS: an absurd implied rate accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M35"
+    },
+    {
+      "desc": "TRACKER: a year-less month name is resolved only within three months",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: usage columns older than a year accepted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: a label with a stray number is read as a bare month name",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR14"
+    },
+    {
+      "desc": "TRACKER: ledger rows not put in time order",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "TR07"
+    },
+    {
+      "desc": "TRACKER: a refund above the balance at its date accepted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: rows the import would drop as duplicates not caught",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: two identical top-ups on one day collide",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: over-long notes passed to the import",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: over-long references passed to the import",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: amounts written in minor units for currencies with decimals",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: amounts above the ledger limit converted",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: \"Top up\" with a space is not a top-up",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: a log row before the window makes arrangements ambiguous",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: a real hotel 123456 dropped from the risk sheet",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: 1,234.56 not readable",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "TRACKER: (-5) read as a number",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR15"
+    },
+    {
+      "desc": "ELLIS: revenue KRW figure not checked",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M36"
+    },
+    {
+      "desc": "ELLIS: a booking rounding to 0 KRW refuses the snapshot",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M36"
+    },
+    {
+      "desc": "ELLIS: tolerance option not validated",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M36"
+    },
+    {
+      "desc": "ELLIS: tolerance resolution coarse",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 5,
+      "firstFailing": "M16"
+    },
+    {
+      "desc": "ELLIS: hotel scope still clips months to the contract period",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M37"
+    },
+    {
+      "desc": "ELLIS: hotel scope still skips shared hotels",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M37"
+    },
+    {
+      "desc": "ELLIS: hotel scope option ignored",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M37"
+    },
+    {
+      "desc": "TRACKER: consumption rows not marked as sales production",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR16"
+    },
+    {
+      "desc": "TRACKER: the production note missing from the check list",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR16"
+    },
+    {
+      "desc": "ELLIS v3: check-out basis buckets bookings by check-in",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M38"
+    },
+    {
+      "desc": "ELLIS v3: two date bases mixed in one snapshot",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M38"
+    },
+    {
+      "desc": "ELLIS v3: a pull that used another basis than the snapshot claims accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M38"
+    },
+    {
+      "desc": "ELLIS v3: the collector always pulls by check-in",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M38"
+    },
+    {
+      "desc": "ELLIS v3: the comparison does not report the snapshot basis",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "M38"
+    },
+    {
+      "desc": "ELLIS v3: since-start aggregate excludes the cut-off day",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: since-start aggregate includes days before the cut-off",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: a cut-off on the 1st creates a pointless aggregate",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: a bad cut-off date is accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: the since-start aggregate used for any contract start date",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: the since-start aggregate used although the contract also ends in the month",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: the since-start aggregate ignored in the comparison",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: skipped rows of the whole month make the since-start amount incomplete",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M39"
+    },
+    {
+      "desc": "ELLIS v3: a since-start aggregate with more bookings than its month accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M40"
+    },
+    {
+      "desc": "ELLIS v3: a since-start aggregate with more skipped rows than its month accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M40"
+    },
+    {
+      "desc": "ELLIS v3: a since-start aggregate dated in another month accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M40"
+    },
+    {
+      "desc": "ELLIS v3: a since-start aggregate dated on the 1st accepted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "M40"
+    },
+    {
+      "desc": "OUTLOOK: top-up request date ignores the lead time",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "OU02"
+    },
+    {
+      "desc": "OUTLOOK: a top-up due today is not urgent",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU02"
+    },
+    {
+      "desc": "OUTLOOK: the two-week boundary excluded",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU02"
+    },
+    {
+      "desc": "OUTLOOK: depleting on the contract end day counted as outlasting it",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU02"
+    },
+    {
+      "desc": "OUTLOOK: top-up timing prefers ELLIS over the confirmed ledger",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU03"
+    },
+    {
+      "desc": "OUTLOOK: an empty balance is not reported as depleted",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU02"
+    },
+    {
+      "desc": "OUTLOOK: a top-up on hold is shown as a plain plan",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "OU02"
+    },
+    {
+      "desc": "OUTLOOK: grade D no longer a reason to wind down",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU05"
+    },
+    {
+      "desc": "OUTLOOK: a refund in progress is ignored",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU05"
+    },
+    {
+      "desc": "OUTLOOK: an ended contract with money left is ignored",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU05"
+    },
+    {
+      "desc": "OUTLOOK: an unrated hotel is \"continue with conditions\" because its limit is 0",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU05"
+    },
+    {
+      "desc": "OUTLOOK: conditions outrank a wind-down",
+      "file": "engine/outlook.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "OU05"
+    },
+    {
+      "desc": "OUTLOOK: regular check is not the 1st of next month",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU01"
+    },
+    {
+      "desc": "OUTLOOK: a watch date on the same day as the regular check is called a watch",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU01"
+    },
+    {
+      "desc": "OUTLOOK: watch interval changed",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU01"
+    },
+    {
+      "desc": "OUTLOOK: ELLIS speed ignored when the ledger month is missing",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU03"
+    },
+    {
+      "desc": "OUTLOOK: an average over fewer months called complete",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU04"
+    },
+    {
+      "desc": "OUTLOOK: booked months after the contract end counted",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU04"
+    },
+    {
+      "desc": "OUTLOOK: booked months that were not collected completely counted as zero",
+      "file": "adapters/ellis.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "OU04"
+    },
+    {
+      "desc": "GRADES: a hotel with several contracts takes its best grade instead of its worst",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "V03b"
+    },
+    {
+      "desc": "GRADES: an unrated contract is ranked worse than D",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "V03b"
+    },
+    {
+      "desc": "GRADES: hotels counted once per contract",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "V03b"
+    },
+    {
+      "desc": "REVIEW: a CEO review without any feedback is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "X02"
+    },
+    {
+      "desc": "REVIEW: a completed review without feedback accepted on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H02"
+    },
+    {
+      "desc": "REVIEW: feedback attributed to someone else accepted on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "H02"
+    }
+  ]
+}

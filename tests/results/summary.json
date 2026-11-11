@@ -1,0 +1,36 @@
+{
+  "generatedFrom": {
+    "node": "2026-11-11T01:02:49.703Z",
+    "ui": "2026-11-11T01:02:44.072Z",
+    "mutation": "2026-11-11T00:58:28.758Z"
+  },
+  "nodeTests": {
+    "total": 188,
+    "passed": 188,
+    "failed": 0
+  },
+  "uiTests": {
+    "total": 26,
+    "passed": 26,
+    "failed": 0
+  },
+  "totalTests": 214,
+  "totalPassed": 214,
+  "requirements": {
+    "total": 101,
+    "internal": 96,
+    "pass": 96,
+    "untested": 0,
+    "fail": 0,
+    "external": 5
+  },
+  "mvp15": {
+    "total": 15,
+    "pass": 15,
+    "passRatePct": 100
+  },
+  "mutation": {
+    "applied": 184,
+    "killed": 184
+  }
+}
