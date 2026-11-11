@@ -29,7 +29,8 @@
   const LABELS = {
     ptype: { FLOATING: B('프리바이(플로팅)', 'Prebuy (Floating)'), PREPAYMENT: B('프리바이(선급금)', 'Prebuy (Prepayment)'), BUYOUT: B('買取(매입)', 'Buyout (買取)'), HARD_BLOCK_ADV: B('하드블럭', 'Hard block'), SECURITY_DEPOSIT: B('보증금', 'Security deposit') },
     txType: { OPENING: B('기초잔액', 'Opening'), TOPUP: B('충전', 'Top-up'), CONSUMPTION: B('소진', 'Consumption'), REFUND: B('반환', 'Refund'), ADJUSTMENT: B('조정', 'Adjustment'), OFFSET: B('상계', 'Offset') },
-    country: { KR: B('한국', 'Korea'), JP: B('일본', 'Japan'), VN: B('베트남', 'Vietnam') },
+    country: { KR: B('한국', 'Korea'), JP: B('일본', 'Japan'), VN: B('베트남', 'Vietnam'), SG: B('싱가포르', 'Singapore'), HK: B('홍콩', 'Hong Kong'), TW: B('대만', 'Taiwan'), TH: B('태국', 'Thailand') },
+    entity: { 'OMH-SG': B('싱가포르 본사 (OMH-SG)', 'Singapore HQ (OMH-SG)'), 'OMH-KR': B('한국 법인 (OMH-KR)', 'Korea entity (OMH-KR)'), 'OMH-JP': B('일본 법인 (OMH-JP)', 'Japan entity (OMH-JP)'), 'OMH-VN': B('베트남 법인 (OMH-VN)', 'Vietnam entity (OMH-VN)') },
     sev: { CRITICAL: B('치명', 'Critical'), HIGH: B('높음', 'High'), MEDIUM: B('중간', 'Medium') },
     alertStatus: { OPEN: B('미처리', 'Open'), ACKNOWLEDGED: B('확인함', 'Acknowledged'), IN_PROGRESS: B('처리중', 'In progress'), RESOLVED: B('해결', 'Resolved'), DISMISSED: B('오탐 기각', 'Dismissed') },
     action: { HOLD_TOPUP: B('추가 충전 보류', 'Hold further top-ups'), VERIFY_CONTRACT: B('계약 확인', 'Verify contract'), RECONFIRM_BALANCE: B('호텔 잔액 재확인', 'Re-confirm balance'), REVIEW_REFUND: B('반환 요청 검토', 'Review refund request') },

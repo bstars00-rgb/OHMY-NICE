@@ -44,7 +44,7 @@ module.exports = function register(h) {
     a.eq(c.setCounterparty('CT-KR-002', 'MAYBE', 'REG-1111').errors[0], 'E_STATUS_INVALID'); a.eq(c.setCounterparty('NOPE', 'VERIFIED', 'REG-1111').errors[0], 'E_CONTRACT_UNKNOWN');
   });
   t('D05', 'Config validation covers every section; a rejected/failed change can never brick the app; all-or-nothing rollback', ['S08', 'D-5'], a => {
-    const st = fresh('ADMIN'); const c = st.commands; const cfg = () => env.clone(st.state.config); const bad = (mut, tag) => { const x = cfg(); mut(x); const r = c.setConfig(x, 'test'); a.eq(r.ok, false, tag); a.ok(r.errors.length > 0, tag); a.ok(st.model().views.length === 16, 'app still computes after ' + tag); };
+    const st = fresh('ADMIN'); const c = st.commands; const cfg = () => env.clone(st.state.config); const bad = (mut, tag) => { const x = cfg(); mut(x); const r = c.setConfig(x, 'test'); a.eq(r.ok, false, tag); a.ok(r.errors.length > 0, tag); a.ok(st.model().views.length === 20, 'app still computes after ' + tag); };
     bad(x => { delete x.alertRules.RATING_DROP; }, 'rule removed'); bad(x => { delete x.guards; }, 'guards removed'); bad(x => { x.forecast.daysPerMonth = 30.5; }, 'fractional days'); bad(x => { x.forecast.daysPerMonth = 0.0001; }, 'tiny days');
     bad(x => { x.asOf = '2026-99-99'; }, 'bad asOf'); bad(x => { x.alertRules.RATING_DROP.params = {}; }, 'params emptied'); bad(x => { x.alertRules.CONSUMPTION_COLLAPSE.params.dropPct = -100; }, 'negative threshold'); bad(x => { x.alertRules.CONSUMPTION_COLLAPSE.params.dropPct = 150; }, 'threshold > 100'); bad(x => { x.alertRules.RATING_DROP.params.notches = 1.5; }, 'fractional notches');
     bad(x => { x.alertRules.LONG_UNCONSUMED.enabled = 'yes'; }, 'non-boolean enabled'); bad(x => { delete x.flagCaps.CLOSURE_CONFIRMED; }, 'flag cap removed'); bad(x => { x.guards.velocityHoldDropPct = 0; }, 'zero velocity hold');
@@ -110,13 +110,13 @@ module.exports = function register(h) {
       'duplicate dedup key': s => { s.ledger.push(Object.assign({}, s.ledger[3], { txId: 'TX-DUP-1' })); }, 'second OPENING': s => { s.ledger.push(Object.assign({}, s.ledger[0], { txId: 'TX-OP-2', externalRef: 'OPEN2' })); },
       'hotel missing': s => { s.hotels.pop(); s.hotels.pop(); }, 'rating missing': s => { delete s.ratings['CT-KR-001']; }, 'refund above balance': s => { s.ledger.push({ txId: 'TX-R-1', contractId: 'CT-KR-001', type: 'REFUND', amountMinor: 9e12, currency: 'KRW', occurredAt: '2026-11-01T10:00:00+09:00', source: 'X' }); },
       'row dated in the future': s => { s.ledger.push({ txId: 'TX-F-1', contractId: 'CT-KR-001', type: 'TOPUP', amountMinor: 1, currency: 'KRW', occurredAt: '2099-11-01T10:00:00+09:00', source: 'X' }); }, 'naive timestamp': s => { s.ledger[2].occurredAt = '2026-06-10T10:00:00'; } };
-    for (const [name, mut] of Object.entries(cases)) { const r = mk(mut); a.eq(r.status, 'CORRUPT_RESET', name); a.ok(r.stg.getItem('omh_hfr_v1.corrupt'), name + ': original blob kept'); a.eq(r.st.model().views.length, 16, name + ': app falls back to a working sample'); }
+    for (const [name, mut] of Object.entries(cases)) { const r = mk(mut); a.eq(r.status, 'CORRUPT_RESET', name); a.ok(r.stg.getItem('omh_hfr_v1.corrupt'), name + ': original blob kept'); a.eq(r.st.model().views.length, 20, name + ': app falls back to a working sample'); }
     a.eq(mk(() => {}).status, 'OK');
     const lowered = mk(s => { s.config.asOf = '2026-11-01'; }); a.eq(lowered.status, 'OK', 'lowering asOf must not invalidate rows posted earlier than today');
   });
   t('E02', 'A broken audit chain is surfaced (AUDIT_BROKEN) without destroying the data', ['D-3', 'D-5'], a => {
     const s = env.clone(Seed.buildSeed()); s.audit = [{ seq: 1, at: 'z', actor: 'a', role: 'SCM', action: 'X', entity: 'e', outcome: 'OK', detail: {}, prevHash: 'GENESIS', hash: 'forged' }];
-    const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(s)); const st = env.newStore({ storage: stg }); a.eq(st.loadStatus, 'AUDIT_BROKEN'); a.eq(st.model().views.length, 16); a.eq(st.verifyAudit().ok, false);
+    const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(s)); const st = env.newStore({ storage: stg }); a.eq(st.loadStatus, 'AUDIT_BROKEN'); a.eq(st.model().views.length, 20); a.eq(st.verifyAudit().ok, false);
   });
   t('E03', "The 'provisional' flag cannot be cleared by an administrator (only a CEO-approved release may)", ['M03-4', 'S08', 'D-4'], a => {
     const st = env.as(env.newStore(), 'ADMIN'); const x = env.clone(st.state.config); x.provisional = false; a.deepEq(st.commands.setConfig(x, 'try to finalise').errors, ['E_PROVISIONAL_LOCKED']); a.eq(st.state.config.provisional, true);
@@ -251,7 +251,7 @@ module.exports = function register(h) {
     const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(real.state)); a.eq(env.newStore({ storage: stg }).loadStatus, 'OK', 'legitimately recorded activity loads cleanly');
   });
   t('F07', 'Config: unknown keys and out-of-range values are rejected', ['S08'], a => {
-    const st = fresh('ADMIN'); const bad = (mut, tag) => { const x = env.clone(st.state.config); mut(x); const r = st.commands.setConfig(x, 'probe'); a.eq(r.ok, false, tag); a.ok(st.model().views.length === 16); };
+    const st = fresh('ADMIN'); const bad = (mut, tag) => { const x = env.clone(st.state.config); mut(x); const r = st.commands.setConfig(x, 'probe'); a.eq(r.ok, false, tag); a.ok(st.model().views.length === 20); };
     bad(x => { x.evil = { x: 1 }; }, 'unknown key'); bad(x => { x.version = -1; }, 'version'); bad(x => { x.guards.nonRefundableMonths = 1e300; }, 'huge months'); bad(x => { x.recon.staleDays = 0.5; }, 'fractional staleDays'); bad(x => { x.alertRules.RATING_DROP.params.windowDays = 1e300; }, 'huge window');
     bad(x => { x.alertRules.BOGUS = { enabled: true, severity: 'HIGH', action: 'HOLD_TOPUP' }; }, 'unknown rule'); bad(x => { x.alertRules.RATING_DROP.params.notches = 5; }, 'notches > 3');
   });
@@ -305,7 +305,7 @@ module.exports = function register(h) {
       for (const c of s.contracts) { b.contracts.push(Object.assign(env.clone(c), { contractId: sx(c.contractId), hotelId: sx(c.hotelId) })); b.ratings[sx(c.contractId)] = env.clone(s.ratings[c.contractId]); }
       for (const x of s.ledger) b.ledger.push(Object.freeze(Object.assign({}, x, { txId: sx(x.txId), contractId: sx(x.contractId), externalRef: x.externalRef ? sx(x.externalRef) : undefined })));
       for (const x of s.confirmations) b.confirmations.push(Object.assign({}, x, { contractId: sx(x.contractId) })); }
-    a.ok(b.ledger.length > 20000, 'rows ' + b.ledger.length); let t0 = Date.now(); const m = Model.compute(b); const dc = Date.now() - t0; a.ok(dc < 3000, 'compute ' + dc + ' ms'); a.eq(m.views.length, 2560);
+    a.ok(b.ledger.length > 20000, 'rows ' + b.ledger.length); let t0 = Date.now(); const m = Model.compute(b); const dc = Date.now() - t0; a.ok(dc < 3000, 'compute ' + dc + ' ms'); a.eq(m.views.length, 3200);
     const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(b)); t0 = Date.now(); const st = env.newStore({ storage: stg }); const dl = Date.now() - t0; a.eq(st.loadStatus, 'OK'); a.ok(dl < 6000, 'load ' + dl + ' ms');
     for (const id of ['CT-KR-001~7', 'CT-JP-004~100', 'CT-VN-002~159']) a.eq(m.byContract[id].balance.closingMinor, Ledger.balance(b.ledger, id).closingMinor, id + ' grouped balance equals full scan');
     const f1 = env.synth({ topups: [['2026-10-10', 10e6]] }), f2 = env.synth({ topups: [['2026-10-10', 10e6]] }); const ix = Ledger.makeIndex(f2.state.ledger); const cx2 = Object.assign({}, f2.cx, { index: ix });

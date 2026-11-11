@@ -90,7 +90,7 @@ module.exports = function register(h) {
   t('L09', 'KPI exposure is grouped per currency and never summed across currencies', ['M04-3'], a => {
     const s = seedState(); const m = Model.compute(s); const k = Model.kpis(m.views);
     const manual = {}; for (const c of s.contracts) { const b = Ledger.balance(s.ledger, c.contractId).closingMinor; manual[c.currency] = (manual[c.currency] || 0) + b; }
-    a.deepEq(k.exposure, manual); a.deepEq(Object.keys(k.exposure).sort(), ['JPY', 'KRW', 'VND'], 'one currency per country'); a.eq(k.exposure.KRW, 45e6 + 30e6 + 46e6 + 5.7e6 + 1.5e6);
+    a.deepEq(k.exposure, manual); a.deepEq(Object.keys(k.exposure).sort(), ['HKD', 'JPY', 'KRW', 'SGD', 'THB', 'TWD', 'VND'], 'one currency per country; every one of them is held by the head office'); a.eq(k.exposure.KRW, 45e6 + 30e6 + 46e6 + 5.7e6 + 1.5e6);
     a.throws(() => Money.assertSame('KRW', 'JPY'), 'E_CURRENCY_MISMATCH');
     const kr = Model.kpis(m.views, { country: 'KR' }); a.deepEq(Object.keys(kr.exposure).sort(), ['KRW'], 'Korean hotels hold Korean won only');
   });

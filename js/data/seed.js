@@ -11,7 +11,7 @@
   const { Config, Ledger } = dep;
   const B = (ko, en) => ({ ko, en });
   const ENTITIES = {
-    'OMH-KR': 'OHMYHOTEL Korea (sample entity)', 'OMH-JP': 'OHMYHOTEL Japan (sample entity)', 'OMH-VN': 'OHMYHOTEL Vietnam (sample entity)',
+    'OMH-SG': 'OHMYHOTEL Singapore HQ (sample entity)', 'OMH-KR': 'OHMYHOTEL Korea (sample entity)', 'OMH-JP': 'OHMYHOTEL Japan (sample entity)', 'OMH-VN': 'OHMYHOTEL Vietnam (sample entity)',
   };
   const ORDER = ['legalEntity', 'operatingStability', 'financialHealth', 'ownershipChange', 'settlementHistory', 'consumptionVsPrepay', 'refundability', 'collateral', 'reconAccuracy', 'continuity', 'scmOps', 'countryLegal'];
   const N = null;
@@ -34,6 +34,10 @@
     ['H013', 'ELLIS-90013', B('샘플 대구 호텔', 'Sample Daegu Hotel'), 'KR', B('대구', 'Daegu'), 'SAMPLE Daegu Stay Co.', 'SCM-KR-02', {}],
     ['H014', 'ELLIS-90014', B('샘플 냐짱 베이 호텔', 'Sample Nha Trang Bay Hotel'), 'VN', B('냐짱', 'Nha Trang'), 'SAMPLE Bay Hotel JSC', 'SCM-VN-02', {}],
     ['H015', 'ELLIS-90015', B('샘플 광주 호텔', 'Sample Gwangju Hotel'), 'KR', B('광주', 'Gwangju'), 'SAMPLE Gwangju Stay Co.', 'SCM-KR-02', {}],
+    ['H016', 'ELLIS-90016', B('샘플 싱가포르 마리나 호텔', 'Sample Singapore Marina Hotel'), 'SG', B('싱가포르', 'Singapore'), 'SAMPLE Marina Pte. Ltd.', 'SCM-SG-01', {}],
+    ['H017', 'ELLIS-90017', B('샘플 홍콩 침사추이 호텔', 'Sample Hong Kong Tsim Sha Tsui Hotel'), 'HK', B('홍콩', 'Hong Kong'), 'SAMPLE TST Hotel Ltd.', 'SCM-HK-01', {}],
+    ['H018', 'ELLIS-90018', B('샘플 타이베이 시먼 호텔', 'Sample Taipei Ximending Hotel'), 'TW', B('타이베이', 'Taipei'), 'SAMPLE Ximen Hotel Co.', 'SCM-TW-01', {}],
+    ['H019', 'ELLIS-90019', B('샘플 방콕 수쿰윗 호텔', 'Sample Bangkok Sukhumvit Hotel'), 'TH', B('방콕', 'Bangkok'), 'SAMPLE Sukhumvit Co. Ltd.', 'SCM-TH-01', {}],
   ].map(([hotelId, ellisHotelId, name, country, city, operatingCompany, scm, facts], i) => ({
     hotelId, ellisHotelId, name, brand: B('(브랜드 미상)', '(brand n/a)'), country, city, operatingCompany, owner: null /* Unknown */, status: 'ACTIVE',
     assignedScm: scm, lastVerifiedDate: '2026-10-15', facts: Object.assign({ closure: null, ownershipChange: 'UNKNOWN' }, facts), isSample: true,
@@ -63,19 +67,27 @@
       { refund: { requested: true, requestedAt: '2026-09-20', requestedAmountMinor: 12e6, dueDate: '2026-10-20' } }),
     C('CT-JP-005', 'H007', 'OMH-JP', 'BUYOUT', 'JPY', '2026-04-01', '2027-03-31', false, false, 0, 30e6, [],
       { Aug: 0, Sep: 0, Oct: 0 }, [30e6, '2026-10-31'], [0, 0, 0], [['2026-08-01', 'C', 52.4]]),
-    C('CT-VN-001', 'H008', 'OMH-VN', 'FLOATING', 'VND', '2025-11-01', '2027-10-31', true, false, 0, 900e6, [['06-10', 600e6], ['07-10', 600e6], ['08-10', 600e6], ['10-10', 300e6]],
+    C('CT-VN-001', 'H008', 'OMH-SG', 'FLOATING', 'VND', '2025-11-01', '2027-10-31', true, false, 0, 900e6, [['06-10', 600e6], ['07-10', 600e6], ['08-10', 600e6], ['10-10', 300e6]],
       { Jun: 580e6, Jul: 610e6, Aug: 600e6, Oct: 620e6 }, null, [610e6, 600e6, 630e6], [['2026-08-01', 'B', 67.7]]),
     C('CT-VN-002', 'H009', 'OMH-VN', 'PREPAYMENT', 'VND', '2025-01-01', '2026-12-31', true, false, 0, 1500e6, [['06-01', 400e6], ['07-01', 400e6], ['08-01', 400e6], ['09-01', 400e6], ['10-01', 400e6]],
       { Jun: 380e6, Jul: 420e6, Aug: 400e6, Sep: 400e6, Oct: 400e6 }, [1500e6, '2026-10-31'], [410e6, 405e6, 395e6], [['2026-08-01', 'C', 59.6]]),
     C('CT-VN-003', 'H010', 'OMH-VN', 'SECURITY_DEPOSIT', 'VND', '2026-03-01', '2028-02-29', true, true, 0, 500e6, [], {}, [500e6, '2026-09-15'], null, [['2026-08-01', 'B', 68.6]]),
-    C('CT-JP-006', 'H011', 'OMH-JP', 'FLOATING', 'JPY', '2026-02-01', '2027-01-31', true, true, 0, 12e6, [['06-05', 6e6], ['07-05', 6e6], ['08-05', 6e6], ['09-05', 6e6], ['10-05', 6e6]],
+    C('CT-JP-006', 'H011', 'OMH-SG', 'FLOATING', 'JPY', '2026-02-01', '2027-01-31', true, true, 0, 12e6, [['06-05', 6e6], ['07-05', 6e6], ['08-05', 6e6], ['09-05', 6e6], ['10-05', 6e6]],
       { Jun: 6e6, Jul: 6e6, Aug: 6e6, Sep: 6e6, Oct: 6e6 }, [12e6, '2026-10-31'], [6.2e6, 6.0e6, 6.1e6], [['2026-08-01', 'B', 68.8]]),
     C('CT-JP-007', 'H012', 'OMH-JP', 'FLOATING', 'JPY', '2026-10-20', '2027-10-19', true, null, 0, 5e6, [], {}, null, null, [], { counterpartyVerification: 'UNKNOWN' }),
-    C('CT-KR-004', 'H013', 'OMH-KR', 'FLOATING', 'KRW', '2025-12-16', '2026-12-15', true, false, 0, K(10), [['06-10', K(10)], ['07-10', K(10)], ['08-10', K(10)], ['09-10', K(10)], ['10-10', K(5)]],
+    C('CT-KR-004', 'H013', 'OMH-SG', 'FLOATING', 'KRW', '2025-12-16', '2026-12-15', true, false, 0, K(10), [['06-10', K(10)], ['07-10', K(10)], ['08-10', K(10)], ['09-10', K(10)], ['10-10', K(5)]],
       { Jun: K(10), Jul: K(10), Aug: K(10), Sep: 9.5e6, Oct: 9.8e6 }, [5.7e6, '2026-10-31'], [K(12), K(12), K(8)], [['2026-08-01', 'B', 67.2]]),
     C('CT-VN-004', 'H014', 'OMH-VN', 'FLOATING', 'VND', '2025-08-01', '2027-07-31', true, false, 0, 1000e6, [],
       { Jun: 100e6, Jul: 100e6, Aug: 90e6, Sep: 60e6, Oct: 0 }, [650e6, '2026-10-15'], [80e6, 55e6, 0], [['2026-08-01', 'C', 55.0]],
       { refund: { requested: true, requestedAt: '2026-08-30', requestedAmountMinor: 650e6, dueDate: '2026-09-30' }, refundRefused: { claimed: true, source: 'SCM', note: 'written refusal received', verified: { by: 'SCM-VN-02 (sample)', at: '2026-10-02', evidenceRef: 'EML-VN-2026-1002' } } }),
+    C('CT-SG-001', 'H016', 'OMH-SG', 'FLOATING', 'SGD', '2026-01-01', '2027-06-30', true, true, 0, 6e6, [['06-10', 3e6], ['07-10', 3e6], ['08-10', 3e6], ['09-10', 3e6], ['10-10', 3e6]],
+      { Jun: 3e6, Jul: 2.9e6, Aug: 3.1e6, Sep: 3e6, Oct: 3e6 }, [6e6, '2026-10-31'], [3.2e6, 3.3e6, 3.4e6], [['2026-08-01', 'B', 72.0]]),
+    C('CT-HK-001', 'H017', 'OMH-SG', 'FLOATING', 'HKD', '2026-02-01', '2027-07-31', true, true, 0, 40e6, [['06-12', 20e6], ['08-12', 20e6], ['10-12', 20e6]],
+      { Jun: 15e6, Jul: 16e6, Aug: 15e6, Sep: 15e6, Oct: 15e6 }, [24e6, '2026-10-31'], [16e6, 15.5e6, 15e6], [['2026-08-01', 'B', 70.4]]),
+    C('CT-TW-001', 'H018', 'OMH-SG', 'PREPAYMENT', 'TWD', '2026-03-01', '2027-08-31', true, true, 0, 150e6, [['07-08', 100e6], ['09-08', 100e6]],
+      { Jun: 58e6, Jul: 62e6, Aug: 60e6, Sep: 60e6, Oct: 60e6 }, [50e6, '2026-10-31'], [61e6, 60e6, 59e6], [['2026-08-01', 'B', 69.2]]),
+    C('CT-TH-001', 'H019', 'OMH-SG', 'FLOATING', 'THB', '2026-04-01', '2027-09-30', true, true, 0, 200e6, [['06-20', 100e6], ['08-20', 100e6], ['10-20', 100e6]],
+      { Jun: 78e6, Jul: 82e6, Aug: 80e6, Sep: 80e6, Oct: 80e6 }, [100e6, '2026-10-31'], [82e6, 80e6, 81e6], [['2026-08-01', 'B', 71.6]]),
     C('CT-KR-005', 'H015', 'OMH-KR', 'HARD_BLOCK_ADV', 'KRW', '2026-05-01', '2027-04-30', true, true, 0, 4000000, [],
       { Jun: 500000, Jul: 500000, Aug: 500000, Sep: 500000, Oct: 500000 }, [1500000, '2026-10-31'], [5200, 5100, 5300].map(x => x * 100), [['2026-08-01', 'B', 76.0]]),
   ];

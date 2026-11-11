@@ -10,7 +10,8 @@
   const Model = NS.Model, Rating = NS.Rating, RBAC = NS.RBAC, Alerts = NS.Alerts, Money = NS.Money;
 
   /* ============ Screen 01 — Executive Dashboard: one card per country; every line of a card opens the screen where that number is worked on ============ */
-  const COUNTRY_ORDER = ['KR', 'JP', 'VN', 'SG'];
+  const COUNTRY_ORDER = ['KR', 'JP', 'VN', 'SG', 'TH', 'HK', 'TW'];
+  const ENTITY_ORDER = ['OMH-SG', 'OMH-KR', 'OMH-JP', 'OMH-VN'];       // the head office first: contracts move there, the local entities keep only what has not moved yet
   /** The balance of one country split the way the country files split it: prebuy (floating / prepayment), hard block, and anything else (buyout, deposit). */
   function balanceGroups(byType) {
     const sum = types => { const out = {}; for (const t of types) for (const [cur, minor] of Object.entries((byType || {})[t] || {})) out[cur] = (out[cur] || 0) + minor; return out; };
@@ -38,7 +39,17 @@
         row('#/risk', c, L('활성 경보', 'Active alerts'), '<b class="cnum">' + alertsN + '</b>', sevBadge('CRITICAL') + ' ' + k.activeAlerts.CRITICAL + ' · ' + sevBadge('HIGH') + ' ' + k.activeAlerts.HIGH + ' · ' + sevBadge('MEDIUM') + ' ' + k.activeAlerts.MEDIUM) + '</div>';
     };
     const notes = '<div class="muted small dash-note">' + esc(L('선급금 잔액', 'Prepayment balance')) + ': ' + esc(L('호텔에 미리 낸 돈 중 아직 쓰지 않은 금액', 'Money paid to hotels in advance and not yet used')) + ' · ' + esc(L('계약이 여러 개면 가장 낮은 등급 · NR = 평가 근거 부족', 'Lowest grade if a hotel has several contracts · NR = not rated (insufficient evidence)')) + '</div>';
-    return caption + '<div class="ccards">' + countries.map(card).join('') + '</div>' + notes;
+    // contracting entities: the Singapore head office holds the contracts that have moved, in several currencies; a local entity keeps only what has not moved yet
+    const entities = [...new Set(m.views.map(v => v.contract.omhEntity))].sort((x, y) => { const ix = ENTITY_ORDER.indexOf(x), iy = ENTITY_ORDER.indexOf(y); return (ix < 0 ? 99 : ix) - (iy < 0 ? 99 : iy) || String(x).localeCompare(String(y)); });
+    const ecard = e => {
+      const k = Model.kpis(m.views, { entity: e }); const g = balanceGroups(k.byType); const ctys = [...new Set(m.views.filter(v => v.contract.omhEntity === e).map(v => v.hotel.country))].sort((x, y) => COUNTRY_ORDER.indexOf(x) - COUNTRY_ORDER.indexOf(y));
+      const line = (label, map) => '<div class="grp"><span class="muted">' + esc(label) + '</span> ' + moneyMap(map) + '</div>';
+      return '<div class="card ecard"><div class="ch"><b>' + esc(lab('entity', e)) + '</b><span class="muted small">' + esc(k.count + L('개 계약 · ', ' contracts · ') + k.hotels + L('개 호텔', ' hotels')) + '</span></div>' +
+        '<a class="crow" href="#/status" data-entity="' + esc(e) + '"><div class="crow-k">' + esc(L('선급금 잔액', 'Prepayment balance')) + '</div><div class="crow-v">' + moneyMap(k.exposure) + line(L('프리바이', 'Prebuy'), g.prebuy) + line(L('하드블럭', 'Hard block'), g.hard) + (g.hasOther ? line(L('기타(買取·보증금)', 'Other (buyout · deposit)'), g.other) : '') + '</div></a>' +
+        '<div class="crow"><div class="crow-k">' + esc(L('호텔 국가', 'Hotel countries')) + '</div><div class="crow-v">' + esc(ctys.map(c => lab('country', c)).join(' · ')) + '</div></div></div>';
+    };
+    const entSec = '<h3 class="dash-sec">' + esc(L('계약 법인별 선급금 잔액', 'Prepayment balance by legal entity')) + '</h3><div class="muted small dash-note">' + esc(L('계약은 싱가포르 본사로 옮기는 중입니다. 본사에는 여러 나라의 통화가 함께 있고, 지역 법인에는 아직 옮기지 못한 계약만 남습니다. 통화는 서로 합치지 않습니다.', 'Contracts are being moved to the Singapore head office. The head office holds several countries\' currencies, and a local entity keeps only the contracts that have not moved yet. Currencies are never added together.')) + '</div><div class="ecards">' + entities.map(ecard).join('') + '</div>';
+    return caption + '<div class="ccards">' + countries.map(card).join('') + '</div>' + entSec + notes;
   }
   /** A line of a country card opens its screen with that country already chosen (status board filter, hotel credit card list). */
   function dashboardBind(el, ctx) {
@@ -46,6 +57,7 @@
       e.preventDefault(); const c = a.getAttribute('data-country'); const path = a.getAttribute('href').slice(1);
       ctx.ui.filters = c ? { country: c } : {}; ctx.ui.profileCountry = c || ''; ctx.navigate(path);
     }));
+    el.querySelectorAll('a[data-entity]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); ctx.ui.filters = { entity: a.getAttribute('data-entity') }; ctx.ui.profileCountry = ''; ctx.navigate('/status'); }));
   }
 
   /* ============ Floating status board (플로팅 현황판): totals by entity and country, grade distribution, high-risk list, contract table ============ */
@@ -55,7 +67,7 @@
     const uniq = fn => [...new Set(m.views.map(fn))].sort();
     const filters = '<div class="toolbar filters">' +
       '<label>' + esc(L('국가', 'Country')) + ' <select data-f="country">' + opt(uniq(v => v.hotel.country), f.country, c => lab('country', c)) + '</select></label>' +
-      '<label>' + esc(L('계약 법인', 'Legal entity')) + ' <select data-f="entity">' + opt(uniq(v => v.contract.omhEntity), f.entity) + '</select></label>' +
+      '<label>' + esc(L('계약 법인', 'Legal entity')) + ' <select data-f="entity">' + opt(uniq(v => v.contract.omhEntity), f.entity, e => lab('entity', e)) + '</select></label>' +
       '<label>' + esc(L('통화', 'Currency')) + ' <select data-f="currency">' + opt(uniq(v => v.currency), f.currency) + '</select></label>' +
       '<label>' + esc(L('선급금 유형', 'Prepayment type')) + ' <select data-f="type">' + opt(uniq(v => v.contract.prepaymentType), f.type, t => lab('ptype', t)) + '</select></label>' +
       '<button class="btn sm" data-act="clear-filters">' + esc(L('필터 초기화', 'Clear filters')) + '</button><span class="spacer"></span>' +
@@ -68,7 +80,7 @@
       '<div class="panel"><h3>' + esc(L('등급별 호텔 수 (계약이 여러 개면 가장 낮은 등급, 잠정 A~D·NR)', 'Hotels by grade (lowest grade among a hotel\'s contracts, provisional A–D · NR)')) + '</h3><div class="body"><div class="gbar" role="img" aria-label="hotels by grade">' + (gradeBar || '—') + '</div><div class="muted small">' + esc(L('NR = 평가 근거 부족으로 미평가. 파트너 A~E 등급과 별개 척도입니다.', 'NR = not rated (insufficient evidence). Separate scale from partner A–E grades.')) + '</div></div></div>' +
       '<div class="panel"><h3>' + esc(L('고위험 호텔 목록', 'High-risk hotel list')) + '</h3><div class="body">' + hiList + '</div></div>' +
       '<div class="panel"><h3>' + esc(L('국가별 선급금 잔액', 'Prepayment balance by country')) + '</h3><div class="body">' + mapList(k.byCountry, c => lab('country', c)) + '</div></div>' +
-      '<div class="panel"><h3>' + esc(L('계약 법인별 선급금 잔액', 'Prepayment balance by legal entity')) + '</h3><div class="body">' + mapList(k.byEntity) + '</div></div>' +
+      '<div class="panel"><h3>' + esc(L('계약 법인별 선급금 잔액', 'Prepayment balance by legal entity')) + '</h3><div class="body">' + mapList(k.byEntity, e => lab('entity', e)) + '</div></div>' +
       '<div class="panel"><h3>' + esc(L('선급금 유형별 잔액', 'Balance by prepayment type')) + '</h3><div class="body">' + mapList(k.byType, t => lab('ptype', t)) + '</div></div></div>';
     const vs = m.views.filter(v => (!f.country || v.hotel.country === f.country) && (!f.entity || v.contract.omhEntity === f.entity) && (!f.currency || v.currency === f.currency) && (!f.type || v.contract.prepaymentType === f.type));
     const cols = [

@@ -24,9 +24,9 @@
     a.eq(n, 56); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | ')); doc.getElementById('lang-ko').click();
   });
   t('U02', 'Floating status board: filters change the numbers; impossible combination shows an empty state', ['S01', 'UI-FILTER', 'UI-EMPTY'], async a => {
-    await load('/status'); doc.getElementById('lang-en').click(); await nav('/status'); const rowsN = () => qa('#tbl-dash tbody tr').length; a.eq(rowsN(), 16);
+    await load('/status'); doc.getElementById('lang-en').click(); await nav('/status'); const rowsN = () => qa('#tbl-dash tbody tr').length; a.eq(rowsN(), 20);
     setVal(q('[data-f="country"]'), 'JP', 'change'); await until(() => rowsN() === 7); setVal(q('[data-f="currency"]'), 'KRW', 'change'); await until(() => txt().includes('No data to display'));
-    click(q('[data-act="clear-filters"]')); await until(() => rowsN() === 16); doc.getElementById('lang-ko').click();
+    click(q('[data-act="clear-filters"]')); await until(() => rowsN() === 20); doc.getElementById('lang-ko').click();
   });
   t('U03', 'Top-up simulator inside the hotel credit card computes instantly, labels itself a simulation, writes nothing and does not carry an amount over to another contract', ['S04', 'T14', 'M04-2'], async a => {
     await load('/profile/CT-KR-004'); const n0 = ledgerLen(); const snap = JSON.stringify(store().state.ledger); const r = () => q('#sim-result').innerText;
@@ -73,11 +73,11 @@
     frame.style.width = '1280px';
   });
   t('U11', 'Tables sort by header and search by text', ['UI-SORT'], async a => {
-    await load('/status'); const rows = () => qa('#tbl-dash tbody tr'); a.eq(rows().length, 16); const first0 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== first0); const f1 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== f1);
+    await load('/status'); const rows = () => qa('#tbl-dash tbody tr'); a.eq(rows().length, 20); const first0 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== first0); const f1 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== f1);
     setVal(q('[data-tq="dash"]'), 'Kyoto'); await until(() => rows().length === 1 && rows()[0].innerText.includes('CT-JP-004')); a.ok(rows()[0].innerText.includes('교토'), 'matches the English name while the UI is Korean'); setVal(q('[data-tq="dash"]'), 'zzzz-none'); await until(() => rows().length === 1 && rows()[0].innerText.includes('표시할 데이터가 없습니다'));
   });
   t('U12', 'Corrupt storage: app starts from the sample, warns the user, and keeps the unreadable blob', ['UI-ERR', 'D-5'], async a => {
-    await load('/dashboard', { pre: () => { localStorage.setItem('omh_hfr_v1', '{broken json'); } , keep: true }); a.ok(q('#banner').innerText.includes('손상') || q('#banner').innerText.includes('corrupt')); a.eq(localStorage.getItem('omh_hfr_v1.corrupt'), '{broken json'); a.eq(qa('#content .ccard').length, 3, 'the sample is shown after the broken blob is set aside'); a.ok(!BAD.test(txt()));
+    await load('/dashboard', { pre: () => { localStorage.setItem('omh_hfr_v1', '{broken json'); } , keep: true }); a.ok(q('#banner').innerText.includes('손상') || q('#banner').innerText.includes('corrupt')); a.eq(localStorage.getItem('omh_hfr_v1.corrupt'), '{broken json'); a.eq(qa('#content .ccard').length, 7, 'the sample is shown after the broken blob is set aside'); a.ok(!BAD.test(txt()));
   });
   t('U13', 'Legacy partner module still loads, evaluates 12 partners (one of them scores 78.7, grade B) and keeps its own storage key; new app does not share it', ['R-1', 'R-2', 'T13', 'D-7'], async a => {
     if (!(await fetch('../legacy/app.js', { method: 'HEAD' }).then(r => r.ok).catch(() => false))) a.skip('the legacy partner module is not part of this repository');
@@ -196,20 +196,20 @@
 
   t('U26', 'Dashboard in country cards: one card per country with one currency, six lines each, every line opens the screen where the number is worked on with that country already chosen; the hotel credit profile has a country filter', ['S01', 'S02', 'UI-FILTER'], async a => {
     await load('/dashboard', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/dashboard');
-    const cards = () => qa('#content .ccard'); a.eq(cards().length, 3, 'one card per country'); a.deepEq(cards().map(c => c.querySelector('.ch b').innerText), ['Korea', 'Japan', 'Vietnam']);
+    const cards = () => qa('#content .ccard'); a.eq(cards().length, 7, 'one card per country'); a.deepEq(cards().map(c => c.querySelector('.ch b').innerText), ['Korea', 'Japan', 'Vietnam', 'Singapore', 'Thailand', 'Hong Kong', 'Taiwan']);
     a.ok(cards().every(c => c.querySelectorAll('a.crow').length === 6), 'six lines on each card'); a.ok(!q('#content table') && !q('#content select'), 'no table and no filter on the dashboard');
     const head = c => c.querySelector('.ch').innerText; a.ok(head(cards()[0]).includes('5 contracts · 5 hotels') && head(cards()[1]).includes('7 contracts · 6 hotels') && head(cards()[2]).includes('4 contracts · 4 hotels'), cards().map(head).join(' | '));
     const bal = c => c.querySelector('a.crow').innerText; a.ok(/KRW/.test(bal(cards()[0])) && !/JPY|VND|USD|SGD/.test(bal(cards()[0])), 'Korea: won only'); a.ok(/JPY/.test(bal(cards()[1])) && !/KRW|VND|USD|SGD/.test(bal(cards()[1])), 'Japan: yen only'); a.ok(/VND/.test(bal(cards()[2])) && !/KRW|JPY|USD|SGD/.test(bal(cards()[2])), 'Vietnam: dong only');
     a.ok(/Prebuy/.test(bal(cards()[0])) && /Hard block/.test(bal(cards()[0])), 'the balance line is split into prebuy and hard block');
     const hrefs = qa('#content a.crow').map(c => c.getAttribute('href')); a.ok(hrefs.includes('#/status') && hrefs.includes('#/risk') && !hrefs.includes('#/sg') && hrefs.some(h => h.startsWith('#/profile')), hrefs.join(' '));
     click(cards()[1].querySelector('a.crow')); await until(() => win.OMH.app.last.route === 'status'); a.eq(win.OMH.app.ui.filters.country, 'JP', 'the status board opens with Japan chosen'); a.eq(qa('#tbl-dash tbody tr').length, 7);
-    await nav('/dashboard'); a.eq(cards().length, 3, 'the dashboard never hides a country because of a filter set elsewhere');
+    await nav('/dashboard'); a.eq(cards().length, 7, 'the dashboard never hides a country because of a filter set elsewhere');
     await nav('/dashboard'); click(cards()[0].querySelectorAll('a.crow')[5]); await until(() => win.OMH.app.last.route === 'risk');
     await nav('/dashboard'); click(cards()[0].querySelectorAll('a.crow')[2]); await until(() => win.OMH.app.last.route === 'profile'); a.ok(q('.biggrade'), 'the profile of a Korean contract is open'); a.eq(q('#pf-country').value, 'KR'); a.eq([...q('#pf-sel').options].length, 5, 'only the Korean contracts are listed');
-    setVal(q('#pf-country'), '', 'change'); await until(() => [...q('#pf-sel').options].length === 16);
-    await nav('/profile/CT-KR-001'); const pc = q('#pf-country'); a.ok(pc, 'country filter exists'); const allOpts = () => [...q('#pf-sel').options].map(o => o.value); a.eq(allOpts().length, 16);
+    setVal(q('#pf-country'), '', 'change'); await until(() => [...q('#pf-sel').options].length === 20);
+    await nav('/profile/CT-KR-001'); const pc = q('#pf-country'); a.ok(pc, 'country filter exists'); const allOpts = () => [...q('#pf-sel').options].map(o => o.value); a.eq(allOpts().length, 20);
     setVal(pc, 'JP', 'change'); await until(() => win.OMH.app.last.params[0] && win.OMH.app.last.params[0].startsWith('CT-JP')); a.eq(allOpts().length, 7, 'only the 7 Japanese contracts are listed'); a.ok(allOpts().every(v => v.startsWith('CT-JP')), allOpts().join(','));
-    setVal(q('#pf-country'), '', 'change'); await until(() => allOpts().length === 16); doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
+    setVal(q('#pf-country'), '', 'change'); await until(() => allOpts().length === 20); doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
   });
 
   t('U28', 'Hotel-level cap in the credit card: SCM enters an amount and a reason, the limit in force drops, the status board shows it, SCM cannot raise it, the CEO lifts it, and a reader sees disabled controls', ['M04-5', 'S02'], async a => {
@@ -231,6 +231,15 @@
     a.ok(txt().includes('The balance is 1.5 months of average consumption.') && txt().includes('To raise it') && txt().includes('Kept out of the score as a personal judgement'), 'reasons and hints are shown'); a.eq(cell('Consumption vs prepaid balance'), '5'); a.eq(cell('Country / legal recovery risk'), '4'); a.eq(cell('Financial health'), 'Unknown'); a.eq(cell('SCM operations assessment'), 'excluded');
     await setRole('ADMIN'); await nav('/admin'); a.ok(q('[data-sc="cty|KR"]') && !q('[data-sc="cty|KR"]').disabled); setVal(q('[data-sc="cty|KR"]'), '5'); setVal(q('#cfg-reason'), 'country table (UI test)'); click(q('[data-act="cfg-save"]')); await until(() => store().state.configHistory.length === 1);
     await nav('/profile/CT-KR-001'); a.eq(cell('Country / legal recovery risk'), '5'); a.ok(txt().includes('Value from the country table (Korea).')); a.ok(!BAD.test(txt())); await setRole('SCM'); doc.getElementById('lang-ko').click();
+  });
+  t('U30', 'Dashboard by legal entity: the Singapore head office holds the moved contracts in seven currencies, the local entities keep the rest, and a card opens the status board for that entity', ['S01', 'UI-FILTER'], async a => {
+    await load('/dashboard', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/dashboard'); const ecards = () => qa('#content .ecard'); a.eq(ecards().length, 4, 'one card per contracting entity');
+    a.deepEq(ecards().map(c => c.querySelector('.ch b').innerText), ['Singapore HQ (OMH-SG)', 'Korea entity (OMH-KR)', 'Japan entity (OMH-JP)', 'Vietnam entity (OMH-VN)']);
+    const hq = ecards()[0]; a.ok(hq.querySelector('.ch').innerText.includes('7 contracts · 7 hotels')); for (const c of ['KRW', 'JPY', 'VND', 'SGD', 'HKD', 'TWD', 'THB']) a.ok(hq.querySelector('a.crow').innerText.includes(c), 'head office holds ' + c);
+    a.ok(/Singapore/.test(hq.innerText) && /Thailand/.test(hq.innerText) && /Hong Kong/.test(hq.innerText) && /Taiwan/.test(hq.innerText), 'the hotel countries of the head office are listed'); a.ok(!/THB|SGD|HKD|TWD/.test(ecards()[2].innerText), 'the Japanese entity keeps only yen');
+    a.ok(txt().includes('Contracts are being moved to the Singapore head office'), 'the note explains why the head office has several currencies');
+    click(hq.querySelector('a.crow')); await until(() => win.OMH.app.last.route === 'status'); a.eq(win.OMH.app.ui.filters.entity, 'OMH-SG'); a.eq(qa('#tbl-dash tbody tr').length, 7); a.ok(q('[data-f="entity"]').innerText.includes('Singapore HQ (OMH-SG)'), 'the filter shows the entity names');
+    doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
   });
   t('U27', 'Hotel credit card in nine sections: the ELLIS booking speed next to the ledger, the next top-up date, the cooperation opinion and the next check date', ['S02', 'OUT-1', 'OUT-2', 'OUT-3', 'ELLIS-6'], async a => {
     await load('/admin', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/admin'); click(q('[data-act="ellis-sample"]')); await until(() => q('#ellis-text').value.includes('omh-ellis-snapshot')); click(q('[data-act="ellis-import"]')); await until(() => store().state.ellis);

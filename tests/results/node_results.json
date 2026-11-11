@@ -1,12 +1,12 @@
 {
-  "ranAt": "2026-11-11T03:55:02.267Z",
+  "ranAt": "2026-11-11T09:13:02.665Z",
   "node": "v24.14.1",
   "suite": "node",
   "total": 193,
   "passed": 193,
   "failed": 0,
   "skipped": 0,
-  "ms": 5709,
+  "ms": 12059,
   "results": [
     {
       "id": "L01",
@@ -17,7 +17,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 31
     },
     {
       "id": "L02",
@@ -60,7 +60,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 22
+      "ms": 35
     },
     {
       "id": "L06",
@@ -70,7 +70,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 26
     },
     {
       "id": "L07",
@@ -92,7 +92,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 29
     },
     {
       "id": "L09",
@@ -102,7 +102,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 27
     },
     {
       "id": "F01",
@@ -112,7 +112,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 30
     },
     {
       "id": "F02",
@@ -134,7 +134,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 28
     },
     {
       "id": "F04",
@@ -144,7 +144,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 54
     },
     {
       "id": "F05",
@@ -154,7 +154,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 56
     },
     {
       "id": "F06",
@@ -164,7 +164,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "F07",
@@ -175,7 +175,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 27
     },
     {
       "id": "F08",
@@ -228,7 +228,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 29
     },
     {
       "id": "R05",
@@ -239,7 +239,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 28
     },
     {
       "id": "R06",
@@ -250,7 +250,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 27
     },
     {
       "id": "R07",
@@ -270,7 +270,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 40
     },
     {
       "id": "R09",
@@ -280,7 +280,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 30
     },
     {
       "id": "M01",
@@ -312,7 +312,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 53
     },
     {
       "id": "M04",
@@ -333,7 +333,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 29
     },
     {
       "id": "M06",
@@ -344,7 +344,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 30
     },
     {
       "id": "M07",
@@ -366,7 +366,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 30
     },
     {
       "id": "M09",
@@ -377,7 +377,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 28
     },
     {
       "id": "A01",
@@ -387,7 +387,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 34
     },
     {
       "id": "A02",
@@ -418,7 +418,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "A05",
@@ -428,7 +428,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 31
     },
     {
       "id": "A06",
@@ -449,7 +449,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 57
     },
     {
       "id": "A08",
@@ -469,7 +469,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "CS01",
@@ -480,7 +480,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "CS02",
@@ -492,7 +492,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 59
     },
     {
       "id": "CS03",
@@ -505,7 +505,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 26
+      "ms": 44
     },
     {
       "id": "CS04",
@@ -516,7 +516,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 35
     },
     {
       "id": "CS05",
@@ -526,7 +526,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 31
     },
     {
       "id": "X12",
@@ -537,7 +537,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 6
     },
     {
       "id": "X01",
@@ -548,7 +548,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 21
+      "ms": 40
     },
     {
       "id": "X03",
@@ -558,7 +558,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 36
     },
     {
       "id": "X02",
@@ -570,7 +570,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 48
     },
     {
       "id": "X17",
@@ -581,7 +581,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 5
+      "ms": 10
     },
     {
       "id": "X06",
@@ -592,7 +592,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 26
+      "ms": 44
     },
     {
       "id": "X04",
@@ -603,7 +603,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 67
+      "ms": 130
     },
     {
       "id": "X05",
@@ -615,7 +615,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 51
+      "ms": 98
     },
     {
       "id": "X08",
@@ -627,7 +627,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 29
     },
     {
       "id": "X13",
@@ -639,7 +639,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 31
     },
     {
       "id": "X09",
@@ -652,7 +652,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 46
     },
     {
       "id": "X15",
@@ -662,7 +662,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 23
+      "ms": 40
     },
     {
       "id": "X18",
@@ -673,7 +673,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 23
+      "ms": 47
     },
     {
       "id": "X11",
@@ -685,7 +685,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 9
     },
     {
       "id": "X19",
@@ -696,7 +696,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 4
     },
     {
       "id": "V01",
@@ -713,11 +713,11 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 185
+      "ms": 347
     },
     {
       "id": "V02",
-      "name": "Per-contract screens (profile with its top-up simulator, ledger, approval packet) render for all 16 contracts incl. NR / D / deposit / no-data cases, KO and EN",
+      "name": "Per-contract screens (profile with its top-up simulator, ledger, approval packet) render for all 20 contracts incl. NR / D / deposit / no-data cases, KO and EN",
       "reqs": [
         "S02",
         "S03",
@@ -727,7 +727,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 61
+      "ms": 117
     },
     {
       "id": "V03",
@@ -739,7 +739,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 36
     },
     {
       "id": "V03b",
@@ -750,7 +750,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 68
     },
     {
       "id": "V03c",
@@ -761,7 +761,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 32
     },
     {
       "id": "V04",
@@ -772,7 +772,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 40
     },
     {
       "id": "V05",
@@ -784,7 +784,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 181
+      "ms": 365
     },
     {
       "id": "P01",
@@ -794,7 +794,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 111
+      "ms": 238
     },
     {
       "id": "P02",
@@ -805,7 +805,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 706
+      "ms": 1551
     },
     {
       "id": "D01",
@@ -817,7 +817,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 46
     },
     {
       "id": "D02",
@@ -838,7 +838,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 37
     },
     {
       "id": "D04",
@@ -849,7 +849,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 26
+      "ms": 75
     },
     {
       "id": "D05",
@@ -860,7 +860,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 34
+      "ms": 133
     },
     {
       "id": "D06",
@@ -870,7 +870,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 30
+      "ms": 103
     },
     {
       "id": "D07",
@@ -880,7 +880,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 60
     },
     {
       "id": "D08",
@@ -891,7 +891,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 140
+      "ms": 460
     },
     {
       "id": "D09",
@@ -913,7 +913,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 21
+      "ms": 44
     },
     {
       "id": "D11",
@@ -924,7 +924,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 105
     },
     {
       "id": "D12",
@@ -947,7 +947,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 52
+      "ms": 172
     },
     {
       "id": "E01",
@@ -960,7 +960,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 340
+      "ms": 758
     },
     {
       "id": "E02",
@@ -971,7 +971,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 33
     },
     {
       "id": "E03",
@@ -983,7 +983,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 32
     },
     {
       "id": "E04",
@@ -1016,7 +1016,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 45
     },
     {
       "id": "F02",
@@ -1027,7 +1027,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "F03",
@@ -1039,7 +1039,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 18
+      "ms": 34
     },
     {
       "id": "F04",
@@ -1050,7 +1050,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 33
     },
     {
       "id": "F06",
@@ -1062,7 +1062,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 113
+      "ms": 219
     },
     {
       "id": "AS01",
@@ -1074,7 +1074,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 3
     },
     {
       "id": "AS02",
@@ -1085,7 +1085,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 85
     },
     {
       "id": "AS03",
@@ -1097,7 +1097,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 81
     },
     {
       "id": "AS04",
@@ -1108,7 +1108,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 40
     },
     {
       "id": "F05",
@@ -1119,7 +1119,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 47
+      "ms": 91
     },
     {
       "id": "F07",
@@ -1129,7 +1129,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 22
+      "ms": 46
     },
     {
       "id": "F08",
@@ -1139,7 +1139,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 32
     },
     {
       "id": "F09",
@@ -1150,7 +1150,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 28
+      "ms": 51
     },
     {
       "id": "H01",
@@ -1162,7 +1162,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 37
     },
     {
       "id": "H02",
@@ -1173,7 +1173,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 55
+      "ms": 95
     },
     {
       "id": "H03",
@@ -1185,7 +1185,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 41
     },
     {
       "id": "S10",
@@ -1196,7 +1196,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 538
+      "ms": 1206
     },
     {
       "id": "H04",
@@ -1209,7 +1209,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 95
+      "ms": 206
     },
     {
       "id": "H05",
@@ -1231,7 +1231,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "I01",
@@ -1242,7 +1242,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 23
     },
     {
       "id": "I02",
@@ -1253,7 +1253,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 3
     },
     {
       "id": "I03",
@@ -1264,7 +1264,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "I04",
@@ -1282,7 +1282,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 219
+      "ms": 449
     },
     {
       "id": "I05",
@@ -1293,7 +1293,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M01",
@@ -1314,7 +1314,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M03",
@@ -1325,7 +1325,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6
+      "ms": 11
     },
     {
       "id": "M04",
@@ -1336,7 +1336,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 35
     },
     {
       "id": "M05",
@@ -1378,7 +1378,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M09",
@@ -1388,7 +1388,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 61
     },
     {
       "id": "M10",
@@ -1399,7 +1399,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M11",
@@ -1409,7 +1409,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 52
     },
     {
       "id": "M12",
@@ -1420,7 +1420,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 55
+      "ms": 149
     },
     {
       "id": "M13",
@@ -1430,7 +1430,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 43
     },
     {
       "id": "M14",
@@ -1440,7 +1440,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 54
     },
     {
       "id": "M15",
@@ -1450,7 +1450,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 43
     },
     {
       "id": "M16",
@@ -1460,7 +1460,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "M17",
@@ -1470,7 +1470,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 198
+      "ms": 406
     },
     {
       "id": "M18",
@@ -1482,7 +1482,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 37
     },
     {
       "id": "M19",
@@ -1504,7 +1504,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 121
+      "ms": 157
     },
     {
       "id": "M21",
@@ -1515,7 +1515,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M22",
@@ -1526,7 +1526,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 138
+      "ms": 260
     },
     {
       "id": "M23",
@@ -1537,7 +1537,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 40
     },
     {
       "id": "M24",
@@ -1569,7 +1569,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 21
+      "ms": 42
     },
     {
       "id": "M27",
@@ -1590,7 +1590,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 104
+      "ms": 192
     },
     {
       "id": "M29",
@@ -1621,7 +1621,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M32",
@@ -1632,7 +1632,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M34",
@@ -1653,7 +1653,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M36",
@@ -1685,7 +1685,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "M39",
@@ -1696,7 +1696,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 1
     },
     {
       "id": "M40",
@@ -1707,7 +1707,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "M33",
@@ -1718,7 +1718,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "A01",
@@ -1728,7 +1728,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "A02",
@@ -1739,7 +1739,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 17
+      "ms": 41
     },
     {
       "id": "A03",
@@ -1750,7 +1750,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 18
+      "ms": 53
     },
     {
       "id": "A04",
@@ -1760,7 +1760,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 46
     },
     {
       "id": "A05",
@@ -1770,7 +1770,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 51
     },
     {
       "id": "A06",
@@ -1780,7 +1780,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 43
     },
     {
       "id": "A07",
@@ -1790,7 +1790,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 34
+      "ms": 84
     },
     {
       "id": "A08",
@@ -1801,7 +1801,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 19
+      "ms": 50
     },
     {
       "id": "A09",
@@ -1813,7 +1813,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 21
+      "ms": 52
     },
     {
       "id": "A10",
@@ -1824,7 +1824,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "A11",
@@ -1834,7 +1834,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "TR01",
@@ -1844,7 +1844,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "TR02",
@@ -1854,7 +1854,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 7
     },
     {
       "id": "TR03",
@@ -1874,7 +1874,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 3
     },
     {
       "id": "TR05",
@@ -1884,7 +1884,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 11
     },
     {
       "id": "TR06",
@@ -1894,7 +1894,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 4
     },
     {
       "id": "TR07",
@@ -1904,7 +1904,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 3
     },
     {
       "id": "TR08",
@@ -1914,7 +1914,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "TR09",
@@ -1945,7 +1945,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 81
+      "ms": 187
     },
     {
       "id": "TR12",
@@ -1955,7 +1955,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 199
+      "ms": 328
     },
     {
       "id": "TR14",
@@ -1966,7 +1966,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 5
     },
     {
       "id": "TR15",
@@ -1977,7 +1977,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 13
     },
     {
       "id": "TR16",
@@ -1988,7 +1988,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "TR13",
@@ -1999,7 +1999,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 3
     },
     {
       "id": "OU01",
@@ -2009,7 +2009,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "OU02",
@@ -2019,7 +2019,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "OU03",
@@ -2041,7 +2041,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6
+      "ms": 2
     },
     {
       "id": "OU05",
@@ -2064,7 +2064,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 45
     },
     {
       "id": "LO01",
@@ -2084,7 +2084,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "LO03",
@@ -2095,7 +2095,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 117
     },
     {
       "id": "LO04",
@@ -2106,7 +2106,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 15
+      "ms": 34
     }
   ]
 }

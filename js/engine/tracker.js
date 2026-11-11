@@ -32,7 +32,7 @@
   }
   /** Whole currency units; "500,000,000", "(1,000)", "-12.314.650" style separators are accepted. Empty -> null, unreadable -> undefined. */
   function parseAmount(v, ccy) {
-    const s0 = norm(v).replace(/\b(VND|USD|KRW|JPY|SGD)\b|[₫đ]/gi, '').trim(); if (!s0) return null;      // only a currency tag is ignored; any other text makes the cell unreadable
+    const s0 = norm(v).replace(/\b(VND|USD|KRW|JPY|SGD|HKD|TWD|THB)\b|[₫đ]/gi, '').trim(); if (!s0) return null;      // only a currency tag is ignored; any other text makes the cell unreadable
     const paren = /^\(.*\)$/.test(s0); let body = paren ? s0.slice(1, -1) : s0; let neg = paren; if (/^-/.test(body)) { if (paren) return undefined; neg = true; body = body.slice(1); } let s = body.replace(/\s/g, '');   // a minus counts only at the front or inside brackets; "5,000-" or "1-000" are unreadable
     const d = Money.decimals(ccy);
     if (paren && /^-/.test(body)) return undefined;                              // "(-5)": two minus signs are not read

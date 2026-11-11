@@ -6,7 +6,7 @@
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function () {
   'use strict';
-  const CURRENCIES = { KRW: { decimals: 0 }, JPY: { decimals: 0 }, VND: { decimals: 0 }, USD: { decimals: 2 }, SGD: { decimals: 2 } };
+  const CURRENCIES = { KRW: { decimals: 0 }, JPY: { decimals: 0 }, VND: { decimals: 0 }, USD: { decimals: 2 }, SGD: { decimals: 2 }, HKD: { decimals: 2 }, TWD: { decimals: 2 }, THB: { decimals: 2 } };
   const isSupported = c => Object.prototype.hasOwnProperty.call(CURRENCIES, c);
   const decimals = c => CURRENCIES[c].decimals;
   /** Major-unit string/number -> integer minor units. Rejects NaN, thousands separators, excess precision. */

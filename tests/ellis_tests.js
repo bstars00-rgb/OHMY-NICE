@@ -148,7 +148,7 @@ module.exports = function (h) {
 
   t('M11', 'hotel mapping: ELLIS-<code> and plain codes match, duplicates and missing ids are reported, unknown hotels are dropped', ['ELLIS-4'], a => {
     const snap = sampleSnap(); const hotels = Store.createStore({ storage: Store.memoryStorage() }).state.hotels;
-    const m = Ellis.matchHotels(snap, hotels); a.eq(m.matched.length, 15); a.deepEq(m.unmatched, ['99999']); a.eq(m.unmapped.length, 0);
+    const m = Ellis.matchHotels(snap, hotels); a.eq(m.matched.length, 15); a.deepEq(m.unmatched, ['99999']); a.eq(m.unmapped.length, 4, 'the four newest sample hotels (Singapore, Hong Kong, Taiwan, Thailand) have no ELLIS rows');
     const dup = hotels.map(x => ({ ...x })); dup[1].ellisHotelId = dup[0].ellisHotelId; dup[2].ellisHotelId = ''; dup[3].ellisHotelId = '4040404';
     const m2 = Ellis.matchHotels(snap, dup); a.ok(m2.conflicts.includes('90001')); a.ok(!m2.matched.some(x => x.hotelCode === '90001'), 'an ambiguous id is never matched');
     const why = Object.fromEntries(m2.unmapped.map(x => [x.hotelId, x.reason])); a.eq(why.H001, 'DUPLICATE_ELLIS_ID'); a.eq(why.H002, 'DUPLICATE_ELLIS_ID'); a.eq(why.H003, 'NO_ELLIS_ID'); a.eq(why.H004, 'NOT_IN_SNAPSHOT');
