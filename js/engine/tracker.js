@@ -11,7 +11,7 @@
   'use strict';
   const { Money, Dates, Csv, Ledger } = dep;
   const DEFAULTS = { currency: 'VND', country: 'VN', entity: 'OMH-VN', confirmStaleDays: 90, endingDays: 90, longUnusedDays: 60, noBookingDays: 30, overfundedDays: 90, discrepancyPct: 5, discrepancyAbsMinor: 10000000, declinePct: 50 };   // thresholds = the tracker's own Settings sheet
-  const TYPE_MAP = [[/floating/i, 'FLOATING'], [/hard\s*-?\s*block/i, 'HARD_BLOCK_ADV'], [/deposit/i, 'SECURITY_DEPOSIT'], [/pre-?\s*pay/i, 'PREPAYMENT'], [/買取|buy\s*-?\s*out|buyout/i, 'BUYOUT']];   // Commit Rev / Commit RN / Hybrid have no counterpart yet (decision pending)
+  const TYPE_MAP = [[/floating/i, 'FLOATING'], [/hard\s*-?\s*block/i, 'HARD_BLOCK_ADV'], [/deposit/i, 'SECURITY_DEPOSIT'], [/pre-?\s*pay/i, 'PREPAYMENT'], [/買取|buy\s*-?\s*out|buyout/i, 'BUYOUT'], [/commit\s*-?\s*rn/i, 'COMMIT_RN'], [/commit\s*-?\s*rev/i, 'COMMIT_REV'], [/hybrid/i, 'COMMIT_REV']];   // Commit RN and Commit Rev are two types; "Hybrid (Commit Rev or RN)" and a bare "Hybrid" count as Commit Rev yet (decision pending)
   const UNMAPPED_TYPES = /commit|hybrid/i;
   const norm = s => String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
   const normId = s => String(s).replace(/^0+(?=\d)/, '');                        // "0101" and "101" are the same hotel

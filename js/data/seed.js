@@ -38,6 +38,7 @@
     ['H017', 'ELLIS-90017', B('샘플 홍콩 침사추이 호텔', 'Sample Hong Kong Tsim Sha Tsui Hotel'), 'HK', B('홍콩', 'Hong Kong'), 'SAMPLE TST Hotel Ltd.', 'SCM-HK-01', {}],
     ['H018', 'ELLIS-90018', B('샘플 타이베이 시먼 호텔', 'Sample Taipei Ximending Hotel'), 'TW', B('타이베이', 'Taipei'), 'SAMPLE Ximen Hotel Co.', 'SCM-TW-01', {}],
     ['H019', 'ELLIS-90019', B('샘플 방콕 수쿰윗 호텔', 'Sample Bangkok Sukhumvit Hotel'), 'TH', B('방콕', 'Bangkok'), 'SAMPLE Sukhumvit Co. Ltd.', 'SCM-TH-01', {}],
+    ['H020', 'ELLIS-90020', B('샘플 오사카 난바 호텔', 'Sample Osaka Namba Hotel'), 'JP', B('오사카', 'Osaka'), 'SAMPLE Namba Hotel KK', 'SCM-JP-02', {}],
   ].map(([hotelId, ellisHotelId, name, country, city, operatingCompany, scm, facts], i) => ({
     hotelId, ellisHotelId, name, brand: B('(브랜드 미상)', '(brand n/a)'), country, city, operatingCompany, owner: null /* Unknown */, status: 'ACTIVE',
     assignedScm: scm, lastVerifiedDate: '2026-10-15', facts: Object.assign({ closure: null, ownershipChange: 'UNKNOWN' }, facts), isSample: true,
@@ -58,7 +59,7 @@
       { Jun: K(25), Jul: K(25), Aug: K(24), Sep: K(22), Oct: K(8) }, [K(46), '2026-10-31'], [K(26), K(24), K(12)], [['2026-09-01', 'A', 82.4]]),
     C('CT-JP-001', 'H004', 'OMH-JP', 'FLOATING', 'JPY', '2025-10-01', '2027-09-30', true, true, 5e6, 10e6, [['06-10', 5e6], ['07-10', 5e6], ['08-10', 5e6], ['09-10', 5e6], ['10-10', 5e6]],
       { Jun: 4.8e6, Jul: 5.2e6, Aug: 5e6, Sep: 5e6, Oct: 5e6 }, [10e6, '2026-10-31'], [5.5e6, 5.6e6, 5.7e6], [['2026-08-01', 'A', 90.4]]),
-    C('CT-JP-002', 'H004', 'OMH-KR', 'HARD_BLOCK_ADV', 'JPY', '2026-01-01', '2027-03-31', true, null, 0, 4000000, [['08-01', 800000], ['09-01', 800000]],
+    C('CT-JP-002', 'H004', 'OMH-SG', 'HARD_BLOCK_ADV', 'JPY', '2026-01-01', '2027-03-31', true, null, 0, 4000000, [['08-01', 800000], ['09-01', 800000]],
       { Jun: 750000, Jul: 800000, Aug: 800000, Sep: 820000, Oct: 780000 }, [1640000, '2026-10-31'], [8200, 8300, 8100].map(x => x * 100), [['2026-08-01', 'B', 70.4]]),
     C('CT-JP-003', 'H005', 'OMH-JP', 'FLOATING', 'JPY', '2025-12-01', '2027-11-30', true, false, 0, 8e6, [['06-10', 4e6], ['07-10', 4e6], ['08-10', 4e6], ['09-10', 4e6], ['10-10', 4e6]],
       { Jun: 4e6, Jul: 4e6, Aug: 4e6, Sep: 4e6, Oct: 4e6 }, [6.5e6, '2026-10-31'], [4.1e6, 4.0e6, 3.9e6], [['2026-09-01', 'B', 65.6]]),
@@ -88,6 +89,7 @@
       { Jun: 58e6, Jul: 62e6, Aug: 60e6, Sep: 60e6, Oct: 60e6 }, [50e6, '2026-10-31'], [61e6, 60e6, 59e6], [['2026-08-01', 'B', 69.2]]),
     C('CT-TH-001', 'H019', 'OMH-SG', 'FLOATING', 'THB', '2026-04-01', '2027-09-30', true, true, 0, 200e6, [['06-20', 100e6], ['08-20', 100e6], ['10-20', 100e6]],
       { Jun: 78e6, Jul: 82e6, Aug: 80e6, Sep: 80e6, Oct: 80e6 }, [100e6, '2026-10-31'], [82e6, 80e6, 81e6], [['2026-08-01', 'B', 71.6]]),
+    C('CT-JP-008', 'H020', 'OMH-JP', 'SECURITY_DEPOSIT', 'JPY', '2018-06-01', '2027-05-31', null, false, 0, 10e6, [], {}, null, null, []),     // a long-held security deposit (Japan holds most of its prepayment this way)
     C('CT-KR-005', 'H015', 'OMH-KR', 'HARD_BLOCK_ADV', 'KRW', '2026-05-01', '2027-04-30', true, true, 0, 4000000, [],
       { Jun: 500000, Jul: 500000, Aug: 500000, Sep: 500000, Oct: 500000 }, [1500000, '2026-10-31'], [5200, 5100, 5300].map(x => x * 100), [['2026-08-01', 'B', 76.0]]),
   ];

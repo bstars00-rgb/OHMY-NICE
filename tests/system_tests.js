@@ -72,7 +72,7 @@ module.exports = function register(h) {
     const a1 = env.newStore(), a2 = env.newStore(); a.eq(JSON.stringify(a1.model()), JSON.stringify(a2.model()), 'seed is deterministic');
   });
   t('X05', 'Corrupt / foreign storage is quarantined, never silently destroyed; legacy storage key is never touched', ['D-5', 'D-7', 'R-2'], a => {
-    const storage = Store.memoryStorage(); storage.setItem('omh_hfr_v1', '{"schemaVersion":1,'); const s = env.newStore({ storage }); a.eq(s.loadStatus, 'CORRUPT_RESET'); a.eq(storage.getItem('omh_hfr_v1.corrupt'), '{"schemaVersion":1,'); a.ok(s.model().views.length === 20);
+    const storage = Store.memoryStorage(); storage.setItem('omh_hfr_v1', '{"schemaVersion":1,'); const s = env.newStore({ storage }); a.eq(s.loadStatus, 'CORRUPT_RESET'); a.eq(storage.getItem('omh_hfr_v1.corrupt'), '{"schemaVersion":1,'); a.ok(s.model().views.length === 21);
     const s3 = Store.memoryStorage(); s3.setItem('omh_hfr_v1', JSON.stringify({ schemaVersion: 2, hotels: [] })); a.eq(env.newStore({ storage: s3 }).loadStatus, 'CORRUPT_RESET');
     const s4 = Store.memoryStorage(); s4.setItem('omh_prg_v42', '{"legacy":"data"}'); const st = env.newStore({ storage: s4 }); env.as(st, 'SCM'); st.commands.addTx({ contractId: 'CT-KR-001', type: 'TOPUP', amountMinor: 1, currency: 'KRW', occurredAt: '2026-11-02T10:00:00+09:00', externalRef: 'k' });
     a.eq(s4.getItem('omh_prg_v42'), '{"legacy":"data"}', 'legacy key byte-identical'); a.ok(st.key !== 'omh_prg_v42'); a.deepEq(Object.keys(s4._dump()).sort(), ['omh_hfr_v1', 'omh_hfr_v1.anchor', 'omh_prg_v42']);
@@ -83,7 +83,7 @@ module.exports = function register(h) {
     const hotels = new Set(s.hotels.map(x => x.hotelId)); const contracts = Object.fromEntries(s.contracts.map(x => [x.contractId, x]));
     a.ok(s.contracts.every(x => hotels.has(x.hotelId)) && Object.keys(s.ratings).every(k => contracts[k]) && s.contracts.every(x => s.ratings[x.contractId]));
     for (const x of s.ledger) { a.ok(contracts[x.contractId], x.txId); a.eq(x.currency, contracts[x.contractId].currency, x.txId); a.ok(env.Dates.isDateTime(x.occurredAt), x.txId); a.ok(/^[A-Z]+-[A-Z0-9-]+-\d{5}$/.test(x.txId) || x.txId, x.txId); }
-    a.ok(s.contracts.length === 20 && s.hotels.length === 19);
+    a.ok(s.contracts.length === 21 && s.hotels.length === 20);
   });
   t('X13', 'Hotel master & contract master carry every required field; owner unknown is explicit; brand ≠ legal counterparty', ['M01-1', 'M01-2', 'M02-6'], a => {
     const s = Seed.buildSeed(); const hk = ['hotelId', 'ellisHotelId', 'name', 'country', 'city', 'operatingCompany', 'owner', 'assignedScm', 'status', 'lastVerifiedDate', 'brand']; const ck = ['contractId', 'hotelId', 'omhEntity', 'counterparty', 'contractType', 'prepaymentType', 'currency', 'startDate', 'endDate', 'assignedScm', 'refund', 'transfer'];
@@ -150,16 +150,16 @@ module.exports = function register(h) {
     const html = ViewsA.profile(mkctx(st, ['CT-NOPE'])); a.ok(html.includes('empty-state'), 'unknown contract -> empty state, not a crash');
   });
   t('V03', 'Dashboard filters (country/entity/currency/type) drive KPIs; empty filter combination yields empty state; control labels show currency & as-of date', ['S01', 'UI-FILTER', 'UI-EMPTY'], a => {
-    const st = fresh('CEO'); UI.setLang('en'); const ui = { filters: { country: 'JP' } }; const h1 = ViewsA.dashboard(mkctx(st, [], ui)); a.ok(h1.includes('7 contracts · 6 hotels'), 'JP filter KPI text'); a.ok(ViewsA.status(mkctx(st, [], ui)).includes('sample-tag'), 'hotel names on the status board carry a SAMPLE tag');
-    const k = Model.kpis(st.model().views, { country: 'JP' }); a.eq(k.count, 7); a.deepEq(Object.keys(k.exposure).sort(), ['JPY']); const k2 = Model.kpis(st.model().views, { country: 'KR', currency: 'JPY' }); a.eq(k2.count, 0); a.deepEq(k2.exposure, {});
+    const st = fresh('CEO'); UI.setLang('en'); const ui = { filters: { country: 'JP' } }; const h1 = ViewsA.dashboard(mkctx(st, [], ui)); a.ok(h1.includes('8 contracts · 7 hotels'), 'JP filter KPI text'); a.ok(ViewsA.status(mkctx(st, [], ui)).includes('sample-tag'), 'hotel names on the status board carry a SAMPLE tag');
+    const k = Model.kpis(st.model().views, { country: 'JP' }); a.eq(k.count, 8); a.deepEq(Object.keys(k.exposure).sort(), ['JPY']); const k2 = Model.kpis(st.model().views, { country: 'KR', currency: 'JPY' }); a.eq(k2.count, 0); a.deepEq(k2.exposure, {});
     const h2 = ViewsA.status(mkctx(st, [], { filters: { country: 'KR', currency: 'JPY' } })); a.ok(h2.includes('No data to display')); a.ok(h2.includes('2026-11-06') && h2.includes('no FX conversion'));
-    const k3 = Model.kpis(st.model().views, { entity: 'OMH-VN' }); a.eq(k3.count, 3); const kHq = Model.kpis(st.model().views, { entity: 'OMH-SG' }); a.eq(kHq.count, 7); a.deepEq(Object.keys(kHq.exposure).sort(), ['HKD', 'JPY', 'KRW', 'SGD', 'THB', 'TWD', 'VND'], 'the head office holds every currency'); a.eq(kHq.exposure.SGD, 6000000); const k4 = Model.kpis(st.model().views, { type: 'SECURITY_DEPOSIT' }); a.eq(k4.count, 1); a.eq(k4.estimatedUnused.VND, undefined, 'deposit has no consumption-based unused estimate'); a.eq(k4.estimatedUnusedUnknown, 1); UI.setLang('ko');
+    const k3 = Model.kpis(st.model().views, { entity: 'OMH-VN' }); a.eq(k3.count, 3); const kHq = Model.kpis(st.model().views, { entity: 'OMH-SG' }); a.eq(kHq.count, 8); a.deepEq(Object.keys(kHq.exposure).sort(), ['HKD', 'JPY', 'KRW', 'SGD', 'THB', 'TWD', 'VND'], 'the head office holds every currency'); a.eq(kHq.exposure.SGD, 6000000); const k4 = Model.kpis(st.model().views, { type: 'SECURITY_DEPOSIT' }); a.eq(k4.count, 2); a.eq(k4.estimatedUnused.VND, undefined, 'deposit has no consumption-based unused estimate'); a.eq(k4.estimatedUnusedUnknown, 2); UI.setLang('ko');
   });
   t('V03b', 'Grade distribution counts hotels, not contracts: a hotel with several contracts is counted once at its lowest grade', ['S01', 'UI-FILTER'], a => {
-    const k = Model.kpis(fresh('SCM').model().views);                                                      // sample: 20 contracts in 19 hotels; only H004 has two contracts (both B)
-    a.deepEq(k.grades, { A: 0, B: 13, C: 3, D: 2, NR: 2 }, 'contract counts are unchanged'); a.deepEq(k.hotelGrades, { A: 0, B: 12, C: 3, D: 2, NR: 2 });
+    const k = Model.kpis(fresh('SCM').model().views);                                                      // sample: 21 contracts in 20 hotels; only H004 has two contracts (both B)
+    a.deepEq(k.grades, { A: 0, B: 13, C: 3, D: 2, NR: 3 }, 'contract counts are unchanged'); a.deepEq(k.hotelGrades, { A: 0, B: 12, C: 3, D: 2, NR: 3 });
     const st2 = fresh('SCM'); a.ok(st2.commands.recordFact('contract', 'CT-JP-001', 'refundRefused', { claimed: true, source: 'SCM', verified: { by: 'test.scm', evidenceRef: 'EML-9001' } }).ok);      // one of H004's two contracts drops to D
-    const k2 = Model.kpis(st2.model().views); a.deepEq(k2.grades, { A: 0, B: 12, C: 3, D: 3, NR: 2 }); a.deepEq(k2.hotelGrades, { A: 0, B: 11, C: 3, D: 3, NR: 2 }, 'H004 is counted once, at its lowest grade (D)');
+    const k2 = Model.kpis(st2.model().views); a.deepEq(k2.grades, { A: 0, B: 12, C: 3, D: 3, NR: 3 }); a.deepEq(k2.hotelGrades, { A: 0, B: 11, C: 3, D: 3, NR: 3 }, 'H004 is counted once, at its lowest grade (D)');
     a.eq(Object.values(k.hotelGrades).reduce((x, y) => x + y, 0), k.hotels, 'every hotel appears exactly once');
     const fake = (hotelId, grade) => ({ hotelId, hotel: { country: 'KR' }, contract: { omhEntity: 'OMH-KR', prepaymentType: 'FLOATING' }, currency: 'KRW', rating: { grade }, balance: { closingMinor: 0 }, limit: { overLimitMinor: 0, recommendedLimitMinor: 0 }, forecast: { status: 'OK', estimatedUnusedAtEndMinor: 0 }, derived: { refundPending: false }, liveAlerts: [], contractId: hotelId + grade });
     const g = Model.kpis([fake('X', 'C'), fake('X', 'NR'), fake('Y', 'NR'), fake('Y', 'D'), fake('Z', 'A'), fake('Z', 'A'), fake('W', 'B'), fake('W', 'A')]).hotelGrades;
@@ -171,9 +171,18 @@ module.exports = function register(h) {
     const kr = card('Korea'), jp = card('Japan'), vn = card('Vietnam');
     for (const s of ['128,200,000 KRW', '126,700,000 KRW', '1,500,000 KRW']) a.ok(kr.includes(s), 'Korea ' + s);           // 45+30+46+5.7 prebuy, 1.5 hard block (hand-added)
     a.ok(!/JPY|VND|USD|SGD/.test(kr.slice(0, kr.indexOf('High-risk'))), 'Korea balance is won only');
-    for (const s of ['78,650,000 JPY', '47,000,000 JPY', '1,650,000 JPY', '30,000,000 JPY']) a.ok(jp.includes(s), 'Japan ' + s);     // 47M prebuy, 1.65M hard block, 30M buyout under "other"
-    a.ok(jp.includes('Other (buyout') && !kr.includes('Other (buyout'), 'the "other" line appears only where something is in it'); a.ok(/Prebuy/.test(vn) && /Hard block/.test(vn));
+    for (const s of ['88,650,000 JPY', '47,000,000 JPY', '1,650,000 JPY', '10,000,000 JPY', '30,000,000 JPY']) a.ok(jp.includes(s), 'Japan ' + s);     // 47M prebuy, 1.65M hard block, 10M deposit, 30M buyout
+    a.ok(jp.includes('Security deposit') && jp.includes('Buyout') && !kr.includes('Security deposit') && !kr.includes('Buyout'), 'the deposit and buyout lines appear only where something is in them, each on its own'); a.ok(/Prebuy/.test(vn) && /Hard block/.test(vn));
     UI.setLang('ko');
+  });
+  t('V03d', 'Commit RN and Commit Rev are two prepayment types: filtered apart, and each has its own line in the balance next to prebuy and hard block', ['S01', 'TRK-1', 'M02-1'], a => {
+    const st = fresh('SCM'); UI.setLang('en'); const vn = html => { const i = html.indexOf('<div class="card ccard"><div class="ch"><b>Vietnam</b>'); const j = html.indexOf('<div class="card ccard">', i + 10); return html.slice(i, j < 0 ? html.length : j); };
+    a.ok(!/Commit/.test(vn(ViewsA.dashboard(mkctx(st, [], { filters: {} })))), 'no Commit line while no contract has a Commit type');
+    st.state.contracts.find(x => x.contractId === 'CT-VN-002').prepaymentType = 'COMMIT_RN'; st.state.contracts.find(x => x.contractId === 'CT-VN-004').prepaymentType = 'COMMIT_REV';
+    const m = st.model(); const html = vn(ViewsA.dashboard(mkctx(st, [], { filters: {} }))); const k = Model.kpis(m.views, { country: 'VN' });
+    a.deepEq(k.byType.COMMIT_RN, { VND: 1500000000 }); a.deepEq(k.byType.COMMIT_REV, { VND: 650000000 }); a.eq(Model.kpis(m.views, { type: 'COMMIT_RN' }).count, 1); a.eq(Model.kpis(m.views, { type: 'COMMIT_REV' }).count, 1);
+    for (const s of ['Prebuy', '590,000,000 VND', 'Commit RN', '1,500,000,000 VND', 'Commit Rev', '650,000,000 VND', 'Security deposit', '500,000,000 VND']) a.ok(html.includes(s), s); a.ok(html.indexOf('Commit RN') < html.indexOf('Commit Rev'), 'RN line comes before the Rev line'); a.ok(html.includes('3,240,000,000 VND'), 'the total still holds all of them');
+    UI.setLang('ko'); a.eq(UI.lab('ptype', 'COMMIT_RN'), '커밋 RN'); a.eq(UI.lab('ptype', 'COMMIT_REV'), '커밋 Rev');
   });
   t('V04', 'XSS: hostile text from CSV / notes / names is HTML-escaped everywhere it is rendered', ['D-8', 'T12'], a => {
     const evil = '<img src=x onerror=alert(1)>'; const st = fresh('SCM'); a.ok(st.commands.addTx({ contractId: 'CT-KR-001', type: 'TOPUP', amountMinor: 1000, currency: 'KRW', occurredAt: '2026-11-02T10:00:00+09:00', externalRef: evil }).ok);
@@ -193,7 +202,7 @@ module.exports = function register(h) {
     const s = Seed.buildSeed(); const big = env.clone(s); big.ledger = s.ledger.slice(); big.hotels = []; big.contracts = []; big.ledger = []; big.confirmations = []; big.ratings = {}; big.sales = {};
     for (let k = 0; k < 13; k++) { const sx = (id) => id + '~' + k; for (const x of s.hotels) big.hotels.push(Object.assign({}, env.clone(x), { hotelId: sx(x.hotelId), ellisHotelId: sx(x.ellisHotelId) })); for (const c of s.contracts) { big.contracts.push(Object.assign(env.clone(c), { contractId: sx(c.contractId), hotelId: sx(c.hotelId) })); big.ratings[sx(c.contractId)] = env.clone(s.ratings[c.contractId]); }
       for (const x of s.ledger) big.ledger.push(Object.freeze(Object.assign({}, x, { txId: sx(x.txId), contractId: sx(x.contractId) }))); for (const x of s.confirmations) big.confirmations.push(Object.assign({}, x, { contractId: sx(x.contractId) })); }
-    big.alerts = []; const t0 = Date.now(); const m = Model.compute(big); const dt = Date.now() - t0; a.eq(m.views.length, 260); a.ok(dt < 2000, 'compute took ' + dt + 'ms'); const k0 = Date.now(); Model.kpis(m.views); a.ok(Date.now() - k0 < 500);
+    big.alerts = []; const t0 = Date.now(); const m = Model.compute(big); const dt = Date.now() - t0; a.eq(m.views.length, 273); a.ok(dt < 2000, 'compute took ' + dt + 'ms'); const k0 = Date.now(); Model.kpis(m.views); a.ok(Date.now() - k0 < 500);
     const st = fresh('SCM'); let csv = 'contractId,type,amount,currency,occurredAt,externalRef\n'; for (let i = 0; i < 2000; i++) csv += 'CT-VN-001,TOPUP,' + (1000 + i) + ',VND,2026-11-0' + (1 + (i % 5)) + 'T10:00:00+09:00,BULK-' + i + '\n';
     const c0 = Date.now(); const r = st.commands.importCsv(csv, 'bulk.csv'); const cd = Date.now() - c0; a.ok(r.ok && r.committed === 2000, 'committed ' + r.committed); a.ok(cd < 3000, 'import took ' + cd + 'ms'); a.eq(st.model().byContract['CT-VN-001'].balance.topupsMinor, 600e6 * 3 + 300e6 + 2000 * 1000 + (1999 * 2000) / 2);
     const again = st.commands.importCsv(csv, 'bulk.csv'); a.eq(again.committed, 0); a.eq(again.summary.duplicate, 2000);

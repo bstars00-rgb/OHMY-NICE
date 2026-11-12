@@ -107,6 +107,7 @@
     // refund / settlement track record: only what the refund tracking of this contract shows
     const rf = contract.refund || {};
     if (rf.requested) { if (derived.refundOverdue) set('settlementHistory', 1, 'REFUND_LATE'); else if (derived.refundOutstandingMinor > 0) set('settlementHistory', 3, 'REFUND_PENDING'); else set('settlementHistory', 5, 'REFUND_DONE'); }
+    else if ((derived.refundRows || 0) > 0) set('settlementHistory', 4, 'REFUND_HISTORY');            // refunds came back and no delay is on record (the Japan ledger shows this for returned deposits)
     else set('settlementHistory', null, 'SETTLE_NONE', [], 'SETTLEMENT_RECORD');
     // legal recovery by country (fixed table)
     const cs = hotel && Object.prototype.hasOwnProperty.call(sc.countryLegal, hotel.country) ? sc.countryLegal[hotel.country] : null;

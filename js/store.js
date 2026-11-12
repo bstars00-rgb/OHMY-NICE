@@ -28,6 +28,7 @@
     for (const c of s.contracts) {
       if (!c || typeof c.contractId !== 'string' || own(byId, c.contractId) || !hotels.has(c.hotelId) || !Money.isSupported(c.currency) || !own(s.ratings, c.contractId)) return false;
       if (c.limitCap && (!Number.isSafeInteger(c.limitCap.amountMinor) || c.limitCap.amountMinor < 0)) return false;
+      if (!Config.entityCurrencyOk(c.omhEntity, c.currency)) return false;                    // e.g. a yen contract under the Korean entity
       byId[c.contractId] = c;
     }
     const replay = []; const index = Ledger.makeIndex(replay);
@@ -220,6 +221,46 @@
           if (errs.length) return { ok: false, errors: errs };
           s.confirmations.push({ contractId: c.contractId, amountMinor: c.amountMinor, currency: c.currency, confirmedAt: c.confirmedAt, by: session.actor });
           return { ok: true, audit: { amountMinor: c.amountMinor, confirmedAt: c.confirmedAt } };
+        });
+      },
+      /** Registers a prepayment contract on a new or an existing hotel: master data plus the OPENING balance row. IDs are made here. Person in charge (SCM) or admin only.
+       *  input: { hotelId } (existing) or { hotel: { nameKo, nameEn, country, cityKo, cityEn, operatingCompany, ellisHotelId?, assignedScm? } }, and { contract: { omhEntity, prepaymentType, currency, startDate, endDate, refundable, openingMinor } } */
+      registerContract(input) {
+        return mutate('master.write', 'CONTRACT_REGISTER', 'new', s => {
+          if (!input || typeof input !== 'object' || !input.contract || typeof input.contract !== 'object') return { ok: false, errors: ['E_ARGUMENT'] };
+          const k = input.contract, nh = input.hotel; const errs = []; const text = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.trim().length <= max;
+          let hotel = null;
+          if (input.hotelId != null && input.hotelId !== '') { hotel = typeof input.hotelId === 'string' ? s.hotels.find(h => h.hotelId === input.hotelId) : null; if (!hotel) errs.push('E_HOTEL_UNKNOWN'); }
+          else if (!nh || typeof nh !== 'object') errs.push('E_ARGUMENT');
+          else {
+            if (!text(nh.nameKo, 80) || !text(nh.nameEn, 80)) errs.push('E_HOTEL_NAME_REQUIRED'); if (!Config.COUNTRIES.includes(nh.country)) errs.push('E_COUNTRY_INVALID');
+            if (!text(nh.cityKo, 60) || !text(nh.cityEn, 60)) errs.push('E_CITY_REQUIRED'); if (!text(nh.operatingCompany, 120)) errs.push('E_OPERATOR_REQUIRED');
+            if (nh.ellisHotelId != null && String(nh.ellisHotelId).trim() !== '') { if (!text(String(nh.ellisHotelId), 40)) errs.push('E_ELLIS_ID_INVALID'); else if (s.hotels.some(h => h.ellisHotelId === String(nh.ellisHotelId).trim())) errs.push('E_ELLIS_ID_DUPLICATE'); }
+          }
+          if (!Config.ENTITIES.includes(k.omhEntity)) errs.push('E_ENTITY_INVALID'); if (!Config.PREPAYMENT_TYPES.includes(k.prepaymentType)) errs.push('E_TYPE_INVALID');
+          if (!Money.isSupported(k.currency)) errs.push('E_CURRENCY_UNSUPPORTED'); else if (!Config.entityCurrencyOk(k.omhEntity, k.currency)) errs.push('E_ENTITY_CURRENCY');
+          if (!Dates.isDate(k.startDate) || !Dates.isDate(k.endDate)) errs.push('E_DATE_INVALID'); else if (k.endDate <= k.startDate) errs.push('E_PERIOD_INVALID');
+          if (!(k.refundable === true || k.refundable === false || k.refundable === null)) errs.push('E_STATUS_INVALID');
+          if (k.monthlySettlement !== undefined && typeof k.monthlySettlement !== 'boolean') errs.push('E_STATUS_INVALID'); else if (k.monthlySettlement === true && k.prepaymentType !== 'HARD_BLOCK_ADV') errs.push('E_MONTHLY_NEEDS_HARD_BLOCK');
+          if (!Number.isSafeInteger(k.openingMinor) || k.openingMinor < 0 || k.openingMinor > 1e15) errs.push('E_AMOUNT_INVALID');
+          if (hotel && s.contracts.some(c => c.hotelId === hotel.hotelId && c.omhEntity === k.omhEntity && c.currency === k.currency && c.prepaymentType === k.prepaymentType)) errs.push('E_CONTRACT_EXISTS');
+          if (errs.length) return { ok: false, errors: errs };
+          const asOf = s.config.asOf; const newHotel = !hotel; const pad = (n, w) => String(n).padStart(w, '0');
+          if (newHotel) {
+            const nextH = 1 + Math.max(0, ...s.hotels.map(h => { const m = /^H(\d+)$/.exec(h.hotelId); return m ? Number(m[1]) : 0; })); const hid = 'H' + pad(nextH, 3);
+            hotel = { hotelId: hid, ellisHotelId: nh.ellisHotelId != null && String(nh.ellisHotelId).trim() !== '' ? String(nh.ellisHotelId).trim() : 'PENDING-' + hid, name: { ko: nh.nameKo.trim(), en: nh.nameEn.trim() }, brand: { ko: '(브랜드 미상)', en: '(brand n/a)' }, country: nh.country,
+              city: { ko: nh.cityKo.trim(), en: nh.cityEn.trim() }, operatingCompany: nh.operatingCompany.trim(), owner: null, status: 'ACTIVE', assignedScm: text(nh.assignedScm, 40) ? nh.assignedScm.trim() : session.actor, lastVerifiedDate: asOf, facts: { closure: null, ownershipChange: 'UNKNOWN' }, isSample: s.isSample === true };
+            s.hotels.push(hotel);
+          }
+          const seqs = s.contracts.filter(c => c.contractId.startsWith('CT-' + hotel.country + '-')).map(c => Number(c.contractId.split('-')[2]) || 0).filter(n => n < 90000);
+          const contractId = 'CT-' + hotel.country + '-' + pad(1 + Math.max(0, ...seqs), 3);
+          s.contracts.push({ contractId, hotelId: hotel.hotelId, omhEntity: k.omhEntity, omhEntityName: Seed.ENTITIES[k.omhEntity], counterparty: { legalName: hotel.operatingCompany, bizRegNo: null }, contractType: k.prepaymentType === 'SECURITY_DEPOSIT' ? 'DEPOSIT_AGREEMENT' : 'ALLOTMENT_PREPAY',
+            prepaymentType: k.prepaymentType, currency: k.currency, startDate: k.startDate, endDate: k.endDate, assignedScm: hotel.assignedScm, refund: { refundable: k.refundable, requested: false }, transfer: { eligible: null }, collateral: null, renewal: null,
+            facts: { counterpartyVerification: 'UNKNOWN', counterpartyEvidence: null, refundRefused: null, legalRecoveryCritical: null }, isSample: s.isSample === true, topUp: null, plannedTopUp: null, allotment: null, monthlySettlement: k.monthlySettlement === true });
+          s.ratings[contractId] = { evidence: {}, history: [], scmOpinion: null };
+          const r = Ledger.append(s.ledger, { contractId, type: 'OPENING', amountMinor: k.openingMinor, currency: k.currency, occurredAt: asOf + 'T09:00:00+09:00', externalRef: 'OPEN-' + contractId, source: 'MANUAL' }, ctxFor());
+          if (!r.ok) { s.contracts.pop(); delete s.ratings[contractId]; if (newHotel) s.hotels.pop(); return { ok: false, errors: r.errors }; }      // nothing is left behind when the opening row is refused
+          return { ok: true, contractId, hotelId: hotel.hotelId, audit: { contractId, hotelId: hotel.hotelId, newHotel, entity: k.omhEntity, currency: k.currency, prepaymentType: k.prepaymentType, openingMinor: k.openingMinor } };
         });
       },
       /** Records contract terms that the rating reads: whether the prepayment is refundable and the documented collateral amount (null = none).

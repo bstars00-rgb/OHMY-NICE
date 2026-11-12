@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-11-11T09:12:50.428Z",
-  "applied": 203,
-  "killed": 203,
+  "ranAt": "2026-11-12T04:39:55.966Z",
+  "applied": 223,
+  "killed": 223,
   "survived": 0,
   "rows": [
     {
@@ -92,7 +92,7 @@
       "desc": "Unknown scored as 3 (mid)",
       "file": "engine/weighted.js",
       "status": "KILLED",
-      "failedTests": 9,
+      "failedTests": 10,
       "firstFailing": "R02"
     },
     {
@@ -344,14 +344,14 @@
       "desc": "state hash not checked on load",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 3,
+      "failedTests": 4,
       "firstFailing": "AS02"
     },
     {
       "desc": "audit entries carry no state hash",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 3,
+      "failedTests": 4,
       "firstFailing": "AS02"
     },
     {
@@ -393,7 +393,7 @@
       "desc": "audit hash chain broken",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 13,
+      "failedTests": 15,
       "firstFailing": "X03"
     },
     {
@@ -596,22 +596,20 @@
       "desc": "TRACKER: the template example row is imported",
       "file": "engine/tracker.js",
       "status": "KILLED",
-      "failedTests": 12,
-      "firstFailing": "TR02"
+      "failedTests": -1
     },
     {
       "desc": "TRACKER: preview open to every role",
       "file": "store.js",
       "status": "KILLED",
-      "failedTests": 1,
-      "firstFailing": "TR11"
+      "failedTests": -1
     },
     {
       "desc": "AUTH: password not checked",
       "file": "core/auth.js",
       "status": "KILLED",
-      "failedTests": 4,
-      "firstFailing": "A01"
+      "failedTests": 5,
+      "firstFailing": "S10"
     },
     {
       "desc": "AUTH: lockout disabled",
@@ -1401,7 +1399,7 @@
       "desc": "SCORE: an overdue refund scores well",
       "file": "engine/rating.js",
       "status": "KILLED",
-      "failedTests": 1,
+      "failedTests": 2,
       "firstFailing": "AS01"
     },
     {
@@ -1424,6 +1422,146 @@
       "status": "KILLED",
       "failedTests": 1,
       "firstFailing": "AS03"
+    },
+    {
+      "desc": "ENTITY: a yen contract under the Korean entity is accepted on load",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "F10"
+    },
+    {
+      "desc": "ENTITY: a local entity may hold any currency",
+      "file": "core/config.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "F10"
+    },
+    {
+      "desc": "REGISTER: a local entity may be given any currency",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AD01"
+    },
+    {
+      "desc": "REGISTER: the same contract is registered twice",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 2,
+      "firstFailing": "AD01"
+    },
+    {
+      "desc": "REGISTER: the CEO may register hotels",
+      "file": "core/rbac.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AD01"
+    },
+    {
+      "desc": "REGISTER: a duplicate ELLIS code is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AD01"
+    },
+    {
+      "desc": "REGISTER: an end date before the start date is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AD01"
+    },
+    {
+      "desc": "REGISTER: a negative opening balance is accepted",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AD01"
+    },
+    {
+      "desc": "COMMIT: Commit RN is read as Commit Rev",
+      "file": "engine/tracker.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "TR03"
+    },
+    {
+      "desc": "COMMIT: the Commit types cannot be registered",
+      "file": "core/config.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AD02"
+    },
+    {
+      "desc": "COMMIT: Commit Rev balance disappears from the dashboard",
+      "file": "ui/views_a.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "V03d"
+    },
+    {
+      "desc": "JAPAN: a record-stopped alert needs one day more than the limit",
+      "file": "engine/alerts.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL01"
+    },
+    {
+      "desc": "JAPAN: a deposit that does not move is reported as stopped",
+      "file": "engine/alerts.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL01"
+    },
+    {
+      "desc": "JAPAN: a deposit held exactly the limit is not reported",
+      "file": "engine/alerts.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL01"
+    },
+    {
+      "desc": "JAPAN: concentration alerts on a group of two",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL02"
+    },
+    {
+      "desc": "JAPAN: deposits and prepayments are pooled for concentration",
+      "file": "engine/model.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL02"
+    },
+    {
+      "desc": "JAPAN: a refund history scores the maximum",
+      "file": "engine/rating.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL04"
+    },
+    {
+      "desc": "JAPAN: a monthly-settlement hard block is treated like a balance-consuming one",
+      "file": "engine/forecast.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL03"
+    },
+    {
+      "desc": "JAPAN: a monthly-settlement hard block gets the deposit hold reason",
+      "file": "engine/limit.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL03"
+    },
+    {
+      "desc": "JAPAN: monthly settlement accepted on a floating contract",
+      "file": "store.js",
+      "status": "KILLED",
+      "failedTests": 1,
+      "firstFailing": "AL03"
     }
   ]
 }

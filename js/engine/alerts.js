@@ -28,6 +28,9 @@
     RENEWAL_DELAY: B('계약 갱신 지연', 'Contract renewal delay'),
     ENTITY_UNKNOWN: B('계약 상대방 실체 미확인', 'Counterparty entity unverified'),
     UNVERIFIED_SIGNAL: B('미검증 위험 신호(확정 아님)', 'Unverified adverse signal (not confirmed)'),
+    RECORD_STALE: B('원장 기록 중단(잔액은 있는데 기록이 없음)', 'Ledger records stopped (a balance with no record)'),
+    LONG_HELD_DEPOSIT: B('장기 예치 보증금(운영사 변경·반환 조건 재확인)', 'Long-held deposit (re-check operator change and refund terms)'),
+    BALANCE_CONCENTRATION: B('잔액 집중(한 계약에 몰림)', 'Balance concentration (one contract holds a large share)'),
   };
   const ACTION_TEXT = {
     HOLD_TOPUP: B('추가 충전 보류', 'Hold further top-ups'), VERIFY_CONTRACT: B('계약 확인', 'Verify contract'),
@@ -76,9 +79,22 @@
       const days = Dates.diffDays(asOf, contract.endDate);
       if (days >= 0 && days <= rd.params.withinDays) push('RENEWAL_DELAY', [{ k: 'daysToEnd', v: days }, { k: 'renewal', v: 'none recorded' }]);
     }
+    const rs = rules.RECORD_STALE;
+    if (rs && rs.enabled && contract.prepaymentType !== 'SECURITY_DEPOSIT' && balance.closingMinor > 0 && derived.daysSinceLastRecord != null && derived.daysSinceLastRecord >= rs.params.days)
+      push('RECORD_STALE', [{ k: 'daysSinceLastRecord', v: derived.daysSinceLastRecord }, { k: 'lastRecordAt', v: derived.lastRecordAt }, { k: 'balance', v: balance.closingMinor }]);
+    const ld = rules.LONG_HELD_DEPOSIT;
+    if (ld && ld.enabled && contract.prepaymentType === 'SECURITY_DEPOSIT' && balance.closingMinor > 0 && derived.heldDays != null && derived.heldDays >= Math.round(ld.params.years * 365))
+      push('LONG_HELD_DEPOSIT', [{ k: 'heldSince', v: contract.startDate }, { k: 'yearsHeld', v: Math.floor(derived.heldDays / 365) }, { k: 'refundable', v: contract.refund && contract.refund.refundable != null ? String(contract.refund.refundable) : 'unknown' }]);
     if (rating.unverifiedSignals.length) push('UNVERIFIED_SIGNAL', rating.unverifiedSignals.map(s => ({ k: s.id, v: 'source=' + s.source + (s.note ? ' · ' + s.note : '') })));
     out.sort((a, b) => SEV_RANK[a.severity] - SEV_RANK[b.severity]);
     return out;
+  }
+
+  /** The concentration alert needs the whole portfolio, so Model.compute builds it after the contracts: view = a contract view, info = { sharePct, groupTotalMinor, count }. Null when the rule is off. */
+  function concentrationAlert(view, info, cfg) {
+    const r = cfg.alertRules.BALANCE_CONCENTRATION; if (!r || !r.enabled) return null; const c = view.contract, h = view.hotel;
+    return { hotelId: h.hotelId, contractId: c.contractId, assignedScm: c.assignedScm || h.assignedScm || null, detectedAt: cfg.asOf, source: 'AUTO', alertId: 'BALANCE_CONCENTRATION:' + c.contractId, ruleId: 'BALANCE_CONCENTRATION', severity: r.severity, action: r.action, title: RULE_TEXT.BALANCE_CONCENTRATION,
+      evidence: [{ k: 'sharePct', v: info.sharePct }, { k: 'balance', v: view.balance.closingMinor }, { k: 'groupTotalMinor', v: info.groupTotalMinor }, { k: 'contractsInGroup', v: info.count }] };
   }
 
   /** Merge freshly detected alerts into persisted state. States survive; cleared auto-alerts get clearedAt; history is kept. */
@@ -102,5 +118,5 @@
     return persisted;
   }
   const isActive = a => !a.clearedAt && a.status !== 'RESOLVED' && a.status !== 'DISMISSED';
-  return { SEV_RANK, STATUSES, RULE_TEXT, ACTION_TEXT, detect, merge, isActive };
+  return { SEV_RANK, STATUSES, RULE_TEXT, ACTION_TEXT, detect, concentrationAlert, merge, isActive };
 });

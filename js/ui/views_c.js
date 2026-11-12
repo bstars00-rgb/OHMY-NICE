@@ -56,12 +56,9 @@
   }
 
   /* ============ Screen 07 — Prepayment Approval Packet and CEO Review (route approval) ============ */
-  function approvalPage(ctx) {
-    const m = ctx.m, st = ctx.store.state; const id = ctx.params[0] || ctx.ui.approvalContract || m.views[0].contractId; const v = m.byContract[id]; if (!v) return U.emptyState(L('계약을 찾을 수 없습니다.', 'Contract not found.'));
-    const role = ctx.store.session.role; const can = p => RBAC.can(role, p); const dis = p => (can(p) ? '' : 'disabled title="' + esc(L('권한 없음', 'No permission')) + '"');
-    const amt = ctx.ui.simAmount != null ? ctx.ui.simAmount : '';
-    const picker = '<div class="toolbar no-print"><label>' + esc(L('계약', 'Contract')) + ' <select id="portal-sel">' + m.views.map(x => '<option value="' + esc(x.contractId) + '" ' + (x.contractId === id ? 'selected' : '') + '>' + esc(tt(x.hotel.name) + ' · ' + x.contractId + ' · ' + x.currency) + '</option>').join('') + '</select></label>' +
-      '<label>' + esc(L('요청 충전액', 'Requested top-up')) + ' (' + esc(v.currency) + ') <input id="portal-amt" value="' + esc(amt) + '" inputmode="decimal"></label></div>';
+  /** The report preview for one amount (plus the print / JSON buttons). Rebuilt in place while the amount is typed, so the buttons around it never move. */
+  function approvalPreview(ctx, v, amt) {
+    const m = ctx.m, st = ctx.store.state; const id = v.contractId; const can = p => RBAC.can(ctx.store.session.role, p);
     const p = amt === '' ? null : Money.parseAmount(amt, v.currency);
     const sim = p && p.ok ? Limit.simulate(v.limit, v.forecast, p.minor, v.contract, { daysPerMonth: st.config.forecast.daysPerMonth, addDays: Dates.addDays, asOf: m.asOf }) : null;
     let report = '';
@@ -88,6 +85,16 @@
         row(L('대표 검토 상태', 'CEO review status'), (() => { const la = st.approvals.filter(x => x.contractId === id).pop(); return la ? esc(lab('apStatus', la.status)) + (la.feedback ? '<br><span class="small">' + esc(la.feedback.text) + ' — ' + esc(la.feedback.by) + '</span>' : '') : esc(L('요청 기록 없음 (실제 결재는 결재 포털에서 이루어집니다)', 'No request yet (the real approval happens in the approval portal)')); })()) +
         '</table><div class="sign">' + esc(L('검토  SCM □   대표이사 □  (검토 완료 · 담당자에게 의견 전달)', 'Review  SCM □   CEO □  (review done · feedback to the person in charge)')) + '</div></div>';
     }
+    const tools = sim && sim.ok ? '<div class="toolbar no-print"><button class="btn" data-act="print">' + esc(L('인쇄 / PDF 저장', 'Print / Save PDF')) + '</button><button class="btn" data-act="dl-json">' + esc(L('JSON 파일 출력', 'Download JSON')) + '</button></div>' : '';
+    return tools + report;
+  }
+  function approvalPage(ctx) {
+    const m = ctx.m, st = ctx.store.state; const id = ctx.params[0] || ctx.ui.approvalContract || m.views[0].contractId; const v = m.byContract[id]; if (!v) return U.emptyState(L('계약을 찾을 수 없습니다.', 'Contract not found.'));
+    const role = ctx.store.session.role; const can = p => RBAC.can(role, p); const dis = p => (can(p) ? '' : 'disabled title="' + esc(L('권한 없음', 'No permission')) + '"');
+    const amt = ctx.ui.simAmount != null ? ctx.ui.simAmount : '';
+    const picker = '<div class="toolbar no-print"><label>' + esc(L('계약', 'Contract')) + ' <select id="portal-sel">' + m.views.map(x => '<option value="' + esc(x.contractId) + '" ' + (x.contractId === id ? 'selected' : '') + '>' + esc(tt(x.hotel.name) + ' · ' + x.contractId + ' · ' + x.currency) + '</option>').join('') + '</select></label>' +
+      '<label>' + esc(L('요청 충전액', 'Requested top-up')) + ' (' + esc(v.currency) + ') <input id="portal-amt" value="' + esc(amt) + '" inputmode="decimal"></label>' +
+      '<button class="btn primary" data-act="ap-create" ' + dis('approval.create') + '>' + esc(L('검토 요청서 초안 저장', 'Save review-request draft')) + '</button></div>';
     const aps = st.approvals.filter(a => a.contractId === id);
     const apRows = aps.map(a => {
       const btns = (a.status === 'DRAFT' ? '<button class="btn sm" data-apsubmit="' + esc(a.approvalId) + '" ' + dis('approval.submit') + '>' + esc(L('대표에게 검토 요청(모의)', 'Request CEO review (mock)')) + '</button>' : '') +
@@ -95,20 +102,62 @@
       return '<tr><td>' + esc(a.approvalId) + '</td><td>' + esc(a.createdAt) + ' ' + esc(a.createdBy) + '</td><td class="num">' + money(a.packet.request.requestedMinor, v.currency) + '</td><td>' + chip(lab('apStatus', a.status), a.status === 'CEO_REVIEWED' ? 'ok' : '') + '</td><td class="small">' + (a.feedback ? esc(a.feedback.text) + '<div class="muted">' + esc(a.feedback.by + ' · ' + a.feedback.at) + '</div>' : '<span class="muted">—</span>') + '</td><td class="small">' + esc(a.packet.fingerprint) + (a.ack ? ' · ' + esc(a.ack.ref) : '') + '</td><td>' + btns + '</td></tr>'; }).join('');
     const apList = '<div class="panel no-print"><h3>' + esc(L('이 계약의 검토 요청 기록 (모의)', 'Review requests for this contract (mock)')) + '</h3><div class="body">' + (aps.length ? '<div class="table-wrap"><table><thead><tr><th>ID</th><th>' + esc(L('작성', 'Created')) + '</th><th class="num">' + esc(L('요청액', 'Requested')) + '</th><th>' + esc(L('상태', 'Status')) + '</th><th>' + esc(L('대표 검토 의견', 'CEO feedback')) + '</th><th>' + esc(L('지문/참조', 'Fingerprint / ref')) + '</th><th></th></tr></thead><tbody>' + apRows + '</tbody></table></div>' : U.emptyState(L('검토 요청 기록이 없습니다.', 'No review requests yet.'))) +
       '<div class="muted small">' + esc(L('대표는 요청서를 검토하고 담당자에게 의견을 전달합니다. 이 화면은 승인하지 않으며 자금 이동·실제 결재·원장 변경도 일으키지 않습니다. 실제 결재는 결재 포털에서 이루어지고, 검토 의견 기록은 CEO 역할만 할 수 있습니다.', 'The CEO reviews the request and sends feedback to the person in charge. This screen approves nothing and moves no funds, issues no real approval and changes no ledger. The real approval happens in the approval portal; only the CEO role can record the review feedback.')) + '</div></div></div>';
-    const tools = sim && sim.ok ? '<div class="toolbar no-print"><button class="btn primary" data-act="ap-create" ' + dis('approval.create') + '>' + esc(L('검토 요청서 초안 저장', 'Save review-request draft')) + '</button><button class="btn" data-act="print">' + esc(L('인쇄 / PDF 저장', 'Print / Save PDF')) + '</button><button class="btn" data-act="dl-json">' + esc(L('JSON 파일 출력', 'Download JSON')) + '</button></div>' : '';
-    return picker + tools + report + apList;
+    return picker + '<div id="portal-preview">' + approvalPreview(ctx, v, amt) + '</div>' + apList;
   }
   function approvalPageBind(el, ctx) {
     const id = ctx.params[0] || ctx.ui.approvalContract || ctx.m.views[0].contractId; const v = ctx.m.byContract[id]; const cmd = ctx.store.commands;
     el.querySelector('#portal-sel').addEventListener('change', e => { ctx.ui.approvalContract = e.target.value; ctx.navigate('/approval/' + e.target.value); });
-    const inp = el.querySelector('#portal-amt'); inp.addEventListener('change', () => { ctx.ui.simAmount = inp.value; ctx.rerender(); });
-    const on = (a, fn) => { const b = el.querySelector('[data-act="' + a + '"]'); if (b) b.addEventListener('click', fn); };
-    on('print', () => window.print());
-    on('dl-json', () => { const p = Money.parseAmount(ctx.ui.simAmount, v.currency); const sim = Limit.simulate(v.limit, v.forecast, p.minor, v.contract, { daysPerMonth: ctx.store.state.config.forecast.daysPerMonth, addDays: Dates.addDays, asOf: ctx.m.asOf });
-      const packet = Adapters.Portal.buildPacket(v, sim, { asOf: ctx.m.asOf, scmOpinion: ctx.store.state.ratings[id].scmOpinion }); const blob = new Blob([JSON.stringify(packet, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'approval_packet_' + id + '.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0); });
-    on('ap-create', () => { const p = Money.parseAmount(ctx.ui.simAmount, v.currency); if (!p.ok) return ctx.toast(U.errText(p.error), 'bad'); ctx.run(() => cmd.createApproval(id, p.minor), L('검토 요청서 초안을 저장했습니다(모의).', 'Review-request draft saved (mock).')); });
+    const inp = el.querySelector('#portal-amt'); const box = el.querySelector('#portal-preview');
+    const bindPreview = () => {
+      const on = (act, fn) => { const bt = box.querySelector('[data-act="' + act + '"]'); if (bt) bt.addEventListener('click', fn); };
+      on('print', () => window.print());
+      on('dl-json', () => { const p = Money.parseAmount(ctx.ui.simAmount, v.currency); const sim = Limit.simulate(v.limit, v.forecast, p.minor, v.contract, { daysPerMonth: ctx.store.state.config.forecast.daysPerMonth, addDays: Dates.addDays, asOf: ctx.m.asOf });
+        const packet = Adapters.Portal.buildPacket(v, sim, { asOf: ctx.m.asOf, scmOpinion: ctx.store.state.ratings[id].scmOpinion }); const blob = new Blob([JSON.stringify(packet, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'approval_packet_' + id + '.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0); });
+    };
+    const refresh = () => { ctx.ui.simAmount = inp.value; box.innerHTML = approvalPreview(ctx, v, inp.value); bindPreview(); };      // only the preview changes: the field and the buttons stay where they are
+    let timer = null; inp.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(refresh, 250); }); inp.addEventListener('change', () => { clearTimeout(timer); refresh(); });
+    bindPreview();
+    const mk = el.querySelector('[data-act="ap-create"]'); if (mk) mk.addEventListener('click', () => { clearTimeout(timer); ctx.ui.simAmount = inp.value; const p = Money.parseAmount(inp.value, v.currency); if (!p.ok) return ctx.toast(inp.value.trim() === '' ? L('요청 충전액을 입력하세요.', 'Enter the requested top-up first.') : U.errText(p.error), 'bad'); ctx.run(() => cmd.createApproval(id, p.minor), L('검토 요청서 초안을 저장했습니다(모의).', 'Review-request draft saved (mock).')); });
     el.querySelectorAll('[data-apsubmit]').forEach(b => b.addEventListener('click', () => ctx.run(() => cmd.submitApproval(b.getAttribute('data-apsubmit')), L('대표에게 검토를 요청했습니다(모의).', 'Review requested from the CEO (mock).'))));
     el.querySelectorAll('[data-apreview]').forEach(b => b.addEventListener('click', () => { const ap = b.getAttribute('data-apreview'); const fb = el.querySelector('[data-apfb="' + ap + '"]'); ctx.run(() => cmd.reviewApproval(ap, fb ? fb.value : ''), L('검토 의견을 담당자에게 전달했습니다(모의, 자금 이동 없음).', 'Feedback recorded for the person in charge (mock, no funds moved).')); }));
+  }
+
+  /* ============ Register a hotel and its prepayment contract (route register) ============ */
+  function registerPage(ctx) {
+    const st = ctx.store.state; const can = RBAC.can(ctx.store.session.role, 'master.write'); const dis = can ? '' : 'disabled title="' + esc(L('권한 없음', 'No permission')) + '"';
+    const opts = (list, labelFn, sel) => list.map(x => '<option value="' + esc(x) + '" ' + (x === sel ? 'selected' : '') + '>' + esc(labelFn(x)) + '</option>').join('');
+    const field = (label, ctl) => '<label class="rg-f"><span class="muted small">' + esc(label) + '</span>' + ctl + '</label>';
+    const inp = (id, extra) => '<input id="' + id + '" ' + (extra || '') + ' ' + dis + '>';
+    const hotelOpts = '<option value="">' + esc(L('새 호텔 등록', 'New hotel')) + '</option>' + st.hotels.map(h => '<option value="' + esc(h.hotelId) + '">' + esc(tt(h.name) + ' · ' + h.hotelId + ' · ' + lab('country', h.country)) + '</option>').join('');
+    const sel = (id, body) => '<select id="' + id + '" ' + dis + '>' + body + '</select>';
+    const form = '<div class="panel"><h3>' + esc(L('호텔·계약 등록', 'Register a hotel and contract')) + '</h3><div class="body">' +
+      '<div class="muted small">' + esc(L('새 호텔과 선급금 계약을 등록하거나, 이미 있는 호텔에 계약을 더합니다. 기초 잔액은 원장의 첫 줄(OPENING)로 들어갑니다. 새 호텔은 소진 실적과 증빙이 없어 신용평가가 미확인으로 시작하고 추가 충전은 보류됩니다. 원장에 소진을 입력하고 자료를 등록하면 점수가 올라갑니다.', 'Register a new hotel with its prepayment contract, or add a contract to an existing hotel. The opening balance becomes the first ledger row (OPENING). A new hotel has no consumption record or evidence, so its rating starts as Unknown and further top-ups are on hold. Enter consumption in the ledger and register evidence to raise the score.')) + '</div>' +
+      '<div class="rg-grid">' + field(L('호텔', 'Hotel'), sel('rg-hotel', hotelOpts)) + '</div>' +
+      '<div id="rg-new" class="rg-grid">' + field(L('호텔명(한국어)', 'Hotel name (Korean)'), inp('rg-name-ko', 'maxlength="80"')) + field(L('호텔명(영어)', 'Hotel name (English)'), inp('rg-name-en', 'maxlength="80"')) +
+        field(L('국가', 'Country'), sel('rg-country', opts(Config.COUNTRIES, c => lab('country', c), 'KR'))) + field(L('도시(한국어)', 'City (Korean)'), inp('rg-city-ko', 'maxlength="60"')) + field(L('도시(영어)', 'City (English)'), inp('rg-city-en', 'maxlength="60"')) +
+        field(L('운영사', 'Operating company'), inp('rg-operator', 'maxlength="120"')) + field(L('ELLIS 호텔 코드(선택)', 'ELLIS hotel code (optional)'), inp('rg-ellis', 'maxlength="40"')) + field(L('담당 SCM', 'Assigned SCM'), inp('rg-scm', 'maxlength="40" value="' + esc(ctx.store.session.actor || '') + '"')) + '</div>' +
+      '<div class="rg-grid">' + field(L('계약 법인', 'Contracting entity'), sel('rg-entity', opts(Config.ENTITIES, e => lab('entity', e), 'OMH-KR'))) + field(L('선급금 유형', 'Prepayment type'), sel('rg-type', opts(Config.PREPAYMENT_TYPES, t => lab('ptype', t), 'FLOATING'))) + field(L('정산 방식(하드블럭만)', 'Settlement (hard block only)'), '<span class="rg-chk"><input type="checkbox" id="rg-monthly" disabled> ' + esc(L('월 선급·월 정산(잔액 없음)', 'Monthly prepay and settlement (no balance)')) + '</span>') +
+        field(L('통화', 'Currency'), sel('rg-ccy', opts(Object.keys(Money.CURRENCIES), c => c, 'KRW'))) + field(L('계약 시작일', 'Contract start'), inp('rg-start', 'type="date" value="' + esc(ctx.m.asOf) + '"')) + field(L('계약 종료일', 'Contract end'), inp('rg-end', 'type="date"')) +
+        field(L('반환 가능', 'Refundable'), sel('rg-refund', opts(['unknown', 'yes', 'no'], k => ({ unknown: L('미확인', 'Unknown'), yes: L('가능', 'Yes'), no: L('불가', 'No') })[k], 'unknown'))) + field(L('기초 잔액', 'Opening balance'), inp('rg-opening', 'inputmode="decimal" placeholder="0"')) + '</div>' +
+      '<div class="toolbar"><button class="btn primary" data-act="rg-save" ' + dis + '>' + esc(L('등록', 'Register')) + '</button></div>' +
+      '<div class="muted small">' + esc(L('호텔 국가마다 통화가 하나입니다. 한국·일본·베트남 법인은 자기 나라 통화만 가질 수 있고, 싱가포르 본사는 모든 통화를 가질 수 있습니다. 같은 호텔·법인·통화·유형의 계약은 한 번만 등록됩니다.', 'Each hotel country has one currency. The Korea, Japan and Vietnam entities hold their own currency only; the Singapore head office may hold any. A contract with the same hotel, entity, currency and type is registered once.')) + '</div>' +
+      (can ? '' : '<div class="note warn">' + esc(L('담당 SCM과 관리자만 등록할 수 있습니다.', 'Only the SCM in charge and the administrator can register.')) + '</div>') + '</div></div>';
+    return form;
+  }
+  function registerBind(el, ctx) {
+    const cmd = ctx.store.commands; const $ = s => el.querySelector(s); const LOCAL = { KR: 'OMH-KR', JP: 'OMH-JP', VN: 'OMH-VN' };
+    const sync = () => { const h = $('#rg-hotel').value ? ctx.store.state.hotels.find(x => x.hotelId === $('#rg-hotel').value) : null; $('#rg-new').style.display = h ? 'none' : ''; const c = h ? h.country : $('#rg-country').value;
+      if (Config.COUNTRY_CURRENCY[c]) $('#rg-ccy').value = Config.COUNTRY_CURRENCY[c]; $('#rg-entity').value = LOCAL[c] || 'OMH-SG'; };
+    const syncType = () => { const hb = $('#rg-type').value === 'HARD_BLOCK_ADV'; const cb = $('#rg-monthly'); cb.disabled = !hb || !RBAC.can(ctx.store.session.role, 'master.write'); if (!hb) cb.checked = false; }; $('#rg-type').addEventListener('change', syncType); syncType();
+    $('#rg-hotel').addEventListener('change', sync); $('#rg-country').addEventListener('change', sync); sync();
+    $('[data-act="rg-save"]').addEventListener('click', () => {
+      const hid = $('#rg-hotel').value; const ccy = $('#rg-ccy').value; const raw = $('#rg-opening').value.trim(); const p = Money.parseAmount(raw === '' ? '0' : raw, ccy); if (!p.ok) return ctx.toast(U.errText(p.error), 'bad');
+      const input = { contract: { omhEntity: $('#rg-entity').value, prepaymentType: $('#rg-type').value, currency: ccy, startDate: $('#rg-start').value, endDate: $('#rg-end').value, refundable: ({ yes: true, no: false, unknown: null })[$('#rg-refund').value], monthlySettlement: $('#rg-monthly').checked, openingMinor: p.minor } };
+      if (hid) input.hotelId = hid; else input.hotel = { nameKo: $('#rg-name-ko').value, nameEn: $('#rg-name-en').value, country: $('#rg-country').value, cityKo: $('#rg-city-ko').value, cityEn: $('#rg-city-en').value, operatingCompany: $('#rg-operator').value, ellisHotelId: $('#rg-ellis').value, assignedScm: $('#rg-scm').value };
+      let res; try { res = cmd.registerContract(input); } catch (e) { return ctx.toast(U.errText(e.code || e.message), 'bad'); }
+      if (!res.ok) return ctx.toast(res.errors.map(U.errText).join(' · '), 'bad');
+      ctx.toast(L('호텔·계약을 등록했습니다.', 'Hotel and contract registered.')); ctx.navigate('/profile/' + res.contractId);
+    });
   }
 
   /* ============ Screen 08 — Administration ============ */
@@ -253,5 +302,5 @@
     on('reset', () => { if (confirm(L('샘플 데이터로 초기화할까요?', 'Reset to sample data?'))) ctx.run(() => ctx.store.commands.resetSample(), L('초기화했습니다.', 'Reset done.')); });
     on('export-json', () => { try { const t = ctx.store.commands.exportJson(); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'application/json' })); a.download = 'omh_hfr_sample_state.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0); } catch (e) { ctx.toast(U.errText(e.code || 'E_FORBIDDEN'), 'bad'); } });
   }
-  return { risk, riskBind, approvalPage, approvalPageBind, admin, adminBind };
+  return { risk, riskBind, approvalPage, approvalPageBind, registerPage, registerBind, admin, adminBind };
 });

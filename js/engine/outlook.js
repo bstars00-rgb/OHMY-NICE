@@ -57,7 +57,7 @@
     else if (d.refundPending) stop.push({ code: 'REFUND_IN_PROGRESS' });
     if (f.expired && bal > 0) stop.push({ code: 'EXPIRED_WITH_BALANCE' });
     if (r.grade === 'C') cond.push({ code: 'GRADE_C' });
-    for (const h of lim.holdReasons || []) if (!['GRADE_D_NO_PREPAY', 'NOT_RATED', 'CRITICAL_FACT_ACTIVE', 'NOT_APPLICABLE_DEPOSIT', 'NO_CONSUMPTION_DATA', 'PARTIAL_CONSUMPTION_DATA'].includes(h)) cond.push({ code: 'HOLD', reason: h });
+    for (const h of lim.holdReasons || []) if (!['GRADE_D_NO_PREPAY', 'NOT_RATED', 'CRITICAL_FACT_ACTIVE', 'NOT_APPLICABLE_DEPOSIT', 'NOT_APPLICABLE_MONTHLY', 'NO_CONSUMPTION_DATA', 'PARTIAL_CONSUMPTION_DATA'].includes(h)) cond.push({ code: 'HOLD', reason: h });
     if (d.consumptionCollapse && !cond.some(x => x.reason === 'CONSUMPTION_COLLAPSE')) cond.push({ code: 'HOLD', reason: 'CONSUMPTION_COLLAPSE' });
     if (lim.overLimitMinor > 0 && r.grade !== 'NR' && r.grade !== 'D') cond.push({ code: 'OVER_LIMIT' });   // for D and NR the limit is 0 by rule, so 'over the limit' says nothing new
     if (d.expiryBeforeDepletion) cond.push({ code: 'EXPIRY_BEFORE_DEPLETION' });

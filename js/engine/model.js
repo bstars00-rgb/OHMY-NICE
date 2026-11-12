@@ -48,6 +48,8 @@
       consumptionCollapse: !!(f.velocity && f.velocity.pct != null && f.velocity.pct <= -(ccRule && ccRule.params ? ccRule.params.dropPct : 50)),
       expiryBeforeDepletion: f.depletesBeforeEnd === false && balance.closingMinor > 0 && !!contract.endDate,
     };
+    let lastRec = null, refundRows = 0; for (const t of own) { const d = String(t.occurredAt).slice(0, 10); if (lastRec === null || d > lastRec) lastRec = d; if (t.type === 'REFUND') refundRows++; }
+    derived.lastRecordAt = lastRec; derived.daysSinceLastRecord = lastRec ? Dates.diffDays(lastRec, asOf) : null; derived.refundRows = refundRows; derived.heldDays = contract.startDate ? Dates.diffDays(contract.startDate, asOf) : null;
     const rec = (state.ratings || {})[contract.contractId] || { history: [] };
     const auto = Rating.autoScores({ contract, hotel, balance, forecast: f, recon, derived, cfg });                  // nobody enters these: they follow from the data
     const rating = Rating.evaluate({ scores: auto.scores, hotel, contract, derived, cfg });
@@ -71,6 +73,16 @@
     const pre = { hotelsById: {}, txsBy: new Map(), ellisCmp: Ellis.compare(state) }; for (const h of state.hotels) pre.hotelsById[h.hotelId] = h;   // one ELLIS comparison for all contracts
     for (const t of state.ledger) { let a = pre.txsBy.get(t.contractId); if (!a) pre.txsBy.set(t.contractId, a = []); a.push(t); }
     const views = state.contracts.map(c => contractView(state, c, pre));
+    // balance concentration: one contract holding a large share of its country / currency group (deposits are a group of their own)
+    const conc = state.config.alertRules.BALANCE_CONCENTRATION;
+    if (conc && conc.enabled) {
+      const groups = new Map(); for (const v of views) { if (v.balance.closingMinor <= 0) continue; const k = v.hotel.country + '|' + v.currency + '|' + (v.contract.prepaymentType === 'SECURITY_DEPOSIT' ? 'DEP' : 'PRE'); let g = groups.get(k); if (!g) groups.set(k, g = { total: 0, items: [] }); g.total += v.balance.closingMinor; g.items.push(v); }
+      const persisted = {}; for (const p of state.alerts || []) persisted[p.alertId] = p; const need = BigInt(Math.round(conc.params.sharePct * 100));
+      for (const g of groups.values()) if (g.items.length >= 3) for (const v of g.items) if (BigInt(v.balance.closingMinor) * 10000n >= need * BigInt(g.total)) {
+        const d = Alerts.concentrationAlert(v, { sharePct: Math.round(v.balance.closingMinor * 1000 / g.total) / 10, groupTotalMinor: g.total, count: g.items.length }, state.config); if (!d) continue;
+        const al = Object.assign({}, d, { status: persisted[d.alertId] ? persisted[d.alertId].status : 'OPEN', persisted: persisted[d.alertId] || null }); v.alerts.push(al); if (al.status !== 'DISMISSED') v.liveAlerts.push(al);
+      }
+    }
     const byContract = Object.create(null); for (const v of views) byContract[v.contractId] = v;      // null prototype: '__proto__' etc. can never resolve
     return { asOf: state.config.asOf, views, byContract, hotelsById: pre.hotelsById };
   }

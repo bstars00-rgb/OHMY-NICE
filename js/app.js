@@ -15,6 +15,7 @@
     { id: 'profile', ico: '▤', ko: '호텔 신용 카드', en: 'Hotel Credit Profile', subKo: '호텔·계약별 평가, 한도, 위험 신호', subEn: 'Rating, limit and risk signals per hotel contract', view: NS.ViewsA.profile, bind: NS.ViewsA.profileBind },
     { id: 'ledger', ico: '☰', ko: '플로팅 원장', en: 'Floating Ledger', subKo: '충전·소진·반환 이력, 대사, CSV 업로드', subEn: 'Top-ups, consumption, refunds, reconciliation, CSV upload', view: NS.ViewsB.ledger, bind: NS.ViewsB.ledgerBind },
     { id: 'risk', ico: '⚠', ko: '위험 모니터링', en: 'Risk Monitoring Center', subKo: '경보·근거·담당자·조치 상태', subEn: 'Alerts, evidence, owners and handling status', view: NS.ViewsC.risk, bind: NS.ViewsC.riskBind },
+    { id: 'register', ico: '＋', ko: '호텔·계약 등록', en: 'Register Hotel & Contract', subKo: '새 호텔과 선급금 계약 등록 (기초 잔액 포함)', subEn: 'Add a hotel and its prepayment contract (with the opening balance)', view: NS.ViewsC.registerPage, bind: NS.ViewsC.registerBind },
     { id: 'approval', ico: '✎', ko: '선급 결재 자료·대표 검토', en: 'Prepayment Approval Packet · CEO Review', subKo: '결재 포털에 붙일 자료와 대표 검토 의견 (모의)', subEn: 'Packet to attach to the portal approval and the CEO review feedback (mock)', view: NS.ViewsC.approvalPage, bind: NS.ViewsC.approvalPageBind },
     { id: 'admin', ico: '⚙', ko: '관리', en: 'Administration', subKo: '가중치·임계값·경보 기준·연동·변경 이력', subEn: 'Weights, thresholds, alert rules, integrations, change log', view: NS.ViewsC.admin, bind: NS.ViewsC.adminBind },
   ];

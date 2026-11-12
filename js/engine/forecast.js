@@ -61,7 +61,7 @@
       status: null, depletionDate: null, daysToDepletion: null, monthsOfCover: null, longUnconsumed: false,
       contractEnd: contract.endDate || null, daysToEnd: null, monthsToEnd: null, depletesBeforeEnd: null, estimatedUnusedAtEndMinor: null, expired: false };
     const end = contract.endDate;
-    if (contract.prepaymentType === 'SECURITY_DEPOSIT') { out.status = 'NOT_APPLICABLE'; return out; }   // deposits are held, not consumed
+    if (contract.prepaymentType === 'SECURITY_DEPOSIT' || contract.monthlySettlement === true) { out.status = 'NOT_APPLICABLE'; return out; }   // deposits are held, not consumed; a hard block paid and settled month by month has no balance to consume
     if (end) { out.daysToEnd = Dates.diffDays(asOf, end); out.expired = out.daysToEnd < 0; out.monthsToEnd = Math.max(0, Math.round(Dates.diffDays(asOf, end) / dpm * 10) / 10); }
     if (balanceMinor <= 0) { out.status = 'DEPLETED'; out.depletesBeforeEnd = true; out.estimatedUnusedAtEndMinor = 0; return out; }
     if (avg.quality === 'NONE') { out.status = 'NO_DATA'; return out; }               // 소진 실적 데이터 없음 — 예측 불가

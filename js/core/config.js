@@ -47,6 +47,9 @@
         RENEWAL_DELAY:           { enabled: true, severity: 'MEDIUM', action: 'VERIFY_CONTRACT', params: { withinDays: 60 } },
         ENTITY_UNKNOWN:          { enabled: true, severity: 'MEDIUM', action: 'VERIFY_CONTRACT' },
         UNVERIFIED_SIGNAL:       { enabled: true, severity: 'MEDIUM', action: 'VERIFY_CONTRACT' },
+        RECORD_STALE:            { enabled: true, severity: 'MEDIUM', action: 'VERIFY_CONTRACT', params: { days: 90 } },        // a balance with no ledger record for this many days (Japan: a prepayment paid, then no settlement recorded)
+        LONG_HELD_DEPOSIT:       { enabled: true, severity: 'MEDIUM', action: 'VERIFY_CONTRACT', params: { years: 5 } },        // a security deposit held this long: re-check operator change and refund terms
+        BALANCE_CONCENTRATION:   { enabled: true, severity: 'MEDIUM', action: 'HOLD_TOPUP', params: { sharePct: 40 } },       // one contract holds this share of its country / currency group (at least three contracts)
       },
     };
   }
@@ -82,8 +85,8 @@
       if (!ACTIONS.includes(r.action)) e.push('E_ACTION:' + k);
       if (typeof r.enabled !== 'boolean') e.push('E_CONFIG_SECTION:alertRules.' + k + '.enabled');
       if (d.params) for (const pk of Object.keys(d.params)) {
-        const v = r.params && r.params[pk]; const intOnly = pk === 'notches' || pk === 'windowDays' || pk === 'withinDays';
-        if (!isNum(v) || v <= 0 || (pk === 'dropPct' && v > 100) || (intOnly && !Number.isInteger(v))) e.push('E_CONFIG_SECTION:alertRules.' + k + '.' + pk);
+        const v = r.params && r.params[pk]; const intOnly = pk === 'notches' || pk === 'windowDays' || pk === 'withinDays' || pk === 'days' || pk === 'years';
+        if (!isNum(v) || v <= 0 || ((pk === 'dropPct' || pk === 'sharePct') && v > 100) || (intOnly && !Number.isInteger(v))) e.push('E_CONFIG_SECTION:alertRules.' + k + '.' + pk);
       }
     }
     const fc = c.flagCaps; if (!fc || typeof fc !== 'object') e.push('E_CONFIG_SECTION:flagCaps'); else for (const k of Object.keys(D.flagCaps)) if (!GRADES.includes(fc[k])) e.push('E_FLAGCAP:' + k);
@@ -112,5 +115,12 @@
     if (typeof c.provisional !== 'boolean') e.push('E_CONFIG_SECTION:provisional');
     return e;
   }
-  return { defaults, validate, GRADES, SEVERITIES, ACTIONS, CRITERIA_IDS };
+  /** A local entity holds contracts in its own currency only (Korea KRW, Japan JPY, Vietnam VND). The Singapore head office (OMH-SG) may hold any currency, since the moved contracts bring theirs. */
+  const ENTITY_CURRENCY = { 'OMH-KR': 'KRW', 'OMH-JP': 'JPY', 'OMH-VN': 'VND' };
+  const entityCurrencyOk = (entity, currency) => !Object.prototype.hasOwnProperty.call(ENTITY_CURRENCY, entity) || ENTITY_CURRENCY[entity] === currency;
+  const COUNTRIES = ['KR', 'JP', 'VN', 'SG', 'TH', 'HK', 'TW'];
+  const COUNTRY_CURRENCY = { KR: 'KRW', JP: 'JPY', VN: 'VND', SG: 'SGD', TH: 'THB', HK: 'HKD', TW: 'TWD' };          // one currency per hotel country
+  const ENTITIES = ['OMH-SG', 'OMH-KR', 'OMH-JP', 'OMH-VN'];
+  const PREPAYMENT_TYPES = ['FLOATING', 'PREPAYMENT', 'HARD_BLOCK_ADV', 'COMMIT_RN', 'COMMIT_REV', 'BUYOUT', 'SECURITY_DEPOSIT'];
+  return { defaults, validate, GRADES, SEVERITIES, ACTIONS, CRITERIA_IDS, ENTITY_CURRENCY, entityCurrencyOk, COUNTRIES, COUNTRY_CURRENCY, ENTITIES, PREPAYMENT_TYPES };
 });

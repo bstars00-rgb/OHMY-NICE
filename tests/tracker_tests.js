@@ -44,17 +44,17 @@ module.exports = function (h) {
     a.throws(() => Tracker.convert({ existing: '' }, {}), 'E_ASOF_REQUIRED');
   });
 
-  t('TR03', 'arrangement types: the five of the system map; Commit / Hybrid and blanks are reported and not converted', ['TRK-1'], a => {
-    const r = conv([healthy({ id: '1', type: 'Floating' }), healthy({ id: '2', type: 'Hard Block' }), healthy({ id: '3', type: 'Deposit' }), healthy({ id: '4', type: 'Prepayment' }), healthy({ id: '5', type: '買取' }), healthy({ id: '6', type: 'Commit Rev' }), healthy({ id: '7', type: 'Hybrid (Commit Rev or RN)' }), healthy({ id: '8', type: '' }), healthy({ id: '9', type: 'Mystery' })]);
-    a.deepEq(r.contracts.map(c => c.prepaymentType), ['FLOATING', 'HARD_BLOCK_ADV', 'SECURITY_DEPOSIT', 'PREPAYMENT', 'BUYOUT']); a.deepEq(codes(r, '6'), ['WARN:T_TYPE_UNMAPPED']); a.deepEq(codes(r, '7'), ['WARN:T_TYPE_UNMAPPED']); a.deepEq(codes(r, '8'), ['ERROR:T_TYPE_MISSING']); a.deepEq(codes(r, '9'), ['WARN:T_TYPE_UNMAPPED']);
-    a.eq(r.summary.rows, 9); a.eq(r.summary.converted, 5);
+  t('TR03', 'arrangement types: the five of the system map plus Commit RN and Commit Rev as two types (Hybrid counts as Commit Rev); blanks and unknown names are reported and not converted', ['TRK-1'], a => {
+    const r = conv([healthy({ id: '1', type: 'Floating' }), healthy({ id: '2', type: 'Hard Block' }), healthy({ id: '3', type: 'Deposit' }), healthy({ id: '4', type: 'Prepayment' }), healthy({ id: '5', type: '買取' }), healthy({ id: '6', type: 'Commit Rev' }), healthy({ id: '7', type: 'Hybrid (Commit Rev or RN)' }), healthy({ id: '8', type: '' }), healthy({ id: '9', type: 'Mystery' }), healthy({ id: '10', type: 'Commit RN' }), healthy({ id: '11', type: 'Hybrid' }), healthy({ id: '12', type: 'Commit - RN' }), healthy({ id: '13', type: 'COMMIT REV' }), healthy({ id: '14', type: 'Commit Other' })]);
+    a.deepEq(r.contracts.map(c => c.prepaymentType), ['FLOATING', 'HARD_BLOCK_ADV', 'SECURITY_DEPOSIT', 'PREPAYMENT', 'BUYOUT', 'COMMIT_REV', 'COMMIT_REV', 'COMMIT_RN', 'COMMIT_REV', 'COMMIT_RN', 'COMMIT_REV']); a.deepEq(codes(r, '6'), []); a.deepEq(codes(r, '7'), []); a.deepEq(codes(r, '14'), ['WARN:T_TYPE_UNMAPPED']); a.deepEq(codes(r, '8'), ['ERROR:T_TYPE_MISSING']); a.deepEq(codes(r, '9'), ['WARN:T_TYPE_UNMAPPED']);
+    a.eq(r.summary.rows, 14); a.eq(r.summary.converted, 11);
   });
 
   t('TR04', 'input checks on the synthetic sample: each built-in problem is found, the healthy row is clean', ['TRK-2'], a => {
-    const r = sampleResult(); a.eq(r.summary.errors, 0); a.eq(r.summary.rows, 8); a.eq(r.summary.converted, 7);
+    const r = sampleResult(); a.eq(r.summary.errors, 0); a.eq(r.summary.rows, 8); a.eq(r.summary.converted, 8);
     a.deepEq(codes(r, '90101'), [], 'healthy row');
     for (const [id, want] of [['90102', ['WARN:T_CONTRACT_ENDING_SOON', 'INFO:T_USAGE_DECLINE', 'INFO:T_PLANNED_TOPUP_NO_DATE']], ['90103', ['WARN:T_BALANCE_NEGATIVE']], ['90104', ['WARN:T_CONTRACT_DATES_MISSING', 'WARN:T_USAGE_MISSING']], ['90105', ['WARN:T_CONFIRM_COPY', 'WARN:T_USAGE_EXCEEDS_FUNDS']],
-      ['90106', ['WARN:T_CONFIRM_COPY', 'WARN:T_USAGE_BEFORE_CONTRACT']], ['90107', ['WARN:T_PLANNED_TOPUP_AT_OR_AFTER_END']], ['90108', ['WARN:T_TYPE_UNMAPPED', 'WARN:T_BALANCE_MISMATCH', 'WARN:T_USAGE_BEFORE_CONTRACT', 'WARN:T_OVERFUNDED']]]) { const got = codes(r, id); for (const w of want) a.includes(got, w, id + ' ' + got.join()); }
+      ['90106', ['WARN:T_CONFIRM_COPY', 'WARN:T_USAGE_BEFORE_CONTRACT']], ['90107', ['WARN:T_PLANNED_TOPUP_AT_OR_AFTER_END']], ['90108', ['WARN:T_BALANCE_MISMATCH', 'WARN:T_USAGE_BEFORE_CONTRACT', 'WARN:T_OVERFUNDED']]]) { const got = codes(r, id); for (const w of want) a.includes(got, w, id + ' ' + got.join()); }
     a.includes(codes(r, '90999'), 'WARN:T_LOG_UNKNOWN_HOTEL'); a.includes(codes(r, '90104'), 'WARN:T_RISK_NO_EVIDENCE'); a.ok(r.riskItems.length === 2, 'the template example row of the Risk Register is skipped');
     const ending = r.issues.find(i => i.code === 'T_CONTRACT_ENDING_SOON'); a.ok(/refund not possible/.test(ending.detail), 'the refund flag is part of the message');
   });
@@ -134,16 +134,16 @@ module.exports = function (h) {
   t('TR11', 'preview command: SCM/Admin only, changes nothing, rejects oversized input, uses the state as-of date', ['TRK-5', 'D-4'], a => {
     const input = { existing: sample('existing'), topUpLog: sample('topup'), risk: sample('risk') };
     for (const role of ['VIEWER', 'CEO']) { const st = env.as(env.newStore(), role); a.throws(() => st.commands.previewTracker(input), 'E_FORBIDDEN', role); }
-    for (const role of ['SCM', 'ADMIN']) { const st = env.as(env.newStore(), role); const before = JSON.stringify(st.state), n = st.state.audit.length; const r = st.commands.previewTracker(input); a.ok(r.ok); a.eq(r.summary.converted, 7); a.eq(JSON.stringify(st.state), before, role + ' state untouched'); a.eq(st.state.audit.length, n, 'no audit row'); }
+    for (const role of ['SCM', 'ADMIN']) { const st = env.as(env.newStore(), role); const before = JSON.stringify(st.state), n = st.state.audit.length; const r = st.commands.previewTracker(input); a.ok(r.ok); a.eq(r.summary.converted, 8); a.eq(JSON.stringify(st.state), before, role + ' state untouched'); a.eq(st.state.audit.length, n, 'no audit row'); }
     const st = env.as(env.newStore(), 'SCM'); a.deepEq(st.commands.previewTracker({ existing: 'x'.repeat(3e6 + 1) }).errors, ['E_TRACKER_INPUT']); a.deepEq(st.commands.previewTracker({ existing: 5 }).errors, ['E_TRACKER_INPUT']);
-    st.state.config.asOf = '2027-01-01'; a.ok(st.commands.previewTracker(input).issues.some(i => i.code === 'T_CONTRACT_EXPIRED_WITH_BALANCE'), 'checks follow the as-of date of the state'); a.eq(st.commands.previewTracker(input, { asOf: ASOF }).summary.converted, 7);
+    st.state.config.asOf = '2027-01-01'; a.ok(st.commands.previewTracker(input).issues.some(i => i.code === 'T_CONTRACT_EXPIRED_WITH_BALANCE'), 'checks follow the as-of date of the state'); a.eq(st.commands.previewTracker(input, { asOf: ASOF }).summary.converted, 8);
   });
 
   t('TR12', 'command-line tool: real data may not be written into the project; exit codes; files written outside', ['TRK-6'], a => {
     const run = args => spawnSync(process.execPath, [path.join(env.root, 'tools/tracker_import.js'), ...args], { encoding: 'utf8' });
     const base = ['--existing', path.join(env.root, 'samples/tracker_SYNTHETIC_existing.csv'), '--topup', path.join(env.root, 'samples/tracker_SYNTHETIC_topup.csv'), '--risk', path.join(env.root, 'samples/tracker_SYNTHETIC_risk.csv'), '--as-of', ASOF];
     const inside = path.join(env.root, 'samples/_trk_guard_test'); const r1 = run([...base, '--out', inside]); a.eq(r1.status, 1); a.ok(/refused/.test(r1.stderr)); a.ok(!fs.existsSync(inside), 'nothing written');
-    const out = fs.mkdtempSync(path.join(os.tmpdir(), 'trk-')); try { const r2 = run([...base, '--out', out]); a.eq(r2.status, 0, r2.stdout + r2.stderr); a.deepEq(fs.readdirSync(out).sort(), ['confirmations.csv', 'contracts.csv', 'issues.csv', 'ledger.csv']); a.ok(/converted 7/.test(r2.stdout));
+    const out = fs.mkdtempSync(path.join(os.tmpdir(), 'trk-')); try { const r2 = run([...base, '--out', out]); a.eq(r2.status, 0, r2.stdout + r2.stderr); a.deepEq(fs.readdirSync(out).sort(), ['confirmations.csv', 'contracts.csv', 'issues.csv', 'ledger.csv']); a.ok(/converted 8/.test(r2.stdout));
       const bad = path.join(out, 'bad.csv'); fs.writeFileSync(bad, existing([healthy({ bal: 'abc' })])); const r3 = run(['--existing', bad, '--as-of', ASOF, '--out', path.join(out, 'o2')]); a.eq(r3.status, 2, 'errors give exit code 2'); a.ok(fs.existsSync(path.join(out, 'o2/issues.csv')), 'the issue list is still written');
       a.eq(run(['--as-of', ASOF]).status, 1, 'usage message'); } finally { fs.rmSync(out, { recursive: true, force: true }); }
   });

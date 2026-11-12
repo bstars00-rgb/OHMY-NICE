@@ -36,14 +36,14 @@ module.exports = function register(h) {
     UI.setLang('xx'); a.eq(UI.getLang(), 'ko', 'unknown language falls back to Korean'); UI.setLang('vi'); a.eq(UI.getLang(), 'vi'); a.deepEq(UI.LANGS, ['ko', 'en', 'ja', 'vi']); UI.setLang('ko');
     UI.setLang('ja'); a.eq(UI.tt({ ko: '샘플 서울 강남 호텔', en: 'Sample Seoul Gangnam Hotel' }), packs.ja['샘플 서울 강남 호텔']); a.eq(UI.tt({ ko: '없는 문구 테스트', en: 'Fallback test' }), 'Fallback test', 'missing entry falls back to English'); a.ok(UI.missing.has('ja:없는 문구 테스트'), 'missing key is recorded'); UI.missing.clear(); UI.setLang('ko');
   });
-  const VIEWS = { dashboard: ViewsA.dashboard, status: ViewsA.status, profile: ViewsA.profile, ledger: ViewsB.ledger, risk: ViewsC.risk, approval: ViewsC.approvalPage, admin: ViewsC.admin };
+  const VIEWS = { dashboard: ViewsA.dashboard, status: ViewsA.status, profile: ViewsA.profile, ledger: ViewsB.ledger, risk: ViewsC.risk, approval: ViewsC.approvalPage, register: ViewsC.registerPage, admin: ViewsC.admin };
   t('I04', 'All screens render in Japanese and Vietnamese for every role: no missing translations, no leftover Korean labels, no unfilled placeholders', ['S01', 'S02', 'S03', 'S04', 'S05', 'S07', 'S08', 'UI-LANG', 'I18N'], a => {
     let n = 0;
     for (const lg of ['ja', 'vi']) {
       UI.setLang(lg); UI.missing.clear();
       for (const role of RBAC.ROLES) {
         const st = env.as(env.newStore(), role); const data = hangulData(st.state); const ctx = (params, extra) => ({ store: st, m: st.model(), ui: Object.assign({ filters: {}, simAmount: '1000' }, extra), params, navigate() {}, rerender() {}, toast() {}, run() {} });
-        const targets = [['dashboard', []], ['status', []], ['risk', []], ['admin', []]]; for (const c of st.state.contracts) for (const nme of ['profile', 'ledger', 'approval']) targets.push([nme, [c.contractId]]);
+        const targets = [['dashboard', []], ['status', []], ['risk', []], ['register', []], ['admin', []]]; for (const c of st.state.contracts) for (const nme of ['profile', 'ledger', 'approval']) targets.push([nme, [c.contractId]]);
         for (const [name, params] of (role === 'SCM' ? targets : targets.filter(x => x[1].length === 0 || x[1][0] === 'CT-JP-004' || x[1][0] === 'CT-JP-007'))) {
           let html = VIEWS[name](ctx(params)); n++; let text = visibleText(html); for (const d of data) text = text.split(visibleText(d)).join(' ');
           a.ok(!/\{\d+\}|undefined|NaN|\[object|Infinity/.test(text), lg + '/' + role + '/' + name + ' ' + (params[0] || '') + ': ' + (text.match(/\{\d+\}|undefined|NaN|\[object|Infinity/) || [''])[0]);

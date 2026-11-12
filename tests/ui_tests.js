@@ -16,17 +16,17 @@
   const q = s => doc.querySelector(s), qa = s => [...doc.querySelectorAll(s)]; const txt = () => doc.getElementById('content').innerText;
   const click = el => el.dispatchEvent(new win.MouseEvent('click', { bubbles: true, cancelable: true }));
   const store = () => win.OMH.app.store; const ledgerLen = () => store().state.ledger.length; const BAD = /undefined|NaN|\[object|Infinity/;
-  const R = ['dashboard', 'status', 'profile', 'ledger', 'risk', 'approval', 'admin'];
+  const R = ['dashboard', 'status', 'profile', 'ledger', 'risk', 'approval', 'register', 'admin'];
 
   t('U01', 'Every screen renders in KO and EN for every role in the real browser with no error text, no undefined/NaN and no console errors', ['S01', 'S02', 'S03', 'S04', 'S05', 'S07', 'S08', 'UI-LANG'], async a => {
     await load('/dashboard'); let n = 0;
     for (const lang of ['ko', 'en']) { doc.getElementById('lang-' + lang).click(); for (const role of ['VIEWER', 'SCM', 'CEO', 'ADMIN']) { await setRole(role); for (const r of R) { await nav('/' + r); const c = q('#content'); n++; a.ok(c.innerText.length > 120, lang + role + r + ' empty'); a.ok(!BAD.test(c.innerText), r + ' ' + lang + ' ' + role + ': ' + (c.innerText.match(BAD) || [''])[0]); a.ok(!q('#content .note.bad b'), 'error boundary shown on ' + r); } } }
-    a.eq(n, 56); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | ')); doc.getElementById('lang-ko').click();
+    a.eq(n, 64); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | ')); doc.getElementById('lang-ko').click();
   });
   t('U02', 'Floating status board: filters change the numbers; impossible combination shows an empty state', ['S01', 'UI-FILTER', 'UI-EMPTY'], async a => {
-    await load('/status'); doc.getElementById('lang-en').click(); await nav('/status'); const rowsN = () => qa('#tbl-dash tbody tr').length; a.eq(rowsN(), 20);
-    setVal(q('[data-f="country"]'), 'JP', 'change'); await until(() => rowsN() === 7); setVal(q('[data-f="currency"]'), 'KRW', 'change'); await until(() => txt().includes('No data to display'));
-    click(q('[data-act="clear-filters"]')); await until(() => rowsN() === 20); doc.getElementById('lang-ko').click();
+    await load('/status'); doc.getElementById('lang-en').click(); await nav('/status'); const rowsN = () => qa('#tbl-dash tbody tr').length; a.eq(rowsN(), 21);
+    setVal(q('[data-f="country"]'), 'JP', 'change'); await until(() => rowsN() === 8); setVal(q('[data-f="currency"]'), 'KRW', 'change'); await until(() => txt().includes('No data to display'));
+    click(q('[data-act="clear-filters"]')); await until(() => rowsN() === 21); doc.getElementById('lang-ko').click();
   });
   t('U03', 'Top-up simulator inside the hotel credit card computes instantly, labels itself a simulation, writes nothing and does not carry an amount over to another contract', ['S04', 'T14', 'M04-2'], async a => {
     await load('/profile/CT-KR-004'); const n0 = ledgerLen(); const snap = JSON.stringify(store().state.ledger); const r = () => q('#sim-result').innerText;
@@ -73,7 +73,7 @@
     frame.style.width = '1280px';
   });
   t('U11', 'Tables sort by header and search by text', ['UI-SORT'], async a => {
-    await load('/status'); const rows = () => qa('#tbl-dash tbody tr'); a.eq(rows().length, 20); const first0 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== first0); const f1 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== f1);
+    await load('/status'); const rows = () => qa('#tbl-dash tbody tr'); a.eq(rows().length, 21); const first0 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== first0); const f1 = rows()[0].innerText; click(q('[data-sort="dash:bal"]')); await until(() => rows()[0].innerText !== f1);
     setVal(q('[data-tq="dash"]'), 'Kyoto'); await until(() => rows().length === 1 && rows()[0].innerText.includes('CT-JP-004')); a.ok(rows()[0].innerText.includes('교토'), 'matches the English name while the UI is Korean'); setVal(q('[data-tq="dash"]'), 'zzzz-none'); await until(() => rows().length === 1 && rows()[0].innerText.includes('표시할 데이터가 없습니다'));
   });
   t('U12', 'Corrupt storage: app starts from the sample, warns the user, and keeps the unreadable blob', ['UI-ERR', 'D-5'], async a => {
@@ -179,7 +179,7 @@
   t('U25', 'Tracker check panel (preview only), top-up terms on the credit card, offset in the ledger form, and the ELLIS comparison on the net basis', ['TRK-5', 'ELLIS-8', 'TRK-8'], async a => {
     await load('/admin', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/admin'); const n0 = ledgerLen(), state0 = JSON.stringify([store().state.ledger, store().state.contracts, store().state.confirmations]);
     a.ok(txt().includes('PIC tracker check & conversion')); click(q('[data-act="trk-sample"]')); await until(() => q('#trk-existing').value.includes('Sample Hanoi Garden Hotel'));
-    click(q('[data-act="trk-run"]')); await until(() => txt().includes('7 converted')); a.ok(txt().includes('8 rows read') && txt().includes('Contract ending soon with balance') && txt().includes('Usage entered before contract start') && txt().includes('Hotel balance equals OMH balance'), 'findings are listed in English');
+    click(q('[data-act="trk-run"]')); await until(() => txt().includes('8 converted')); a.ok(txt().includes('8 rows read') && txt().includes('Contract ending soon with balance') && txt().includes('Usage entered before contract start') && txt().includes('Hotel balance equals OMH balance'), 'findings are listed in English');
     a.ok(q('[data-trkdl="ledger.csv"]') && q('[data-trkdl="contracts.csv"]') && q('[data-trkdl="issues.csv"]'), 'download buttons'); a.eq(ledgerLen(), n0); a.eq(JSON.stringify([store().state.ledger, store().state.contracts, store().state.confirmations]), state0, 'nothing was stored'); a.eq(store().state.audit.filter(e => /TRACKER/i.test(e.action)).length, 0);
     setVal(q('#trk-existing'), 'Hotel ID,x\r\n1,2'); click(q('[data-act="trk-run"]')); await until(() => txt().includes('Required column headings missing')); a.ok(!/undefined|NaN/.test(txt()));
     await setRole('CEO'); await nav('/admin'); a.ok(q('[data-act="trk-run"]').disabled && q('#trk-existing').disabled, 'CEO cannot use it'); await setRole('SCM');
@@ -198,18 +198,18 @@
     await load('/dashboard', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/dashboard');
     const cards = () => qa('#content .ccard'); a.eq(cards().length, 7, 'one card per country'); a.deepEq(cards().map(c => c.querySelector('.ch b').innerText), ['Korea', 'Japan', 'Vietnam', 'Singapore', 'Thailand', 'Hong Kong', 'Taiwan']);
     a.ok(cards().every(c => c.querySelectorAll('a.crow').length === 6), 'six lines on each card'); a.ok(!q('#content table') && !q('#content select'), 'no table and no filter on the dashboard');
-    const head = c => c.querySelector('.ch').innerText; a.ok(head(cards()[0]).includes('5 contracts · 5 hotels') && head(cards()[1]).includes('7 contracts · 6 hotels') && head(cards()[2]).includes('4 contracts · 4 hotels'), cards().map(head).join(' | '));
+    const head = c => c.querySelector('.ch').innerText; a.ok(head(cards()[0]).includes('5 contracts · 5 hotels') && head(cards()[1]).includes('8 contracts · 7 hotels') && head(cards()[2]).includes('4 contracts · 4 hotels'), cards().map(head).join(' | '));
     const bal = c => c.querySelector('a.crow').innerText; a.ok(/KRW/.test(bal(cards()[0])) && !/JPY|VND|USD|SGD/.test(bal(cards()[0])), 'Korea: won only'); a.ok(/JPY/.test(bal(cards()[1])) && !/KRW|VND|USD|SGD/.test(bal(cards()[1])), 'Japan: yen only'); a.ok(/VND/.test(bal(cards()[2])) && !/KRW|JPY|USD|SGD/.test(bal(cards()[2])), 'Vietnam: dong only');
     a.ok(/Prebuy/.test(bal(cards()[0])) && /Hard block/.test(bal(cards()[0])), 'the balance line is split into prebuy and hard block');
     const hrefs = qa('#content a.crow').map(c => c.getAttribute('href')); a.ok(hrefs.includes('#/status') && hrefs.includes('#/risk') && !hrefs.includes('#/sg') && hrefs.some(h => h.startsWith('#/profile')), hrefs.join(' '));
-    click(cards()[1].querySelector('a.crow')); await until(() => win.OMH.app.last.route === 'status'); a.eq(win.OMH.app.ui.filters.country, 'JP', 'the status board opens with Japan chosen'); a.eq(qa('#tbl-dash tbody tr').length, 7);
+    click(cards()[1].querySelector('a.crow')); await until(() => win.OMH.app.last.route === 'status'); a.eq(win.OMH.app.ui.filters.country, 'JP', 'the status board opens with Japan chosen'); a.eq(qa('#tbl-dash tbody tr').length, 8);
     await nav('/dashboard'); a.eq(cards().length, 7, 'the dashboard never hides a country because of a filter set elsewhere');
     await nav('/dashboard'); click(cards()[0].querySelectorAll('a.crow')[5]); await until(() => win.OMH.app.last.route === 'risk');
     await nav('/dashboard'); click(cards()[0].querySelectorAll('a.crow')[2]); await until(() => win.OMH.app.last.route === 'profile'); a.ok(q('.biggrade'), 'the profile of a Korean contract is open'); a.eq(q('#pf-country').value, 'KR'); a.eq([...q('#pf-sel').options].length, 5, 'only the Korean contracts are listed');
-    setVal(q('#pf-country'), '', 'change'); await until(() => [...q('#pf-sel').options].length === 20);
-    await nav('/profile/CT-KR-001'); const pc = q('#pf-country'); a.ok(pc, 'country filter exists'); const allOpts = () => [...q('#pf-sel').options].map(o => o.value); a.eq(allOpts().length, 20);
-    setVal(pc, 'JP', 'change'); await until(() => win.OMH.app.last.params[0] && win.OMH.app.last.params[0].startsWith('CT-JP')); a.eq(allOpts().length, 7, 'only the 7 Japanese contracts are listed'); a.ok(allOpts().every(v => v.startsWith('CT-JP')), allOpts().join(','));
-    setVal(q('#pf-country'), '', 'change'); await until(() => allOpts().length === 20); doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
+    setVal(q('#pf-country'), '', 'change'); await until(() => [...q('#pf-sel').options].length === 21);
+    await nav('/profile/CT-KR-001'); const pc = q('#pf-country'); a.ok(pc, 'country filter exists'); const allOpts = () => [...q('#pf-sel').options].map(o => o.value); a.eq(allOpts().length, 21);
+    setVal(pc, 'JP', 'change'); await until(() => win.OMH.app.last.params[0] && win.OMH.app.last.params[0].startsWith('CT-JP')); a.eq(allOpts().length, 8, 'only the 8 Japanese contracts are listed'); a.ok(allOpts().every(v => v.startsWith('CT-JP')), allOpts().join(','));
+    setVal(q('#pf-country'), '', 'change'); await until(() => allOpts().length === 21); doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
   });
 
   t('U28', 'Hotel-level cap in the credit card: SCM enters an amount and a reason, the limit in force drops, the status board shows it, SCM cannot raise it, the CEO lifts it, and a reader sees disabled controls', ['M04-5', 'S02'], async a => {
@@ -235,11 +235,27 @@
   t('U30', 'Dashboard by legal entity: the Singapore head office holds the moved contracts in seven currencies, the local entities keep the rest, and a card opens the status board for that entity', ['S01', 'UI-FILTER'], async a => {
     await load('/dashboard', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/dashboard'); const ecards = () => qa('#content .ecard'); a.eq(ecards().length, 4, 'one card per contracting entity');
     a.deepEq(ecards().map(c => c.querySelector('.ch b').innerText), ['Singapore HQ (OMH-SG)', 'Korea entity (OMH-KR)', 'Japan entity (OMH-JP)', 'Vietnam entity (OMH-VN)']);
-    const hq = ecards()[0]; a.ok(hq.querySelector('.ch').innerText.includes('7 contracts · 7 hotels')); for (const c of ['KRW', 'JPY', 'VND', 'SGD', 'HKD', 'TWD', 'THB']) a.ok(hq.querySelector('a.crow').innerText.includes(c), 'head office holds ' + c);
-    a.ok(/Singapore/.test(hq.innerText) && /Thailand/.test(hq.innerText) && /Hong Kong/.test(hq.innerText) && /Taiwan/.test(hq.innerText), 'the hotel countries of the head office are listed'); a.ok(!/THB|SGD|HKD|TWD/.test(ecards()[2].innerText), 'the Japanese entity keeps only yen');
+    const hq = ecards()[0]; a.ok(hq.querySelector('.ch').innerText.includes('8 contracts · 8 hotels')); for (const c of ['KRW', 'JPY', 'VND', 'SGD', 'HKD', 'TWD', 'THB']) a.ok(hq.querySelector('a.crow').innerText.includes(c), 'head office holds ' + c);
+    a.ok(/Singapore/.test(hq.innerText) && /Thailand/.test(hq.innerText) && /Hong Kong/.test(hq.innerText) && /Taiwan/.test(hq.innerText), 'the hotel countries of the head office are listed'); a.ok(!/THB|SGD|HKD|TWD|KRW|VND/.test(ecards()[2].innerText), 'the Japanese entity keeps only yen'); a.ok(!/JPY|VND|THB|SGD|HKD|TWD/.test(ecards()[1].innerText), 'the Korean entity keeps only won'); a.ok(!/JPY|KRW|THB|SGD|HKD|TWD/.test(ecards()[3].innerText), 'the Vietnamese entity keeps only dong');
     a.ok(txt().includes('Contracts are being moved to the Singapore head office'), 'the note explains why the head office has several currencies');
-    click(hq.querySelector('a.crow')); await until(() => win.OMH.app.last.route === 'status'); a.eq(win.OMH.app.ui.filters.entity, 'OMH-SG'); a.eq(qa('#tbl-dash tbody tr').length, 7); a.ok(q('[data-f="entity"]').innerText.includes('Singapore HQ (OMH-SG)'), 'the filter shows the entity names');
+    click(hq.querySelector('a.crow')); await until(() => win.OMH.app.last.route === 'status'); a.eq(win.OMH.app.ui.filters.entity, 'OMH-SG'); a.eq(qa('#tbl-dash tbody tr').length, 8); a.ok(q('[data-f="entity"]').innerText.includes('Singapore HQ (OMH-SG)'), 'the filter shows the entity names');
     doc.getElementById('lang-ko').click(); a.eq(errors.length, 0, 'console errors: ' + errors.join(' | '));
+  });
+  t('U31', 'Approval screen: the save button sits next to the amount field from the start, so typing an amount and clicking it works without pressing Enter; the preview follows the typing in place', ['M09-2', 'S07'], async a => {
+    await load('/approval/CT-KR-004'); const btn = () => q('[data-act="ap-create"]'); a.ok(btn() && !btn().disabled, 'the button is there before any amount is typed'); a.ok(btn().closest('.toolbar').querySelector('#portal-amt'), 'and sits in the same row as the amount field');
+    click(btn()); await sleep(50); a.eq(store().state.approvals.length, 0, 'an empty amount saves nothing'); a.ok(/Enter the requested top-up first|요청 충전액을 입력/.test(doc.getElementById('toast').textContent), 'and says what is missing');
+    const amt = q('#portal-amt'); const before = btn(); amt.focus(); setVal(amt, '1000000'); await until(() => q('#portal-report')); a.ok(btn() === before, 'the preview refreshes in place: the button element is the same one'); a.ok(q('#portal-report').innerText.includes('1,000,000 KRW'), 'the preview follows the typing without Enter or leaving the field');
+    click(btn()); await until(() => store().state.approvals.length === 1); a.eq(store().state.approvals[0].packet.request.requestedMinor, 1000000, 'the draft holds the amount that was typed'); a.ok(!BAD.test(txt()));
+    await setRole('VIEWER'); await nav('/approval/CT-KR-004'); a.ok(q('[data-act="ap-create"]').disabled, 'a reader sees the button disabled'); await setRole('SCM');
+  });
+  t('U32', 'Register a hotel and contract: the form fills in the currency and entity for the country, a refusal explains itself, a registration opens the new hotel credit card, and a reader sees disabled controls', ['REG-1'], async a => {
+    await load('/register'); doc.getElementById('lang-en').click(); await nav('/register'); const n0 = store().state.contracts.length;
+    a.ok(!q('#rg-name-ko').disabled && !q('[data-act="rg-save"]').disabled, 'SCM can register'); a.eq(q('#rg-ccy').value, 'KRW'); a.eq(q('#rg-entity').value, 'OMH-KR'); a.ok(q('#rg-monthly').disabled, 'the monthly-settlement box is for hard blocks only'); setVal(q('#rg-type'), 'HARD_BLOCK_ADV', 'change'); a.ok(!q('#rg-monthly').disabled); setVal(q('#rg-type'), 'FLOATING', 'change'); a.ok(q('#rg-monthly').disabled && !q('#rg-monthly').checked);
+    click(q('[data-act="rg-save"]')); await sleep(50); a.eq(store().state.contracts.length, n0, 'an empty form registers nothing'); a.ok(/name|Name/.test(doc.getElementById('toast').textContent), 'and says what is missing');
+    setVal(q('#rg-country'), 'TH', 'change'); a.eq(q('#rg-ccy').value, 'THB', 'the currency follows the country'); a.eq(q('#rg-entity').value, 'OMH-SG', 'a country without a local entity goes to the head office');
+    setVal(q('#rg-name-ko'), '샘플 푸켓 호텔'); setVal(q('#rg-name-en'), 'Sample Phuket Hotel'); setVal(q('#rg-city-ko'), '푸켓'); setVal(q('#rg-city-en'), 'Phuket'); setVal(q('#rg-operator'), 'SAMPLE Phuket Co. Ltd.'); setVal(q('#rg-end'), '2027-11-05'); setVal(q('#rg-opening'), '1500000.50');
+    click(q('[data-act="rg-save"]')); await until(() => win.OMH.app.last.route === 'profile'); a.eq(win.OMH.app.last.params[0], 'CT-TH-002'); a.eq(store().state.contracts.length, n0 + 1); a.ok(txt().includes('Sample Phuket Hotel'), 'the new hotel credit card opens'); a.ok(txt().includes('1,500,000.50 THB'), 'with the opening balance in baht');
+    await setRole('VIEWER'); await nav('/register'); a.ok(q('#rg-name-ko').disabled && q('[data-act="rg-save"]').disabled, 'a reader sees disabled controls'); await setRole('SCM'); doc.getElementById('lang-ko').click();
   });
   t('U27', 'Hotel credit card in nine sections: the ELLIS booking speed next to the ledger, the next top-up date, the cooperation opinion and the next check date', ['S02', 'OUT-1', 'OUT-2', 'OUT-3', 'ELLIS-6'], async a => {
     await load('/admin', { account: 'demo.scm' }); doc.getElementById('lang-en').click(); await nav('/admin'); click(q('[data-act="ellis-sample"]')); await until(() => q('#ellis-text').value.includes('omh-ellis-snapshot')); click(q('[data-act="ellis-import"]')); await until(() => store().state.ellis);
