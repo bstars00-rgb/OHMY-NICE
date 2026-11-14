@@ -319,6 +319,16 @@ module.exports = function register(h) {
     a.eq(env.synth({}).view().ratingScores.settlementHistory, null, 'no refund on record: nothing to judge');
     const late = env.synth({ refund: { requested: true, requestedAt: '2026-09-20', requestedAmountMinor: 5e6, dueDate: '2026-10-20' } }); a.eq(late.view().ratingScores.settlementHistory, 1);
   });
+  t('BN01', 'Data saved by an older release of the prototype is not reported as corruption: the new sample loads, the old data is kept under a separate key, a calm status is set, and the next load is clean; unreadable data is still quarantined', ['D-5', 'UI-ERR'], a => {
+    const stg = Store.memoryStorage(); const first = env.as(env.newStore({ storage: stg }), 'SCM'); a.eq(first.state.dataVersion, '2026-11-14'); a.eq(first.loadStatus, 'EMPTY_SEEDED'); const blob = stg.getItem('omh_hfr_v1'); a.eq(env.newStore({ storage: stg }).loadStatus, 'OK', 'the same release loads clean');
+    const load = mut => { const s = JSON.parse(blob); mut(s); const g = Store.memoryStorage(); g.setItem('omh_hfr_v1', JSON.stringify(s)); g.setItem('omh_hfr_v1.anchor', '{"seq":1,"hash":"old"}'); return { g, st: env.newStore({ storage: g }) }; };
+    for (const [name, mut] of [['no version (a release before versions existed)', s => { delete s.dataVersion; }], ['an older version', s => { s.dataVersion = '2026-11-01'; }], ['an older release whose settings no longer validate', s => { delete s.dataVersion; delete s.config.scoring; }], ['an older release with a different audit chain', s => { delete s.dataVersion; s.audit[0].hash = 'x'; }]]) {
+      const r = load(mut); a.eq(r.st.loadStatus, 'UPGRADED', name); a.eq(r.st.model().views.length, 21, name + ': the new sample'); a.ok(r.g.getItem('omh_hfr_v1.previous'), name + ': old data kept'); a.ok(!r.g.getItem('omh_hfr_v1.corrupt'), name + ': not flagged as corrupt'); a.eq(r.st.state.dataVersion, '2026-11-14');
+      a.eq(env.newStore({ storage: r.g }).loadStatus, 'OK', name + ': the next load is clean'); }
+    const bad = Store.memoryStorage(); bad.setItem('omh_hfr_v1', '{broken'); const b = env.newStore({ storage: bad }); a.eq(b.loadStatus, 'CORRUPT_RESET'); a.eq(bad.getItem('omh_hfr_v1.corrupt'), '{broken'); a.ok(!bad.getItem('omh_hfr_v1.previous'));
+    const cur = load(s => { s.contracts[0].currency = 'JPY'; }); a.eq(cur.st.loadStatus, 'CORRUPT_RESET', 'data of the current release that breaks the rules is still quarantined');
+    const rs = env.as(env.newStore({ storage: Store.memoryStorage() }), 'ADMIN'); a.ok(rs.commands.resetSample().ok); a.eq(rs.state.dataVersion, '2026-11-14', 'a reset keeps the version');
+  });
   t('F05', 'Load check: approvals and dismissed alerts recorded in storage must be backed by an audit entry', ['D-3', 'D-5'], a => {
     const base = fresh('SCM'); base.commands.createApproval('CT-KR-001', 1000); const raw = JSON.parse(JSON.stringify(base.state));
     const load = mut => { const s = env.clone(raw); mut(s); const stg = Store.memoryStorage(); stg.setItem('omh_hfr_v1', JSON.stringify(s)); return env.newStore({ storage: stg }); };

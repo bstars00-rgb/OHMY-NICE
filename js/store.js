@@ -77,6 +77,8 @@
   function freezeLedger(s) { s.ledger = s.ledger.map(t => Object.freeze(Object.assign({}, t))); return s; }
   const clone = o => JSON.parse(JSON.stringify(o));
 
+  /** The release of the sample data this code belongs to. Saved data from another release is not an error: the new sample is loaded and the old data is kept under a separate key. Bump it whenever the sample data or the settings change shape. */
+  const DATA_VERSION = Seed.DATA_VERSION;
   function createStore(opts) {
     opts = opts || {};
     const storage = opts.storage || memoryStorage(); const KEY = opts.key || DEFAULT_KEY; const now = opts.now || (() => new Date().toISOString());
@@ -92,9 +94,9 @@
     function load() {
       const raw = storage.getItem(KEY);
       if (raw) {
-        try { const p = JSON.parse(raw); if (shapeOk(p, now().slice(0, 10))) { state = freezeLedger(p); loadStatus = verifyAudit().ok && anchorOk() && auditBacksState(state) && coreOk(state) ? 'OK' : 'AUDIT_BROKEN'; refreshAlerts(); return; } loadStatus = 'CORRUPT_RESET'; }
+        try { const p = JSON.parse(raw); if (p && typeof p === 'object' && !Array.isArray(p) && p.schemaVersion === 1 && p.dataVersion !== DATA_VERSION) { loadStatus = 'UPGRADED'; try { storage.setItem(KEY + '.previous', raw); } catch (e2) { /* the old data may be too large to keep: the new sample still loads */ } } else if (shapeOk(p, now().slice(0, 10))) { state = freezeLedger(p); loadStatus = verifyAudit().ok && anchorOk() && auditBacksState(state) && coreOk(state) ? 'OK' : 'AUDIT_BROKEN'; refreshAlerts(); return; } else loadStatus = 'CORRUPT_RESET'; }
         catch (e) { loadStatus = 'CORRUPT_RESET'; }
-        storage.setItem(KEY + '.corrupt', raw);                    // keep the unreadable blob for forensics instead of destroying it
+        if (loadStatus !== 'UPGRADED') storage.setItem(KEY + '.corrupt', raw);                    // keep the unreadable blob for forensics instead of destroying it
       }
       state = freezeLedger(Seed.buildSeed()); refreshAlerts(); auditAdd('SYSTEM', 'SEED_LOADED', 'state', 'OK', { status: loadStatus });
       persist();

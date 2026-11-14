@@ -40,6 +40,7 @@
     $('banner').innerHTML = '<span class="b-sample">SAMPLE DATA</span> ' + esc(L('모든 호텔·금액은 가상의 샘플입니다 (실제 OMH 데이터 아님).', 'All hotels and amounts are fictional samples (not OMH operating data).')) + ' &nbsp;|&nbsp; <span class="b-proto">PROTOTYPE</span> ' + esc(L('실제 송금·결재·장부 이전은 실행되지 않습니다. 등급 구간·한도 배수는 대표 승인 전 잠정값입니다.', 'No real payment, approval or ledger transfer is executed. Grade bands and multipliers are provisional pending CEO approval.')) +
       (storageWarn ? ' &nbsp;|&nbsp; <b class="bad">' + esc(L('브라우저 저장소 사용 불가 — 새로고침 시 데이터가 사라집니다.', 'Browser storage unavailable — data will not survive reload.')) + '</b>' : '') +
       (store.loadStatus === 'AUDIT_BROKEN' ? ' &nbsp;|&nbsp; <b class="bad">' + esc(L('감사 로그 체인이 손상되었습니다(데이터는 유지, 변조 가능성 확인 필요).', 'Audit-log chain is broken (data kept; possible tampering — investigate).')) + '</b>' : '') +
+      (store.loadStatus === 'UPGRADED' ? ' &nbsp;|&nbsp; <b>' + esc(L('프로토타입이 새 버전으로 바뀌어 샘플 데이터를 새로 불러왔습니다(이전 데이터는 별도 키에 보관).', 'The prototype was updated, so the sample data was loaded again (your earlier data is kept under a separate key).')) + '</b>' : '') +
       (store.loadStatus === 'CORRUPT_RESET' ? ' &nbsp;|&nbsp; <b class="bad">' + esc(L('저장 데이터가 손상되어 샘플로 복구했습니다(원본은 별도 키에 보관).', 'Stored data was corrupt and was replaced by the sample (original kept under a separate key).')) + '</b>' : '');
     $('foot').textContent = 'store: ' + store.key + ' · legacy key untouched';
   }

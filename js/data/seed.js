@@ -10,6 +10,8 @@
   'use strict';
   const { Config, Ledger } = dep;
   const B = (ko, en) => ({ ko, en });
+  /** The release of the sample data. Saved data from another release is not an error: the store loads the new sample and keeps the old data under a separate key. Bump it whenever the sample data or the settings change shape. */
+  const DATA_VERSION = '2026-11-14';
   const ENTITIES = {
     'OMH-SG': 'OHMYHOTEL Singapore HQ (sample entity)', 'OMH-KR': 'OHMYHOTEL Korea (sample entity)', 'OMH-JP': 'OHMYHOTEL Japan (sample entity)', 'OMH-VN': 'OHMYHOTEL Vietnam (sample entity)',
   };
@@ -137,8 +139,8 @@
       { alertId: 'RECON_UNCONFIRMED:CT-JP-001', ruleId: 'RECON_UNCONFIRMED', hotelId: 'H004', contractId: 'CT-JP-001', severity: 'MEDIUM', action: 'RECONFIRM_BALANCE', status: 'RESOLVED', source: 'AUTO', title: B('잔액 확인 미완료', 'Balance confirmation incomplete'), evidence: [{ k: 'status', v: 'UNCONFIRMED' }], detectedAt: '2026-08-10', firstDetectedAt: '2026-08-10', lastDetectedAt: '2026-08-20', clearedAt: '2026-09-02', notes: [], assignedScm: 'SCM-JP-01', historical: true },
     ];
     return {
-      schemaVersion: 1, isSample: true, config, hotels, contracts, ledger, confirmations, sales, ratings, alerts, approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [], entities: ENTITIES,
+      schemaVersion: 1, dataVersion: DATA_VERSION, isSample: true, config, hotels, contracts, ledger, confirmations, sales, ratings, alerts, approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [], entities: ENTITIES,
     };
   }
-  return { buildSeed, ENTITIES, ORDER };
+  return { buildSeed, ENTITIES, ORDER, DATA_VERSION };
 });

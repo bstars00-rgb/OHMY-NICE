@@ -850,6 +850,7 @@
  "실제 송금·결재·장부 이전은 실행되지 않습니다. 등급 구간·한도 배수는 대표 승인 전 잠정값입니다.": "Không thực hiện chuyển tiền, phê duyệt hay chuyển sổ thực tế. Khung xếp hạng và hệ số hạn mức là giá trị tạm thời trước khi CEO phê duyệt.",
  "브라우저 저장소 사용 불가 — 새로고침 시 데이터가 사라집니다.": "Không dùng được bộ nhớ trình duyệt — dữ liệu sẽ mất khi tải lại trang.",
  "감사 로그 체인이 손상되었습니다(데이터는 유지, 변조 가능성 확인 필요).": "Chuỗi nhật ký kiểm toán đã bị hỏng (dữ liệu vẫn giữ, cần kiểm tra khả năng bị chỉnh sửa).",
+ "프로토타입이 새 버전으로 바뀌어 샘플 데이터를 새로 불러왔습니다(이전 데이터는 별도 키에 보관).": "Bản mẫu đã được cập nhật nên dữ liệu mẫu được tải lại (dữ liệu trước đó được giữ ở một khóa riêng).",
  "저장 데이터가 손상되어 샘플로 복구했습니다(원본은 별도 키에 보관).": "Dữ liệu lưu bị hỏng nên đã khôi phục bằng dữ liệu mẫu (bản gốc được lưu ở khóa riêng).",
  "실제 송금·결재·장부 이전은 실행되지 않습니다.": "Không có chuyển tiền, phê duyệt hay chuyển sổ sách thật nào được thực hiện.",
  "계산 오류: ": "Lỗi tính toán: ",

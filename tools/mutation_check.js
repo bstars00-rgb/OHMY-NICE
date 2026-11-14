@@ -231,6 +231,9 @@ const M = [
   ["engine/forecast.js","|| contract.monthlySettlement === true) { out.status = 'NOT_APPLICABLE';",") { out.status = 'NOT_APPLICABLE';","JAPAN: a monthly-settlement hard block is treated like a balance-consuming one"],
   ["engine/limit.js","contract.monthlySettlement === true ? 'NOT_APPLICABLE_MONTHLY' : 'NOT_APPLICABLE_DEPOSIT'","'NOT_APPLICABLE_DEPOSIT'","JAPAN: a monthly-settlement hard block gets the deposit hold reason"],
   ["store.js","else if (k.monthlySettlement === true && k.prepaymentType !== 'HARD_BLOCK_ADV') errs.push('E_MONTHLY_NEEDS_HARD_BLOCK');","","JAPAN: monthly settlement accepted on a floating contract"],
+  ["store.js","p.dataVersion !== DATA_VERSION) { loadStatus = 'UPGRADED';","false) { loadStatus = 'UPGRADED';","UPGRADE: data from an older release is reported as corrupt"],
+  ["store.js","if (loadStatus !== 'UPGRADED') storage.setItem(KEY + '.corrupt', raw);","storage.setItem(KEY + '.corrupt', raw);","UPGRADE: old data is also stored as corrupt"],
+  ["data/seed.js","schemaVersion: 1, dataVersion: DATA_VERSION, isSample: true,","schemaVersion: 1, isSample: true,","UPGRADE: the new sample is not stamped, so it is upgraded on every load"],
 ];
 let killed = 0; const rows = [];
 for (const [file, from, to, desc] of M) {
