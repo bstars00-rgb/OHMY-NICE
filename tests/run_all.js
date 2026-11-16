@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path');
 const H = require('./harness');
 (async () => {
   const h = H.create('node');
-  require('./engine_tests')(h); require('./system_tests')(h); require('./regression_tests')(h); require('./i18n_tests')(h); require('./ellis_tests')(h); require('./auth_tests')(h); require('./tracker_tests')(h); require('./review_tests')(h); require('./review_store_tests')(h); require('./signals_tests')(h); require('./routine_tests')(h); require('./outlook_tests')(h); require('./ledger_offset_tests')(h);
+  require('./engine_tests')(h); require('./system_tests')(h); require('./regression_tests')(h); require('./i18n_tests')(h); require('./ellis_tests')(h); require('./auth_tests')(h); require('./tracker_tests')(h); require('./review_tests')(h); require('./review_store_tests')(h); require('./signals_tests')(h); require('./routine_tests')(h); require('./deposits_tests')(h); require('./outlook_tests')(h); require('./ledger_offset_tests')(h);
   const res = await h.run();
   fs.mkdirSync(path.join(__dirname, 'results'), { recursive: true });
   fs.writeFileSync(path.join(__dirname, 'results/node_results.json'), JSON.stringify(Object.assign({ ranAt: new Date().toISOString(), node: process.version }, res), null, 2));

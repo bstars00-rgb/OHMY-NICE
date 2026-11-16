@@ -280,6 +280,18 @@ const M = [
   ["store.js","s.reviews || {}, s.settlements || {}, s.monthCloses || {}]","s.reviews || {}, s.monthCloses || {}]","STORE: settlements edited by hand are not detected"],
   ["engine/model.js","if (rLetter) extraHolds.push('BALANCE_LETTER_OVERDUE');","","MODEL: an overdue balance letter does not stop top-ups"],
   ["core/rbac.js","'settle.process': ['SUPPORT', 'ADMIN']","'settle.process': ['SCM', 'SUPPORT', 'ADMIN']","SETTLE: the SCM may settle and close"],
+  ["engine/deposits.js","held.days >= Math.round(yearsLimit * 365)","held.days > Math.round(yearsLimit * 365)","DEPOSITS: exactly five years is not long-held"],
+  ["engine/deposits.js","bal.closingMinor > 0 && held.days != null","held.days != null","DEPOSITS: a fully refunded deposit is long-held"],
+  ["engine/deposits.js","if (+to.slice(8, 10) < +from.slice(8, 10)) months--;","","DEPOSITS: a month that is not complete is counted"],
+  ["engine/deposits.js","rf.overdue ? 'OVERDUE' : 'REQUESTED') : 'DONE'","rf.overdue ? 'OVERDUE' : 'REQUESTED') : 'REQUESTED'","DEPOSITS: a refund received in full still shows as requested"],
+  ["engine/deposits.js","const firstAt = contract.startDate || (placed.length ? placed[0] : null);","const firstAt = (placed.length ? placed[0] : null) || contract.startDate;","DEPOSITS: held since the opening row instead of the contract start"],
+  ["engine/deposits.js","t.balanceMinor += s.balanceMinor;","t.balanceMinor += s.placedMinor;","DEPOSITS: the total balance adds what was placed"],
+  ["store.js","if (r.amountMinor > v.balance.closingMinor) return { ok: false, errors: ['E_REFUND_EXCEEDS_BALANCE'] };","","STORE: a refund request can exceed the balance"],
+  ["store.js","if (c.refund && c.refund.requested && v.derived.refundOutstandingMinor > 0) return { ok: false, errors: ['E_REFUND_OPEN'] };","","STORE: two refund requests can be open at once"],
+  ["store.js","if (why.length < 3) return { ok: false, errors: ['E_REASON_REQUIRED'] };","","STORE: a refund request can be closed without a reason"],
+  ["store.js","!Dates.isDate(r.dueDate) || r.dueDate < r.requestedAt","!Dates.isDate(r.dueDate)","STORE: a refund due date before the request date is accepted"],
+  ["store.js","const rf = Object.assign({}, c.refund, { requested: false });","const rf = Object.assign({}, c.refund, { requested: true });","STORE: closing a refund request leaves it open"],
+  ["core/rbac.js","'refund.request': ['SCM', 'SUPPORT', 'ADMIN']","'refund.request': ['VIEWER', 'SCM', 'SUPPORT', 'ADMIN']","REFUND: a viewer may record refund requests"],
 ];
 let killed = 0; const rows = [];
 for (const [file, from, to, desc] of M) {

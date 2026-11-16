@@ -5,7 +5,7 @@ const R = p => require(path.join(__dirname, '../../js', p));
 const env = {};
 env.Dates = R('core/dates.js'); env.Money = R('core/money.js'); env.Config = R('core/config.js'); env.RBAC = R('core/rbac.js'); env.Auth = R('core/auth.js');
 env.Weighted = R('engine/weighted.js'); env.Rating = R('engine/rating.js'); env.Ledger = R('engine/ledger.js'); env.Forecast = R('engine/forecast.js');
-env.Limit = R('engine/limit.js'); env.Alerts = R('engine/alerts.js'); env.Csv = R('engine/csv.js'); env.Model = R('engine/model.js'); env.Outlook = R('engine/outlook.js'); env.Review = R('engine/review.js'); env.Signals = R('engine/signals.js'); env.Routine = R('engine/routine.js');
+env.Limit = R('engine/limit.js'); env.Alerts = R('engine/alerts.js'); env.Csv = R('engine/csv.js'); env.Model = R('engine/model.js'); env.Outlook = R('engine/outlook.js'); env.Review = R('engine/review.js'); env.Signals = R('engine/signals.js'); env.Routine = R('engine/routine.js'); env.Deposits = R('engine/deposits.js');
 env.Tracker = R('engine/tracker.js'); env.Adapters = R('adapters/adapters.js'); env.Ellis = R('adapters/ellis.js'); env.Seed = R('data/seed.js'); env.Store = R('store.js');
 env.I18N_ja = R('i18n/ja.js'); env.I18N_vi = R('i18n/vi.js'); env.UI = R('ui/common.js'); env.ViewsA = R('ui/views_a.js'); env.ViewsB = R('ui/views_b.js'); env.ViewsC = R('ui/views_c.js'); env.ViewsD = R('ui/views_d.js'); env.ViewsAuth = R('ui/views_auth.js');
 env.root = path.join(__dirname, '../..');

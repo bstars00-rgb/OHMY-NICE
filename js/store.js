@@ -3,17 +3,17 @@
 (function (root, factory) {
   const NS = root.OMH || (root.OMH = {});
   const dep = typeof require === 'function'
-    ? { Money: require('./core/money.js'), Dates: require('./core/dates.js'), Config: require('./core/config.js'), RBAC: require('./core/rbac.js'), Ledger: require('./engine/ledger.js'), Rating: require('./engine/rating.js'), Review: require('./engine/review.js'), Signals: require('./engine/signals.js'), Routine: require('./engine/routine.js'),
+    ? { Money: require('./core/money.js'), Dates: require('./core/dates.js'), Config: require('./core/config.js'), RBAC: require('./core/rbac.js'), Ledger: require('./engine/ledger.js'), Rating: require('./engine/rating.js'), Review: require('./engine/review.js'), Signals: require('./engine/signals.js'), Routine: require('./engine/routine.js'), Deposits: require('./engine/deposits.js'),
         Alerts: require('./engine/alerts.js'), Csv: require('./engine/csv.js'), Limit: require('./engine/limit.js'), Model: require('./engine/model.js'),
         Adapters: require('./adapters/adapters.js'), Auth: require('./core/auth.js'), Tracker: require('./engine/tracker.js'), Ellis: require('./adapters/ellis.js'), Seed: require('./data/seed.js') }
-    : { Money: NS.Money, Dates: NS.Dates, Config: NS.Config, RBAC: NS.RBAC, Ledger: NS.Ledger, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Routine: NS.Routine, Alerts: NS.Alerts, Csv: NS.Csv, Limit: NS.Limit,
+    : { Money: NS.Money, Dates: NS.Dates, Config: NS.Config, RBAC: NS.RBAC, Ledger: NS.Ledger, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Routine: NS.Routine, Deposits: NS.Deposits, Alerts: NS.Alerts, Csv: NS.Csv, Limit: NS.Limit,
         Model: NS.Model, Adapters: NS.Adapters, Auth: NS.Auth, Tracker: NS.Tracker, Ellis: NS.Ellis, Seed: NS.Seed };
   const api = factory(dep);
   NS.Store = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function (dep) {
   'use strict';
-  const { Money, Dates, Config, RBAC, Ledger, Rating, Review, Signals, Routine, Alerts, Csv, Limit, Model, Adapters, Auth, Tracker, Ellis, Seed } = dep;
+  const { Money, Dates, Config, RBAC, Ledger, Rating, Review, Signals, Routine, Deposits, Alerts, Csv, Limit, Model, Adapters, Auth, Tracker, Ellis, Seed } = dep;
   const DEFAULT_KEY = 'omh_hfr_v1';                       // NEVER the legacy key 'omh_prg_v42'
   const REQUIRED_KEYS = ['hotels', 'contracts', 'ledger', 'config', 'ratings', 'alerts', 'audit'];
 
@@ -136,7 +136,7 @@
     /** Run a command: permission check -> fn -> alert refresh -> audit -> persist. fn must validate BEFORE mutating and return {ok,...}. */
     /** A settlement can only be recorded for a past month of a contract that keeps a usage ledger, and not once the month is closed. */
     function settlePeriodErrors(s, c, period) {
-      if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(String(period))) return 'E_PERIOD_INVALID'; if (period > Routine.lastMonthOf(s.config.asOf)) return 'E_PERIOD_FUTURE'; if (!Routine.applicable(c)) return 'E_SETTLE_NOT_APPLICABLE'; if ((s.monthCloses || {})[period]) return 'E_MONTH_CLOSED'; return null;
+      if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(String(period))) return 'E_MONTH_INVALID'; if (period > Routine.lastMonthOf(s.config.asOf)) return 'E_PERIOD_FUTURE'; if (!Routine.applicable(c)) return 'E_SETTLE_NOT_APPLICABLE'; if ((s.monthCloses || {})[period]) return 'E_MONTH_CLOSED'; return null;
     }
     function settleGet(s, contractId, period) { return ((s.settlements || {})[contractId] || {})[period] || null; }
     function settleRec(s, contractId, period) { s.settlements = s.settlements || {}; const byC = s.settlements[contractId] || (s.settlements[contractId] = {}); return byC[period] || (byC[period] = { invoice: null, ellis: null, settled: null, history: [] }); }
@@ -321,10 +321,32 @@
       /** Settlement step 6: the monthly close on the first business day. The close records who closed it and which contracts were still open; it never changes the ledger. */
       closeMonth(period) {
         return mutate('settle.process', 'MONTH_CLOSE', String(period), s => {
-          if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(String(period))) return { ok: false, errors: ['E_PERIOD_INVALID'] }; const asOf = s.config.asOf; if (period > Routine.lastMonthOf(asOf)) return { ok: false, errors: ['E_PERIOD_FUTURE'] };
+          if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(String(period))) return { ok: false, errors: ['E_MONTH_INVALID'] }; const asOf = s.config.asOf; if (period > Routine.lastMonthOf(asOf)) return { ok: false, errors: ['E_PERIOD_FUTURE'] };
           s.monthCloses = s.monthCloses || {}; if (s.monthCloses[period]) return { ok: false, errors: ['E_MONTH_CLOSED'] }; if (asOf < Routine.closeDate(period)) return { ok: false, errors: ['E_CLOSE_TOO_EARLY'] };
           const open = [], done = []; const m = Model.compute(s); for (const v of m.views) { if (!Routine.applicable(v.contract)) continue; const st = Routine.steps({ rec: ((s.settlements || {})[v.contractId] || {})[period] || null, consMinor: v.consByMonth[period] || 0, recon: v.recon, period, closed: null }); (Routine.settled(st) ? done : open).push(v.contractId); }
           s.monthCloses[period] = { closedAt: asOf, closedBy: session.actor, settledCount: done.length, openContracts: open }; return { ok: true, audit: { period, settledCount: done.length, openCount: open.length } };
+        });
+      },
+      /** Records that a refund was asked of the hotel: amount, date asked, date due. One open request at a time; the amount cannot exceed the balance. The money itself is recorded in the ledger when it arrives. */
+      recordRefundRequest(contractId, req) {
+        return mutate('refund.request', 'REFUND_REQUEST', contractId, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; const r = req || {};
+          if (!Number.isSafeInteger(r.amountMinor) || r.amountMinor <= 0 || r.amountMinor > 1e15) return { ok: false, errors: ['E_AMOUNT_INVALID'] };
+          if (!Dates.isDate(r.requestedAt) || r.requestedAt > s.config.asOf || !Dates.isDate(r.dueDate) || r.dueDate < r.requestedAt) return { ok: false, errors: ['E_REFUND_DATES'] };
+          const v = Model.compute(s).byContract[contractId]; if (c.refund && c.refund.requested && v.derived.refundOutstandingMinor > 0) return { ok: false, errors: ['E_REFUND_OPEN'] };
+          if (r.amountMinor > v.balance.closingMinor) return { ok: false, errors: ['E_REFUND_EXCEEDS_BALANCE'] };
+          const note = String(r.note == null ? '' : r.note).trim().slice(0, 200); const before = Object.assign({}, c.refund);
+          c.refundHistory = (c.refundHistory || []).concat([{ event: 'REQUESTED', at: s.config.asOf, by: session.actor, requestedAt: r.requestedAt, dueDate: r.dueDate, amountMinor: r.amountMinor, note }]);
+          c.refund = Object.assign({}, c.refund, { requested: true, requestedAt: r.requestedAt, requestedAmountMinor: r.amountMinor, dueDate: r.dueDate }); return { ok: true, audit: { contractId, amountMinor: r.amountMinor, requestedAt: r.requestedAt, dueDate: r.dueDate, before: before.requested === true } };
+        });
+      },
+      /** Closes a refund request (received in full, withdrawn or replaced). A reason is required and the request stays in the history. */
+      closeRefundRequest(contractId, reason) {
+        return mutate('refund.request', 'REFUND_CLOSE', contractId, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; if (!(c.refund && c.refund.requested)) return { ok: false, errors: ['E_REFUND_NONE'] };
+          const why = String(reason == null ? '' : reason).trim(); if (why.length < 3) return { ok: false, errors: ['E_REASON_REQUIRED'] };
+          c.refundHistory = (c.refundHistory || []).concat([{ event: 'CLOSED', at: s.config.asOf, by: session.actor, requestedAt: c.refund.requestedAt, dueDate: c.refund.dueDate, amountMinor: c.refund.requestedAmountMinor, note: why.slice(0, 200) }]);
+          const rf = Object.assign({}, c.refund, { requested: false }); delete rf.requestedAt; delete rf.requestedAmountMinor; delete rf.dueDate; c.refund = rf; return { ok: true, audit: { contractId, reason: why.slice(0, 200) } };
         });
       },
       /** The risk codes of a contract (C1-C5 severe, G1-G8 general): what the SCM or finance support found on site or in the papers. They feed signal S8. Replaces the list; the earlier list stays in the history. */

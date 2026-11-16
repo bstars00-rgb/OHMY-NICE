@@ -4,7 +4,7 @@
 // Usage: node tools/i18n_extract.js [out.json]   —  or require('./i18n_extract').extract()
 const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
-const FILES = ['js/ui/common.js', 'js/ui/views_a.js', 'js/ui/views_b.js', 'js/ui/views_c.js', 'js/ui/views_d.js', 'js/ui/views_auth.js', 'js/core/auth.js', 'js/app.js', 'js/adapters/adapters.js', 'js/engine/rating.js', 'js/engine/review.js', 'js/engine/signals.js', 'js/engine/routine.js', 'js/engine/alerts.js', 'js/data/seed.js'];
+const FILES = ['js/ui/common.js', 'js/ui/views_a.js', 'js/ui/views_b.js', 'js/ui/views_c.js', 'js/ui/views_d.js', 'js/ui/views_auth.js', 'js/core/auth.js', 'js/app.js', 'js/adapters/adapters.js', 'js/engine/rating.js', 'js/engine/review.js', 'js/engine/signals.js', 'js/engine/routine.js', 'js/engine/deposits.js', 'js/engine/alerts.js', 'js/data/seed.js'];
 const HANGUL = /[가-힣]/;
 const LIT = "'((?:[^'\\\\]|\\\\.)*)'";
 const unq = s => new Function('return \'' + s + '\'')();

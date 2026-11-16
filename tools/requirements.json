@@ -126,5 +126,8 @@
  {"id":"SET-3","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"호텔 잔액 확인서 2개월 미회신이면 충전 정지","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js, js/engine/model.js"},
  {"id":"SET-4","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"정산 절차 ①~⑥(청구서, ELLIS 대조, 정산일, 원장 차감, 호텔 확인, 월 마감)와 역할 분리","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js, js/store.js, js/ui/views_d.js"},
  {"id":"SET-5","pri":"P1","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"알림 목록: 조건·조치·받는 사람(대표 확정 표)","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js, js/ui/views_d.js"},
- {"id":"SET-6","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"월 마감: 첫 영업일부터, 월 1회, 감사 기록과 변조 감지","design":"17_Prototype_Specification 4.8, 19장","impl":"js/store.js"}
+ {"id":"SET-6","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"월 마감: 첫 영업일부터, 월 1회, 감사 기록과 변조 감지","design":"17_Prototype_Specification 4.8, 19장","impl":"js/store.js"},
+ {"id":"DEP-1","pri":"P0","src":"대표 확정 기준 2026-11-13 (보증금 탭)","title":"보증금·바이아웃 원장: 예치·반환·잔액, 예치 시작일, 보관 기간, 장기 예치(5년 이상, 경보와 같은 기준)","design":"17_Prototype_Specification 4.9, 20장","impl":"js/engine/deposits.js, js/ui/views_d.js"},
+ {"id":"DEP-2","pri":"P1","src":"대표 확정 기준 2026-11-13 (보증금 탭)","title":"보증금 장부(원장 행과 누적 잔액)와 통화별 합계(환율 환산 없음)","design":"17_Prototype_Specification 4.9, 20장","impl":"js/engine/deposits.js, js/ui/views_d.js"},
+ {"id":"DEP-3","pri":"P0","src":"대표 확정 기준 2026-11-13 (보증금 탭)","title":"반환 요청 기록·종료: 금액·날짜 검사, 열린 요청 한 건, 잔액 초과 금지, 사유 필수, 이력, 상태(요청 중·기한 경과·수령 완료)","design":"17_Prototype_Specification 4.9, 20장","impl":"js/store.js, js/engine/deposits.js"}
 ]

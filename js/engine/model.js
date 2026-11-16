@@ -2,14 +2,14 @@
 (function (root, factory) {
   const NS = root.OMH || (root.OMH = {});
   const dep = typeof require === 'function'
-    ? { Money: require('../core/money.js'), Dates: require('../core/dates.js'), Ledger: require('./ledger.js'), Forecast: require('./forecast.js'), Rating: require('./rating.js'), Review: require('./review.js'), Signals: require('./signals.js'), Routine: require('./routine.js'), Limit: require('./limit.js'), Alerts: require('./alerts.js'), Ellis: require('../adapters/ellis.js'), Outlook: require('./outlook.js') }
-    : { Money: NS.Money, Dates: NS.Dates, Ledger: NS.Ledger, Forecast: NS.Forecast, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Routine: NS.Routine, Limit: NS.Limit, Alerts: NS.Alerts, Ellis: NS.Ellis, Outlook: NS.Outlook };
+    ? { Money: require('../core/money.js'), Dates: require('../core/dates.js'), Ledger: require('./ledger.js'), Forecast: require('./forecast.js'), Rating: require('./rating.js'), Review: require('./review.js'), Signals: require('./signals.js'), Routine: require('./routine.js'), Deposits: require('./deposits.js'), Limit: require('./limit.js'), Alerts: require('./alerts.js'), Ellis: require('../adapters/ellis.js'), Outlook: require('./outlook.js') }
+    : { Money: NS.Money, Dates: NS.Dates, Ledger: NS.Ledger, Forecast: NS.Forecast, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Routine: NS.Routine, Deposits: NS.Deposits, Limit: NS.Limit, Alerts: NS.Alerts, Ellis: NS.Ellis, Outlook: NS.Outlook };
   const api = factory(dep);
   NS.Model = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function (dep) {
   'use strict';
-  const { Money, Dates, Ledger, Forecast, Rating, Review, Signals, Routine, Limit, Alerts, Ellis, Outlook } = dep;
+  const { Money, Dates, Ledger, Forecast, Rating, Review, Signals, Routine, Deposits, Limit, Alerts, Ellis, Outlook } = dep;
 
   function latestConfirmation(state, contractId) {
     let best = null;
@@ -85,12 +85,13 @@
     const daysToEnd = contract.endDate ? Dates.diffDays(asOf, contract.endDate) : null;
     const routine = { applicable: rApplicable, period: rPeriod, lag: rLag, letterOverdue: rLetter, steps: rSteps, settled: rApplicable && Routine.settled(rSteps), closeDate: Routine.closeDate(rPeriod), daysToEnd,
       reminders: Routine.reminders({ off: !rApplicable || offSignals, hasBalance: balance.closingMinor > 0, lag: rLag, letterOverdue: rLetter, daysToEnd, expiryNoticeDays: cfg.review.routine.expiryNoticeDays, signals, holds: limit.holdReasons, riskFlags: contract.riskFlags || [], notes: limit.notes || [] }) };
+    const deposit = Deposits.applicable(contract) ? Deposits.summarize({ contract, rows: own, asOf, cfg, recon, refund: { requested: !!rf.requested, requestedAt: rf.requestedAt, requestedMinor: rf.requestedAmountMinor, dueDate: rf.dueDate, receivedMinor: refundReceived, outstandingMinor: refundOutstanding, overdue: refundOverdue } }) : null;
     const pt = contract.plannedTopUp; const plannedSim = pt && Number.isSafeInteger(pt.amountMinor) && pt.amountMinor > 0 ? Limit.simulate(limit, f, pt.amountMinor, contract, { daysPerMonth: cfg.forecast.daysPerMonth, addDays: Dates.addDays, asOf }) : null;   // the tracker's planned top-up, checked against the limit
     const ellisOutlook = Ellis.outlook(state, contract.contractId, { cmp: pre.ellisCmp });                                  // what the ELLIS bookings say about the consumption speed (indicator, never written to the ledger)
     const topupPlan = Outlook.topupPlan({ forecast: f, limit, contract, balance }, ellisOutlook, cfg, asOf);              // section 7: when the next top-up has to be requested
     const relationship = Outlook.relationship({ rating, forecast: f, limit, contract, balance, derived });               // section 8: should the cooperation go on (a recommendation for the CEO)
     return { contractId: contract.contractId, hotelId: contract.hotelId, hotel, contract, balance, recon, forecast: f, derived, rating, ratingScores: auto.scores, ratingBasis: auto.basis, ratingRecord: rec, ratingDrop, recoverability: recov,
-      alerts, liveAlerts: live, limit, signals, routine, consByMonth, plannedSim, nextCheck: nextCheck(rating.grade, live, asOf), ellisOutlook, topupPlan, relationship, currency: contract.currency };
+      alerts, liveAlerts: live, limit, signals, routine, deposit, consByMonth, plannedSim, nextCheck: nextCheck(rating.grade, live, asOf), ellisOutlook, topupPlan, relationship, currency: contract.currency };
   }
 
   /** Compute every contract view. */
