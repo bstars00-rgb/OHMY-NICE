@@ -109,3 +109,5 @@ td.empty,.empty-state{text-align:center;color:var(--muted);padding:34px 12px} .e
 .rv-card{border:1px solid var(--line);border-radius:8px;padding:10px 12px} .rv-card .v2{font-size:18px;margin:2px 0}
 .rv-table td,.rv-table th{vertical-align:top} .rv-table tr.area td{background:rgba(127,140,160,.12)} .rv-table select{min-width:84px}
 .flagpicks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 14px;margin:8px 0} .flagpick{font-size:12.5px;display:flex;gap:6px;align-items:flex-start}
+.rt-table td,.rt-table th{vertical-align:top} .rt-in{white-space:normal} .rt-in input,.rt-in select{margin:2px 4px 2px 0}
+.rt-table .chip{white-space:nowrap}

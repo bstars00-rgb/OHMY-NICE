@@ -138,12 +138,12 @@ module.exports = function register(h) {
 
   /* ---------------- Screens (Node render smoke) ---------------- */
   const BAD = /undefined|NaN|\[object|Infinity|>null</;
-  const VIEWS = { dashboard: ViewsA.dashboard, status: ViewsA.status, profile: ViewsA.profile, ledger: ViewsB.ledger, risk: ViewsC.risk, approval: ViewsC.approvalPage, admin: ViewsC.admin };
+  const VIEWS = { dashboard: ViewsA.dashboard, status: ViewsA.status, profile: ViewsA.profile, ledger: ViewsB.ledger, risk: ViewsC.risk, approval: ViewsC.approvalPage, routine: env.ViewsD.routine, admin: ViewsC.admin };
   const mkctx = (st, params, ui) => ({ store: st, m: st.model(), ui: ui || { filters: {}, riskFilter: {} }, params: params || [], navigate() {}, rerender() {}, toast() {}, run() {} });
-  t('V01', 'All 7 screens render for every role in KO and EN without undefined/NaN/[object]/Infinity', ['S01', 'S02', 'S03', 'S04', 'S05', 'S07', 'S08', 'UI-LANG'], a => {
+  t('V01', 'All 8 screens render for every role in KO and EN without undefined/NaN/[object]/Infinity', ['S01', 'S02', 'S03', 'S04', 'S05', 'S07', 'S08', 'UI-LANG'], a => {
     let n = 0;
     for (const lang of ['ko', 'en']) { UI.setLang(lang); for (const role of RBAC.ROLES) { const st = fresh(role); for (const [name, fn] of Object.entries(VIEWS)) { const html = fn(mkctx(st, [], name === 'approval' || name === 'profile' ? { filters: {}, simAmount: '1000000' } : null)); n++; a.ok(typeof html === 'string' && html.length > 200, name); a.ok(!BAD.test(html), lang + '/' + role + '/' + name + ' -> ' + (html.match(BAD) || [''])[0] + ' ... ' + (html.slice(Math.max(0, html.search(BAD) - 60), html.search(BAD) + 40))); } } }
-    UI.setLang('ko'); a.eq(n, 70);
+    UI.setLang('ko'); a.eq(n, 80);
   });
   t('V02', 'Per-contract screens (profile with its top-up simulator, ledger, approval packet) render for all 20 contracts incl. NR / D / deposit / no-data cases, KO and EN', ['S02', 'S03', 'S04', 'S07', 'UI-EMPTY'], a => {
     const st = fresh('SCM'); for (const lang of ['ko', 'en']) { UI.setLang(lang); for (const c of st.state.contracts) { for (const [name, fn] of [['profile', ViewsA.profile], ['ledger', ViewsB.ledger], ['approval', ViewsC.approvalPage]]) { const ui = { filters: {}, simAmount: '1000' + (c.currency === 'USD' || c.currency === 'SGD' ? '.50' : '') }; const html = fn(mkctx(st, [c.contractId], ui)); a.ok(!BAD.test(html), lang + ' ' + name + ' ' + c.contractId + ' ' + (html.match(BAD) || [''])[0]); a.ok(html.includes(c.contractId)); } } } UI.setLang('ko');

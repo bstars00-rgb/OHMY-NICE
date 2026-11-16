@@ -11,7 +11,7 @@
   const { Config, Ledger } = dep;
   const B = (ko, en) => ({ ko, en });
   /** The release of the sample data. Saved data from another release is not an error: the store loads the new sample and keeps the old data under a separate key. Bump it whenever the sample data or the settings change shape. */
-  const DATA_VERSION = '2026-11-16';
+  const DATA_VERSION = '2026-11-17';
   const ENTITIES = {
     'OMH-SG': 'OHMYHOTEL Singapore HQ (sample entity)', 'OMH-KR': 'OHMYHOTEL Korea (sample entity)', 'OMH-JP': 'OHMYHOTEL Japan (sample entity)', 'OMH-VN': 'OHMYHOTEL Vietnam (sample entity)',
   };
@@ -141,12 +141,18 @@
       'CT-VN-001': ['F1 F2 F3 O3', 'F1 F2 F3 O3'], 'CT-VN-002': ['F1 F2 F3 O1', 'F1 F2 F3 O1'], 'CT-VN-004': ['F1 F2 F3 !K2', 'F1 F2 F3 !K3'], 'CT-SG-001': ['F1 F3 O3 H1', 'F1 F3 O3 H1'], 'CT-HK-001': ['F1 F2 F3', 'F1 F2 F3 O3'], 'CT-TW-001': ['F1 F3 H1 ~R1', 'F1 F3 H1 O3'], 'CT-TH-001': ['F1 F3 H1 H2', 'F1 F3 H1 H2'] };
     const parse = spec => { const a = {}; for (const id of Review.ITEM_IDS) a[id] = 'GOOD'; for (const tok of spec.split(' ').filter(Boolean)) { if (tok[0] === '~') a[tok.slice(1)] = 'CAUTION'; else if (tok[0] === '!') a[tok.slice(1)] = 'ISSUE'; else a[tok] = 'UNCHECKED'; } return a; };
     for (const [cid, [sales, fin]] of Object.entries(RV)) { const c = contracts.find(x => x.contractId === cid); reviews[cid] = { sales: { reviewer: c.assignedScm + ' (sample)', at: '2026-10-31', answers: parse(sales) }, support: { reviewer: 'SUPPORT-01 (sample)', at: '2026-10-31', answers: parse(fin) }, history: [] }; }
+    // sample settlements of October 2026 (synthetic): one fully settled, one only invoiced, one with a difference to ask the hotel about
+    const settlements = {
+      'CT-KR-001': { '2026-10': { invoice: { no: 'INV-S-1001', receivedAt: '2026-11-02', amountMinor: 30000000, by: 'scm.kr (sample)', at: '2026-11-02' }, ellis: { result: 'MATCH', note: '', ellisMinor: 30000000, by: 'scm.kr (sample)', at: '2026-11-03' }, settled: { settledAt: '2026-11-04', by: 'SUPPORT-01 (sample)', at: '2026-11-04' }, history: [] } },
+      'CT-KR-002': { '2026-10': { invoice: { no: 'INV-S-1002', receivedAt: '2026-11-03', amountMinor: 20000000, by: 'scm.kr (sample)', at: '2026-11-03' }, ellis: null, settled: null, history: [] } },
+      'CT-JP-001': { '2026-10': { invoice: { no: 'INV-S-2001', receivedAt: '2026-11-02', amountMinor: 5200000, by: 'scm.jp (sample)', at: '2026-11-02' }, ellis: { result: 'DIFF', note: 'nights differ by 2, asked the hotel (sample)', ellisMinor: 5000000, by: 'scm.jp (sample)', at: '2026-11-03' }, settled: null, history: [] } },
+    };
     const alerts = [
       { alertId: 'SALES_DECLINE:CT-KR-002', ruleId: 'SALES_DECLINE', hotelId: 'H002', contractId: 'CT-KR-002', severity: 'MEDIUM', action: 'HOLD_TOPUP', status: 'RESOLVED', source: 'AUTO', title: B('판매 감소 추세', 'Sales decline trend'), evidence: [{ k: 'changePct', v: -22 }], detectedAt: '2026-07-01', firstDetectedAt: '2026-07-01', lastDetectedAt: '2026-07-15', clearedAt: '2026-07-20', notes: [{ at: '2026-07-20', by: 'SCM-KR-01 (sample)', text: '성수기 반등 확인' }], assignedScm: 'SCM-KR-01', historical: true },
       { alertId: 'RECON_UNCONFIRMED:CT-JP-001', ruleId: 'RECON_UNCONFIRMED', hotelId: 'H004', contractId: 'CT-JP-001', severity: 'MEDIUM', action: 'RECONFIRM_BALANCE', status: 'RESOLVED', source: 'AUTO', title: B('잔액 확인 미완료', 'Balance confirmation incomplete'), evidence: [{ k: 'status', v: 'UNCONFIRMED' }], detectedAt: '2026-08-10', firstDetectedAt: '2026-08-10', lastDetectedAt: '2026-08-20', clearedAt: '2026-09-02', notes: [], assignedScm: 'SCM-JP-01', historical: true },
     ];
     return {
-      schemaVersion: 1, dataVersion: DATA_VERSION, isSample: true, config, hotels, contracts, ledger, confirmations, sales, ratings, alerts, reviews, approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [], entities: ENTITIES,
+      schemaVersion: 1, dataVersion: DATA_VERSION, isSample: true, config, hotels, contracts, ledger, confirmations, sales, ratings, alerts, reviews, settlements, monthCloses: {}, approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [], entities: ENTITIES,
     };
   }
   return { buildSeed, ENTITIES, ORDER, DATA_VERSION };

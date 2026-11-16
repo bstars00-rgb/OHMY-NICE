@@ -1,12 +1,12 @@
 {
-  "ranAt": "2026-11-16T01:52:38.316Z",
+  "ranAt": "2026-11-16T04:42:24.230Z",
   "node": "v24.14.1",
   "suite": "node",
-  "total": 218,
-  "passed": 218,
+  "total": 228,
+  "passed": 228,
   "failed": 0,
   "skipped": 0,
-  "ms": 9551,
+  "ms": 10392,
   "results": [
     {
       "id": "L01",
@@ -17,7 +17,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 30
     },
     {
       "id": "L02",
@@ -28,7 +28,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "L03",
@@ -39,7 +39,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "L04",
@@ -60,7 +60,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 37
+      "ms": 40
     },
     {
       "id": "L06",
@@ -70,7 +70,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 23
+      "ms": 25
     },
     {
       "id": "L07",
@@ -81,7 +81,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "L08",
@@ -92,7 +92,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 26
     },
     {
       "id": "L09",
@@ -102,7 +102,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 26
     },
     {
       "id": "F01",
@@ -112,7 +112,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 28
+      "ms": 29
     },
     {
       "id": "F02",
@@ -123,7 +123,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "F03",
@@ -134,7 +134,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 28
     },
     {
       "id": "F04",
@@ -144,7 +144,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 51
     },
     {
       "id": "F05",
@@ -154,7 +154,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 47
+      "ms": 51
     },
     {
       "id": "F06",
@@ -175,7 +175,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 25
     },
     {
       "id": "F08",
@@ -206,7 +206,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "R03",
@@ -217,7 +217,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "R04",
@@ -228,7 +228,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 31
     },
     {
       "id": "R05",
@@ -239,7 +239,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 26
     },
     {
       "id": "R06",
@@ -250,7 +250,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 26
     },
     {
       "id": "R07",
@@ -270,7 +270,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 39
+      "ms": 41
     },
     {
       "id": "R09",
@@ -290,7 +290,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M02",
@@ -301,7 +301,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M03",
@@ -312,7 +312,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 49
+      "ms": 48
     },
     {
       "id": "M04",
@@ -323,7 +323,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 3
     },
     {
       "id": "M05",
@@ -334,7 +334,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 27
     },
     {
       "id": "M06",
@@ -345,7 +345,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 23
+      "ms": 24
     },
     {
       "id": "M07",
@@ -356,7 +356,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M08",
@@ -367,7 +367,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 26
     },
     {
       "id": "M09",
@@ -378,7 +378,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 25
     },
     {
       "id": "A01",
@@ -388,7 +388,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 34
     },
     {
       "id": "A02",
@@ -429,7 +429,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 26
     },
     {
       "id": "A06",
@@ -440,7 +440,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "A07",
@@ -460,7 +460,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "A09",
@@ -493,7 +493,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 49
     },
     {
       "id": "CS03",
@@ -506,7 +506,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 38
+      "ms": 41
     },
     {
       "id": "CS04",
@@ -517,7 +517,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 30
     },
     {
       "id": "CS05",
@@ -527,7 +527,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 25
     },
     {
       "id": "X12",
@@ -538,7 +538,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6
+      "ms": 5
     },
     {
       "id": "X01",
@@ -549,7 +549,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 37
+      "ms": 40
     },
     {
       "id": "X03",
@@ -559,7 +559,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 30
+      "ms": 36
     },
     {
       "id": "X02",
@@ -571,7 +571,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 47
     },
     {
       "id": "X17",
@@ -582,7 +582,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 5
+      "ms": 6
     },
     {
       "id": "X06",
@@ -593,7 +593,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 36
+      "ms": 38
     },
     {
       "id": "X04",
@@ -604,7 +604,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 110
+      "ms": 115
     },
     {
       "id": "X05",
@@ -616,7 +616,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 78
+      "ms": 79
     },
     {
       "id": "X08",
@@ -628,7 +628,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 24
+      "ms": 25
     },
     {
       "id": "X13",
@@ -653,7 +653,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 41
+      "ms": 44
     },
     {
       "id": "X15",
@@ -663,7 +663,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 34
+      "ms": 37
     },
     {
       "id": "X18",
@@ -674,7 +674,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 37
+      "ms": 39
     },
     {
       "id": "X11",
@@ -686,7 +686,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 9
     },
     {
       "id": "X19",
@@ -701,7 +701,7 @@
     },
     {
       "id": "V01",
-      "name": "All 7 screens render for every role in KO and EN without undefined/NaN/[object]/Infinity",
+      "name": "All 8 screens render for every role in KO and EN without undefined/NaN/[object]/Infinity",
       "reqs": [
         "S01",
         "S02",
@@ -714,7 +714,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 344
+      "ms": 379
     },
     {
       "id": "V02",
@@ -728,7 +728,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 138
+      "ms": 152
     },
     {
       "id": "V03",
@@ -740,7 +740,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 30
+      "ms": 32
     },
     {
       "id": "V03b",
@@ -751,7 +751,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 53
+      "ms": 56
     },
     {
       "id": "V03c",
@@ -762,7 +762,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 29
     },
     {
       "id": "V03d",
@@ -774,7 +774,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 30
     },
     {
       "id": "V04",
@@ -785,7 +785,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 36
+      "ms": 38
     },
     {
       "id": "V05",
@@ -797,7 +797,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 301
+      "ms": 314
     },
     {
       "id": "P01",
@@ -807,7 +807,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 142
+      "ms": 146
     },
     {
       "id": "P02",
@@ -818,7 +818,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 717
+      "ms": 736
     },
     {
       "id": "D01",
@@ -830,7 +830,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 35
     },
     {
       "id": "D02",
@@ -851,7 +851,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 30
     },
     {
       "id": "D04",
@@ -862,7 +862,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 46
+      "ms": 51
     },
     {
       "id": "D05",
@@ -873,7 +873,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 52
+      "ms": 61
     },
     {
       "id": "D06",
@@ -883,7 +883,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 47
+      "ms": 53
     },
     {
       "id": "D07",
@@ -893,7 +893,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 39
     },
     {
       "id": "D08",
@@ -904,7 +904,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 221
+      "ms": 238
     },
     {
       "id": "D09",
@@ -915,7 +915,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "D10",
@@ -926,7 +926,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 33
     },
     {
       "id": "D11",
@@ -937,7 +937,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 52
     },
     {
       "id": "D12",
@@ -948,7 +948,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "D14",
@@ -960,7 +960,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 84
+      "ms": 89
     },
     {
       "id": "E01",
@@ -973,7 +973,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 553
+      "ms": 569
     },
     {
       "id": "E02",
@@ -984,7 +984,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 29
     },
     {
       "id": "E03",
@@ -1029,7 +1029,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 36
     },
     {
       "id": "F02",
@@ -1040,7 +1040,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "F03",
@@ -1052,7 +1052,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 30
     },
     {
       "id": "F04",
@@ -1063,7 +1063,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 32
     },
     {
       "id": "F06",
@@ -1075,7 +1075,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 184
+      "ms": 200
     },
     {
       "id": "AS01",
@@ -1098,7 +1098,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 66
+      "ms": 69
     },
     {
       "id": "AS03",
@@ -1110,7 +1110,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 68
+      "ms": 73
     },
     {
       "id": "AS04",
@@ -1121,7 +1121,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 40
+      "ms": 36
     },
     {
       "id": "F10",
@@ -1132,7 +1132,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 59
+      "ms": 66
     },
     {
       "id": "AD01",
@@ -1145,7 +1145,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 85
+      "ms": 93
     },
     {
       "id": "AD02",
@@ -1167,7 +1167,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 55
+      "ms": 60
     },
     {
       "id": "AL02",
@@ -1178,7 +1178,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 59
+      "ms": 60
     },
     {
       "id": "AL03",
@@ -1189,7 +1189,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 33
+      "ms": 34
     },
     {
       "id": "AL04",
@@ -1211,7 +1211,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 246
+      "ms": 252
     },
     {
       "id": "F05",
@@ -1222,7 +1222,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 74
+      "ms": 77
     },
     {
       "id": "F07",
@@ -1242,7 +1242,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 26
     },
     {
       "id": "F09",
@@ -1253,7 +1253,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 47
+      "ms": 48
     },
     {
       "id": "H01",
@@ -1265,7 +1265,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 30
     },
     {
       "id": "H02",
@@ -1276,7 +1276,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 86
+      "ms": 88
     },
     {
       "id": "H03",
@@ -1288,7 +1288,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 27
     },
     {
       "id": "S10",
@@ -1299,7 +1299,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 784
+      "ms": 877
     },
     {
       "id": "H04",
@@ -1312,7 +1312,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 157
+      "ms": 162
     },
     {
       "id": "H05",
@@ -1323,7 +1323,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "D15",
@@ -1345,7 +1345,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 20
+      "ms": 24
     },
     {
       "id": "I02",
@@ -1385,7 +1385,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 460
+      "ms": 570
     },
     {
       "id": "I05",
@@ -1396,7 +1396,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 3
     },
     {
       "id": "M01",
@@ -1417,7 +1417,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M03",
@@ -1428,7 +1428,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 9
     },
     {
       "id": "M04",
@@ -1449,7 +1449,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M06",
@@ -1470,7 +1470,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M08",
@@ -1491,7 +1491,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 26
+      "ms": 28
     },
     {
       "id": "M10",
@@ -1512,7 +1512,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 28
+      "ms": 26
     },
     {
       "id": "M12",
@@ -1523,7 +1523,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 86
+      "ms": 90
     },
     {
       "id": "M13",
@@ -1533,7 +1533,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 28
+      "ms": 31
     },
     {
       "id": "M14",
@@ -1543,7 +1543,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 36
+      "ms": 37
     },
     {
       "id": "M15",
@@ -1553,7 +1553,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 28
+      "ms": 32
     },
     {
       "id": "M16",
@@ -1573,7 +1573,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 305
+      "ms": 328
     },
     {
       "id": "M18",
@@ -1585,7 +1585,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 30
+      "ms": 29
     },
     {
       "id": "M19",
@@ -1596,7 +1596,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M20",
@@ -1607,7 +1607,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 123
+      "ms": 131
     },
     {
       "id": "M21",
@@ -1629,7 +1629,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 215
+      "ms": 220
     },
     {
       "id": "M23",
@@ -1640,7 +1640,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 34
+      "ms": 36
     },
     {
       "id": "M24",
@@ -1651,7 +1651,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M25",
@@ -1661,7 +1661,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M26",
@@ -1672,7 +1672,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 32
     },
     {
       "id": "M27",
@@ -1693,7 +1693,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 163
+      "ms": 170
     },
     {
       "id": "M29",
@@ -1714,7 +1714,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M31",
@@ -1724,7 +1724,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M32",
@@ -1745,7 +1745,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "M35",
@@ -1788,7 +1788,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "M39",
@@ -1799,7 +1799,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "M40",
@@ -1821,7 +1821,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "A01",
@@ -1831,7 +1831,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "A02",
@@ -1842,7 +1842,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 30
     },
     {
       "id": "A03",
@@ -1853,7 +1853,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 31
+      "ms": 32
     },
     {
       "id": "A04",
@@ -1863,7 +1863,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 26
     },
     {
       "id": "A05",
@@ -1883,7 +1883,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 26
     },
     {
       "id": "A07",
@@ -1904,7 +1904,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 30
+      "ms": 33
     },
     {
       "id": "A09",
@@ -1937,7 +1937,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "TR01",
@@ -1947,7 +1947,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "TR02",
@@ -1957,7 +1957,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 5
     },
     {
       "id": "TR03",
@@ -1967,7 +1967,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "TR04",
@@ -1987,7 +1987,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 8
     },
     {
       "id": "TR06",
@@ -1997,7 +1997,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 4
     },
     {
       "id": "TR07",
@@ -2048,7 +2048,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 126
+      "ms": 135
     },
     {
       "id": "TR12",
@@ -2058,7 +2058,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 212
+      "ms": 216
     },
     {
       "id": "TR14",
@@ -2091,7 +2091,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "TR13",
@@ -2176,7 +2176,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 50
+      "ms": 55
     },
     {
       "id": "RV08",
@@ -2187,7 +2187,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 27
     },
     {
       "id": "RV09",
@@ -2199,7 +2199,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 46
+      "ms": 51
     },
     {
       "id": "RV10",
@@ -2211,7 +2211,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 50
+      "ms": 55
     },
     {
       "id": "SG01",
@@ -2221,7 +2221,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "SG02",
@@ -2231,7 +2231,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "SG03",
@@ -2242,7 +2242,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 29
+      "ms": 28
     },
     {
       "id": "SG04",
@@ -2253,7 +2253,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 36
+      "ms": 41
     },
     {
       "id": "SG06",
@@ -2264,7 +2264,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 64
+      "ms": 69
     },
     {
       "id": "SG05",
@@ -2275,7 +2275,115 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 99
+      "ms": 107
+    },
+    {
+      "id": "RT01",
+      "name": "Business days and the close date: the first Monday-to-Friday of a month, the close of a month falls on the first business day after it, across year ends",
+      "reqs": [
+        "SET-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RT02",
+      "name": "Settlement lag: the last month with usage is before last month; no usage yet is not a lag; zero usage does not count",
+      "reqs": [
+        "SET-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RT03",
+      "name": "Hotel balance letter unanswered for two months: an old letter or none at all stops top-ups; no balance, no stop",
+      "reqs": [
+        "SET-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RT04",
+      "name": "The six steps of one month: each step follows the one before it, a difference sends the month to the hotel check, and the month counts as settled only with steps 1-4 done",
+      "reqs": [
+        "SET-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RT05",
+      "name": "Reminder list: who is told what, per the CEO table; contracts without a routine have none",
+      "reqs": [
+        "SET-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RT06",
+      "name": "Routine in the model: the sample settlements show their steps, deposits and buyouts have no routine, an overdue balance letter holds top-ups, and the reminder list reaches the contract view",
+      "reqs": [
+        "SET-4",
+        "SET-3",
+        "SET-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 27
+    },
+    {
+      "id": "RT07",
+      "name": "Settlement commands: step 1 and 2 by the SCM, step 3 and the close by finance support, steps in order, checked inputs, history, locked once settled, and the ledger never changes",
+      "reqs": [
+        "SET-4",
+        "SET-6",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 48
+    },
+    {
+      "id": "RT08",
+      "name": "Monthly close: from the first business day, once per month, never for a month that is not over, it lists what was still open, and a close or a settlement edited by hand is caught on load",
+      "reqs": [
+        "SET-6",
+        "D-3",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 89
+    },
+    {
+      "id": "RT10",
+      "name": "A month close forged together with the state hash, the audit chain and the anchor is still caught: the close has no audit entry of its own",
+      "reqs": [
+        "SET-6",
+        "D-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 31
+    },
+    {
+      "id": "RT09",
+      "name": "Settings of the routine are checked: the letter limit and the expiry notice have ranges",
+      "reqs": [
+        "CFG-1",
+        "SET-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
     },
     {
       "id": "OU01",
@@ -2295,7 +2403,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 2
     },
     {
       "id": "OU03",
@@ -2340,7 +2448,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 27
+      "ms": 28
     },
     {
       "id": "LO01",
@@ -2371,7 +2479,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 78
+      "ms": 82
     },
     {
       "id": "LO04",
@@ -2382,7 +2490,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 25
+      "ms": 27
     }
   ]
 }

@@ -10,6 +10,8 @@
   const PERMS = {
     'ledger.write': ['SCM', 'SUPPORT', 'ADMIN'], 'ledger.import': ['SCM', 'SUPPORT', 'ADMIN'], 'ellis.import': ['SCM', 'SUPPORT', 'ADMIN'], 'confirmation.write': ['SCM', 'SUPPORT', 'ADMIN'],
     'rating.edit': ['SCM', 'SUPPORT', 'ADMIN'], 'rating.commit': ['SCM', 'SUPPORT', 'ADMIN'], 'opinion.write': ['SCM', 'SUPPORT', 'ADMIN'],
+    'settle.invoice': ['SCM', 'SUPPORT', 'ADMIN'],            // steps 1, 2 and 5 of the settlement: invoice received, ELLIS comparison, hotel check (담당 SCM)
+    'settle.process': ['SUPPORT', 'ADMIN'],                   // steps 3 and 6: settle in ELLIS and close the month (경영지원)
     'review.sales': ['SCM', 'ADMIN'],                          // the sales side of the credit review (담당 SCM)
     'review.support': ['SUPPORT', 'ADMIN'],                    // the finance side, scored on its own from the registries and books (경영지원)
     'alert.update': ['SCM', 'SUPPORT', 'CEO', 'ADMIN'], 'alert.dismiss': ['CEO', 'ADMIN'],

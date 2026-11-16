@@ -3,17 +3,17 @@
 (function (root, factory) {
   const NS = root.OMH || (root.OMH = {});
   const dep = typeof require === 'function'
-    ? { Money: require('./core/money.js'), Dates: require('./core/dates.js'), Config: require('./core/config.js'), RBAC: require('./core/rbac.js'), Ledger: require('./engine/ledger.js'), Rating: require('./engine/rating.js'), Review: require('./engine/review.js'), Signals: require('./engine/signals.js'),
+    ? { Money: require('./core/money.js'), Dates: require('./core/dates.js'), Config: require('./core/config.js'), RBAC: require('./core/rbac.js'), Ledger: require('./engine/ledger.js'), Rating: require('./engine/rating.js'), Review: require('./engine/review.js'), Signals: require('./engine/signals.js'), Routine: require('./engine/routine.js'),
         Alerts: require('./engine/alerts.js'), Csv: require('./engine/csv.js'), Limit: require('./engine/limit.js'), Model: require('./engine/model.js'),
         Adapters: require('./adapters/adapters.js'), Auth: require('./core/auth.js'), Tracker: require('./engine/tracker.js'), Ellis: require('./adapters/ellis.js'), Seed: require('./data/seed.js') }
-    : { Money: NS.Money, Dates: NS.Dates, Config: NS.Config, RBAC: NS.RBAC, Ledger: NS.Ledger, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Alerts: NS.Alerts, Csv: NS.Csv, Limit: NS.Limit,
+    : { Money: NS.Money, Dates: NS.Dates, Config: NS.Config, RBAC: NS.RBAC, Ledger: NS.Ledger, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Routine: NS.Routine, Alerts: NS.Alerts, Csv: NS.Csv, Limit: NS.Limit,
         Model: NS.Model, Adapters: NS.Adapters, Auth: NS.Auth, Tracker: NS.Tracker, Ellis: NS.Ellis, Seed: NS.Seed };
   const api = factory(dep);
   NS.Store = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function (dep) {
   'use strict';
-  const { Money, Dates, Config, RBAC, Ledger, Rating, Review, Signals, Alerts, Csv, Limit, Model, Adapters, Auth, Tracker, Ellis, Seed } = dep;
+  const { Money, Dates, Config, RBAC, Ledger, Rating, Review, Signals, Routine, Alerts, Csv, Limit, Model, Adapters, Auth, Tracker, Ellis, Seed } = dep;
   const DEFAULT_KEY = 'omh_hfr_v1';                       // NEVER the legacy key 'omh_prg_v42'
   const REQUIRED_KEYS = ['hotels', 'contracts', 'ledger', 'config', 'ratings', 'alerts', 'audit'];
 
@@ -46,7 +46,7 @@
     return Config.validate(s.config).length === 0 && integrityOk(s, [s.config.asOf, nowDate].sort().pop());   // nothing may be dated after both the as-of date and today
   }
   /** Hash of everything the commands may change except alerts (which refresh by themselves): ledger, masters, ratings, confirmations, sales, config. */
-  function coreHashOf(s) { const parts = [s.ledger, s.hotels, s.contracts, s.ratings, s.confirmations, s.config, s.sales, s.reviews || {}]; if (s.ellis) parts.push(s.ellis); return Adapters.hash53(JSON.stringify(parts)); }   // 'ellis' joins the hash only once imported, so states saved before it existed still verify
+  function coreHashOf(s) { const parts = [s.ledger, s.hotels, s.contracts, s.ratings, s.confirmations, s.config, s.sales, s.reviews || {}, s.settlements || {}, s.monthCloses || {}]; if (s.ellis) parts.push(s.ellis); return Adapters.hash53(JSON.stringify(parts)); }   // 'ellis' joins the hash only once imported, so states saved before it existed still verify
   /** The newest audit entry that carries a state hash must agree with the stored state (detects edits made outside the commands). */
   function coreOk(s) { for (let k = s.audit.length - 1; k >= 0; k--) { const d = s.audit[k].detail; if (d && d.coreHash) return d.coreHash === coreHashOf(s); } return true; }
   /** State that claims a decision happened must have a matching successful audit entry (forged approvals / dismissals are flagged). */
@@ -54,6 +54,7 @@
     const last = pred => { for (let k = s.audit.length - 1; k >= 0; k--) if (pred(s.audit[k])) return s.audit[k]; return null; };
     const ids = new Set();
     if (s.ellis) { const e = last(x => x.action === 'ELLIS_IMPORT_SNAPSHOT' && x.outcome === 'OK'); if (!e || !e.detail || e.detail.hash !== s.ellis.snapshot.hash) return false; }   // an ELLIS snapshot must come from a recorded import
+    for (const p of Object.keys(s.monthCloses || {})) { if (!last(x => x.action === 'MONTH_CLOSE' && x.outcome === 'OK' && x.entity === p)) return false; }        // a month close needs its audit entry
     for (const ap of s.approvals || []) {
       if (ids.has(ap.approvalId)) return false; ids.add(ap.approvalId);
       const draft = last(e => e.action === 'PORTAL_DRAFT' && e.outcome === 'OK' && e.detail && e.detail.approvalId === ap.approvalId);
@@ -133,6 +134,12 @@
     }
 
     /** Run a command: permission check -> fn -> alert refresh -> audit -> persist. fn must validate BEFORE mutating and return {ok,...}. */
+    /** A settlement can only be recorded for a past month of a contract that keeps a usage ledger, and not once the month is closed. */
+    function settlePeriodErrors(s, c, period) {
+      if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(String(period))) return 'E_PERIOD_INVALID'; if (period > Routine.lastMonthOf(s.config.asOf)) return 'E_PERIOD_FUTURE'; if (!Routine.applicable(c)) return 'E_SETTLE_NOT_APPLICABLE'; if ((s.monthCloses || {})[period]) return 'E_MONTH_CLOSED'; return null;
+    }
+    function settleGet(s, contractId, period) { return ((s.settlements || {})[contractId] || {})[period] || null; }
+    function settleRec(s, contractId, period) { s.settlements = s.settlements || {}; const byC = s.settlements[contractId] || (s.settlements[contractId] = {}); return byC[period] || (byC[period] = { invoice: null, ellis: null, settled: null, history: [] }); }
     function mutate(perm, action, entity, fn) {
       try { requirePerm(perm); }
       catch (e) { auditAdd(session.actor, action, String(entity), 'DENIED', { perm }); try { persist(); } catch (e2) { /* storage failure must not mask the denial */ } throw e; }
@@ -276,6 +283,48 @@
           const full = {}; for (const id of Review.ITEM_IDS) full[id] = answers[id] || 'UNCHECKED'; rec[key] = { reviewer: session.actor, at: s.config.asOf, answers: full };
           const dec = Review.decide(rec, s.config.review); const mine = side === 'SUPPORT' ? dec.support : dec.sales;
           return { ok: true, decision: dec, audit: { side, score: mine.score, knockout: mine.knockout, status: dec.status, grade: dec.grade } };
+        });
+      },
+      /** Settlement step 1: the hotel invoice (usage statement) of a month arrived. Number, date received and amount; the earlier record stays in the history. */
+      recordInvoice(contractId, period, invoice) {
+        return mutate('settle.invoice', 'SETTLE_INVOICE', contractId + ':' + period, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; const pe = settlePeriodErrors(s, c, period); if (pe) return { ok: false, errors: [pe] };
+          const inv = invoice || {}; const no = String(inv.no == null ? '' : inv.no).trim(); if (!no || no.length > 40) return { ok: false, errors: ['E_INVOICE_NO'] };
+          if (!Dates.isDate(inv.receivedAt) || inv.receivedAt > s.config.asOf || inv.receivedAt < period + '-01') return { ok: false, errors: ['E_INVOICE_DATE'] };
+          if (!Number.isSafeInteger(inv.amountMinor) || inv.amountMinor <= 0 || inv.amountMinor > 1e15) return { ok: false, errors: ['E_AMOUNT_INVALID'] };
+          const rec = settleRec(s, contractId, period); if (rec.settled) return { ok: false, errors: ['E_SETTLED_LOCKED'] };
+          if (rec.invoice) rec.history.push({ step: 1, replacedAt: s.config.asOf, by: rec.invoice.by, was: rec.invoice }); rec.invoice = { no, receivedAt: inv.receivedAt, amountMinor: inv.amountMinor, by: session.actor, at: s.config.asOf }; rec.ellis = null;
+          return { ok: true, audit: { contractId, period, no, amountMinor: inv.amountMinor } };
+        });
+      },
+      /** Settlement step 2: the invoice compared with the ELLIS check-out bookings. MATCH lets the settlement go on; DIFF needs a note and goes to the hotel (step 5). */
+      recordEllisCheck(contractId, period, check) {
+        return mutate('settle.invoice', 'SETTLE_ELLIS_CHECK', contractId + ':' + period, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; const pe = settlePeriodErrors(s, c, period); if (pe) return { ok: false, errors: [pe] };
+          const ck = check || {}; if (ck.result !== 'MATCH' && ck.result !== 'DIFF') return { ok: false, errors: ['E_SETTLE_RESULT'] }; const note = String(ck.note == null ? '' : ck.note).trim().slice(0, 300);
+          if (ck.result === 'DIFF' && note.length < 3) return { ok: false, errors: ['E_DIFF_NOTE_REQUIRED'] };
+          if (ck.ellisMinor != null && !(Number.isSafeInteger(ck.ellisMinor) && ck.ellisMinor >= 0 && ck.ellisMinor <= 1e15)) return { ok: false, errors: ['E_AMOUNT_INVALID'] };
+          const rec = settleGet(s, contractId, period); if (!rec || !rec.invoice) return { ok: false, errors: ['E_STEP_ORDER'] }; if (rec.settled) return { ok: false, errors: ['E_SETTLED_LOCKED'] };
+          if (rec.ellis) rec.history.push({ step: 2, replacedAt: s.config.asOf, by: rec.ellis.by, was: rec.ellis }); rec.ellis = { result: ck.result, note, ellisMinor: ck.ellisMinor == null ? null : ck.ellisMinor, by: session.actor, at: s.config.asOf };
+          return { ok: true, audit: { contractId, period, result: ck.result } };
+        });
+      },
+      /** Settlement step 3: the matching part was settled in ELLIS (done in ELLIS by finance support; here only the date is recorded). Needs a MATCH in step 2. */
+      recordSettlement(contractId, period, settledAt) {
+        return mutate('settle.process', 'SETTLE_DONE', contractId + ':' + period, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; const pe = settlePeriodErrors(s, c, period); if (pe) return { ok: false, errors: [pe] };
+          if (!Dates.isDate(settledAt) || settledAt > s.config.asOf || settledAt < period + '-01') return { ok: false, errors: ['E_INVOICE_DATE'] };
+          const rec = settleGet(s, contractId, period); if (!rec || !rec.invoice || !rec.ellis || rec.ellis.result !== 'MATCH') return { ok: false, errors: ['E_STEP_ORDER'] }; if (rec.settled) return { ok: false, errors: ['E_SETTLED_LOCKED'] };
+          rec.settled = { settledAt, by: session.actor, at: s.config.asOf }; return { ok: true, audit: { contractId, period, settledAt } };
+        });
+      },
+      /** Settlement step 6: the monthly close on the first business day. The close records who closed it and which contracts were still open; it never changes the ledger. */
+      closeMonth(period) {
+        return mutate('settle.process', 'MONTH_CLOSE', String(period), s => {
+          if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(String(period))) return { ok: false, errors: ['E_PERIOD_INVALID'] }; const asOf = s.config.asOf; if (period > Routine.lastMonthOf(asOf)) return { ok: false, errors: ['E_PERIOD_FUTURE'] };
+          s.monthCloses = s.monthCloses || {}; if (s.monthCloses[period]) return { ok: false, errors: ['E_MONTH_CLOSED'] }; if (asOf < Routine.closeDate(period)) return { ok: false, errors: ['E_CLOSE_TOO_EARLY'] };
+          const open = [], done = []; const m = Model.compute(s); for (const v of m.views) { if (!Routine.applicable(v.contract)) continue; const st = Routine.steps({ rec: ((s.settlements || {})[v.contractId] || {})[period] || null, consMinor: v.consByMonth[period] || 0, recon: v.recon, period, closed: null }); (Routine.settled(st) ? done : open).push(v.contractId); }
+          s.monthCloses[period] = { closedAt: asOf, closedBy: session.actor, settledCount: done.length, openContracts: open }; return { ok: true, audit: { period, settledCount: done.length, openCount: open.length } };
         });
       },
       /** The risk codes of a contract (C1-C5 severe, G1-G8 general): what the SCM or finance support found on site or in the papers. They feed signal S8. Replaces the list; the earlier list stays in the history. */

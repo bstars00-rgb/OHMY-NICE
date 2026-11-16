@@ -120,5 +120,11 @@
  {"id":"SIG-5","pri":"P1","src":"대표 확정 기준 2026-11-13","title":"위험 코드(중대 C1~C5, 일반 G1~G8) 입력과 이력","design":"17_Prototype_Specification 7·8장","impl":"js/store.js (setRiskFlags), js/ui/views_a.js"},
  {"id":"SIG-6","pri":"P1","src":"대표 확정 기준 2026-11-13","title":"연말 규칙: 12월 신규·충전 차단, 날짜는 설정값","design":"17_Prototype_Specification 7·8장","impl":"js/core/config.js, js/engine/model.js"},
  {"id":"LIM-5","pri":"P1","src":"대표 확정 기준 2026-11-13","title":"한도 근거(객실 수·월 객실매출) 입력과 이력","design":"17_Prototype_Specification 7·8장","impl":"js/store.js (setHotelBasis), js/ui/views_a.js"},
- {"id":"CFG-1","pri":"P1","src":"대표 확정 기준 2026-11-13","title":"설정값 검증(범위·날짜)","design":"17_Prototype_Specification 7·8장","impl":"js/core/config.js"}
+ {"id":"CFG-1","pri":"P1","src":"대표 확정 기준 2026-11-13","title":"설정값 검증(범위·날짜)","design":"17_Prototype_Specification 7·8장","impl":"js/core/config.js"},
+ {"id":"SET-1","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"영업일(월~금)과 월 마감일(다음 달 첫 영업일) 계산","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js"},
+ {"id":"SET-2","pri":"P1","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"정산 밀림: 마지막 소진 월이 지난달보다 앞선 계약","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js"},
+ {"id":"SET-3","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"호텔 잔액 확인서 2개월 미회신이면 충전 정지","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js, js/engine/model.js"},
+ {"id":"SET-4","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"정산 절차 ①~⑥(청구서, ELLIS 대조, 정산일, 원장 차감, 호텔 확인, 월 마감)와 역할 분리","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js, js/store.js, js/ui/views_d.js"},
+ {"id":"SET-5","pri":"P1","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"알림 목록: 조건·조치·받는 사람(대표 확정 표)","design":"17_Prototype_Specification 4.8, 19장","impl":"js/engine/routine.js, js/ui/views_d.js"},
+ {"id":"SET-6","pri":"P0","src":"대표 확정 기준 2026-11-13 (정산과 감시)","title":"월 마감: 첫 영업일부터, 월 1회, 감사 기록과 변조 감지","design":"17_Prototype_Specification 4.8, 19장","impl":"js/store.js"}
 ]

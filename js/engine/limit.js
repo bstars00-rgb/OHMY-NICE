@@ -20,7 +20,7 @@
    */
   function compute(input) {
     const { grade, forecast: f, outstandingMinor, contract, alerts, cfg } = input; const ratingFlags = input.ratingFlags || []; const hotel = input.hotel || {}; const rv = cfg.review;
-    const months0 = rv.gradeMonths[grade] != null ? rv.gradeMonths[grade] : 0; const short = input.directMonths != null && input.directMonths < rv.shortHistoryMonths; const mult = short ? Math.min(months0, rv.shortHistoryFactor) : months0;
+    const months0 = cfg.gradeMultipliers[grade] != null ? cfg.gradeMultipliers[grade] : 0; const short = input.directMonths != null && input.directMonths < rv.shortHistoryMonths; const mult = short ? Math.min(months0, rv.shortHistoryFactor) : months0;
     const out = { grade, multiplier: mult, gradeMonths: months0, shortHistory: short, directMonths: input.directMonths == null ? null : input.directMonths, outstandingMinor, currency: contract.currency, guards: [], holdReasons: [], notes: [], dataQuality: f.quality };
     if (contract.limitCap && Number.isSafeInteger(contract.limitCap.amountMinor) && contract.limitCap.amountMinor >= 0) out.manualCapMinor = contract.limitCap.amountMinor;   // hotel-level cap entered by a person
     const hmax = rv.hotelMax[contract.currency]; if (Number.isSafeInteger(hmax)) out.hotelMaxMinor = hmax; else { out.hotelMaxPending = true; out.notes.push('HOTEL_MAX_PENDING'); }
