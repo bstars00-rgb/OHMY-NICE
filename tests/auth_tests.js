@@ -91,7 +91,7 @@ module.exports = function (h) {
     const mx = RBAC.matrix(); a.eq(mx.length, Object.keys(RBAC.PERMS).length);
     for (const x of mx) { for (const r of RBAC.ROLES) a.eq(x.roles[r], RBAC.can(r, x.perm), x.perm + '/' + r); a.ok(UI.LABELS.perm[x.perm] && UI.LABELS.perm[x.perm].ko && UI.LABELS.perm[x.perm].en, 'label for ' + x.perm); }
     a.deepEq(Object.keys(UI.LABELS.perm).sort(), Object.keys(RBAC.PERMS).sort(), 'no stale labels');
-    a.deepEq(mx.find(x => x.perm === 'approval.review').roles, { VIEWER: false, SCM: false, CEO: true, ADMIN: false });
+    a.deepEq(mx.find(x => x.perm === 'approval.review').roles, { VIEWER: false, SCM: false, SUPPORT: false, CEO: true, ADMIN: false });
     a.ok(RBAC.ROLES.every(r => r !== 'VIEWER' || mx.every(x => !x.roles.VIEWER)), 'the viewer has no write permission');
   });
 

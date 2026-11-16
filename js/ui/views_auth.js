@@ -10,7 +10,7 @@
   const U = NS.UI, { L, esc, tt, lab, chip } = U; const Auth = NS.Auth;
   const NAME_KO = '한국어', NAME_JA = '日本語', NAME_VI = 'Tiếng Việt';                  // language names are shown in their own language and are not translated
   const LANG_NAMES = { ko: NAME_KO, en: 'EN', ja: NAME_JA, vi: NAME_VI };
-  const ROLE_DESC = { VIEWER: () => L('화면 조회만 가능(입력·검토 의견 기록 불가)', 'View only (no entry, no review feedback)'), SCM: () => L('원장·CSV·ELLIS 입력, 평가 입력, 검토 요청서 초안 작성·제출', 'Ledger / CSV / ELLIS entry, rating input, review-request drafts and submission'),
+  const ROLE_DESC = { VIEWER: () => L('화면 조회만 가능(입력·검토 의견 기록 불가)', 'View only (no entry, no review feedback)'), SCM: () => L('원장·CSV·ELLIS 입력, 신용 심사 채점(영업), 검토 요청서 초안 작성·제출', 'Ledger / CSV / ELLIS entry, the sales side of the credit review, review-request drafts and submission'), SUPPORT: () => L('경영지원: 신용 심사 채점(검증), 원장·정산 입력, 검토 요청서 초안 작성·제출', 'Finance support: the verifying side of the credit review, ledger and settlement entry, review-request drafts and submission'),
     CEO: () => L('대표 검토 의견 기록, 경보 기각, 감사 로그 열람', 'Record CEO review feedback, dismiss alerts, read the audit log'), ADMIN: () => L('대표 검토 의견 기록을 뺀 모든 업무와 설정 변경', 'Everything except CEO review feedback, plus configuration') };
 
   function login(ctx) {

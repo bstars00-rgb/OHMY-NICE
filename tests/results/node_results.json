@@ -1,12 +1,12 @@
 {
-  "ranAt": "2026-11-14T07:03:08.287Z",
+  "ranAt": "2026-11-16T01:52:38.316Z",
   "node": "v24.14.1",
   "suite": "node",
-  "total": 202,
-  "passed": 202,
+  "total": 218,
+  "passed": 218,
   "failed": 0,
   "skipped": 0,
-  "ms": 490786,
+  "ms": 9551,
   "results": [
     {
       "id": "L01",
@@ -17,7 +17,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 40
+      "ms": 29
     },
     {
       "id": "L02",
@@ -28,7 +28,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "L03",
@@ -39,7 +39,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "L04",
@@ -60,7 +60,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 62
+      "ms": 37
     },
     {
       "id": "L06",
@@ -70,7 +70,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 33
+      "ms": 23
     },
     {
       "id": "L07",
@@ -92,7 +92,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 46
+      "ms": 25
     },
     {
       "id": "L09",
@@ -102,7 +102,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 24
     },
     {
       "id": "F01",
@@ -112,7 +112,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 28
     },
     {
       "id": "F02",
@@ -134,7 +134,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 27
     },
     {
       "id": "F04",
@@ -144,7 +144,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 68
+      "ms": 48
     },
     {
       "id": "F05",
@@ -154,7 +154,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 66
+      "ms": 47
     },
     {
       "id": "F06",
@@ -175,7 +175,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 36
+      "ms": 24
     },
     {
       "id": "F08",
@@ -186,7 +186,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "R01",
@@ -206,7 +206,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "R03",
@@ -228,7 +228,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 38
+      "ms": 29
     },
     {
       "id": "R05",
@@ -239,7 +239,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 33
+      "ms": 25
     },
     {
       "id": "R06",
@@ -250,7 +250,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 35
+      "ms": 24
     },
     {
       "id": "R07",
@@ -270,7 +270,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 51
+      "ms": 39
     },
     {
       "id": "R09",
@@ -280,17 +280,17 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 25
     },
     {
       "id": "M01",
-      "name": "Grade multipliers A×2, B×1, C×0.5, D×0 on the 3-month average",
+      "name": "Grade months A 2, B 1, C and D 0 on the 3-month average",
       "reqs": [
         "M04-1"
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M02",
@@ -301,7 +301,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "M03",
@@ -312,17 +312,18 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 71
+      "ms": 49
     },
     {
       "id": "M04",
-      "name": "Extra safeguards: contract end, non-refundable, refund unknown, low recoverability",
+      "name": "The CEO's limit: the smallest of four values (purchases x grade months, room-count cap, 10% of room revenue, hotel maximum); short trade, grade months, first deposit and the hold over the maximum",
       "reqs": [
-        "M04-4"
+        "M04-4",
+        "REV-5"
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 4
     },
     {
       "id": "M05",
@@ -333,7 +334,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 35
+      "ms": 25
     },
     {
       "id": "M06",
@@ -344,7 +345,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 35
+      "ms": 23
     },
     {
       "id": "M07",
@@ -366,7 +367,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 35
+      "ms": 27
     },
     {
       "id": "M09",
@@ -377,7 +378,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 34
+      "ms": 24
     },
     {
       "id": "A01",
@@ -387,7 +388,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 31
     },
     {
       "id": "A02",
@@ -398,7 +399,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "A03",
@@ -418,7 +419,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "A05",
@@ -428,7 +429,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 34
+      "ms": 24
     },
     {
       "id": "A06",
@@ -439,7 +440,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "A07",
@@ -449,7 +450,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 67
+      "ms": 48
     },
     {
       "id": "A08",
@@ -469,7 +470,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 0
+      "ms": 1
     },
     {
       "id": "CS01",
@@ -480,7 +481,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "CS02",
@@ -492,7 +493,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 66
+      "ms": 48
     },
     {
       "id": "CS03",
@@ -505,7 +506,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 77
+      "ms": 38
     },
     {
       "id": "CS04",
@@ -516,7 +517,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 51
+      "ms": 31
     },
     {
       "id": "CS05",
@@ -526,7 +527,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 39
+      "ms": 24
     },
     {
       "id": "X12",
@@ -537,7 +538,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 6
     },
     {
       "id": "X01",
@@ -548,7 +549,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 46
+      "ms": 37
     },
     {
       "id": "X03",
@@ -558,7 +559,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 40
+      "ms": 30
     },
     {
       "id": "X02",
@@ -570,7 +571,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 65
+      "ms": 42
     },
     {
       "id": "X17",
@@ -581,7 +582,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 5
     },
     {
       "id": "X06",
@@ -592,7 +593,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 53
+      "ms": 36
     },
     {
       "id": "X04",
@@ -603,7 +604,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 160
+      "ms": 110
     },
     {
       "id": "X05",
@@ -615,7 +616,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 132
+      "ms": 78
     },
     {
       "id": "X08",
@@ -627,7 +628,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 24
     },
     {
       "id": "X13",
@@ -639,7 +640,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 25
     },
     {
       "id": "X09",
@@ -652,7 +653,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 56
+      "ms": 41
     },
     {
       "id": "X15",
@@ -662,7 +663,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 52
+      "ms": 34
     },
     {
       "id": "X18",
@@ -673,7 +674,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 57
+      "ms": 37
     },
     {
       "id": "X11",
@@ -685,7 +686,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 10
+      "ms": 7
     },
     {
       "id": "X19",
@@ -713,7 +714,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 418
+      "ms": 344
     },
     {
       "id": "V02",
@@ -727,7 +728,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 154
+      "ms": 138
     },
     {
       "id": "V03",
@@ -739,7 +740,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 42
+      "ms": 30
     },
     {
       "id": "V03b",
@@ -750,7 +751,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 88
+      "ms": 53
     },
     {
       "id": "V03c",
@@ -761,7 +762,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 45
+      "ms": 27
     },
     {
       "id": "V03d",
@@ -773,7 +774,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 43
+      "ms": 27
     },
     {
       "id": "V04",
@@ -784,7 +785,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 214
+      "ms": 36
     },
     {
       "id": "V05",
@@ -796,7 +797,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2229
+      "ms": 301
     },
     {
       "id": "P01",
@@ -806,7 +807,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 997
+      "ms": 142
     },
     {
       "id": "P02",
@@ -817,7 +818,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 5630
+      "ms": 717
     },
     {
       "id": "D01",
@@ -829,7 +830,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 334
+      "ms": 32
     },
     {
       "id": "D02",
@@ -840,7 +841,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 0
     },
     {
       "id": "D03",
@@ -850,7 +851,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 429
+      "ms": 29
     },
     {
       "id": "D04",
@@ -861,7 +862,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 524
+      "ms": 46
     },
     {
       "id": "D05",
@@ -872,7 +873,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 719
+      "ms": 52
     },
     {
       "id": "D06",
@@ -882,7 +883,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 427
+      "ms": 47
     },
     {
       "id": "D07",
@@ -892,7 +893,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 263
+      "ms": 31
     },
     {
       "id": "D08",
@@ -903,7 +904,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1756
+      "ms": 221
     },
     {
       "id": "D09",
@@ -925,7 +926,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 211
+      "ms": 32
     },
     {
       "id": "D11",
@@ -936,7 +937,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 335
+      "ms": 48
     },
     {
       "id": "D12",
@@ -947,7 +948,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 1
     },
     {
       "id": "D14",
@@ -959,7 +960,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 429487
+      "ms": 84
     },
     {
       "id": "E01",
@@ -972,7 +973,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6834
+      "ms": 553
     },
     {
       "id": "E02",
@@ -983,7 +984,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 317
+      "ms": 27
     },
     {
       "id": "E03",
@@ -995,7 +996,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 255
+      "ms": 26
     },
     {
       "id": "E04",
@@ -1016,7 +1017,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "F01",
@@ -1028,7 +1029,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 302
+      "ms": 32
     },
     {
       "id": "F02",
@@ -1039,7 +1040,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "F03",
@@ -1051,7 +1052,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 451
+      "ms": 29
     },
     {
       "id": "F04",
@@ -1062,7 +1063,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 467
+      "ms": 29
     },
     {
       "id": "F06",
@@ -1074,7 +1075,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1548
+      "ms": 184
     },
     {
       "id": "AS01",
@@ -1086,7 +1087,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 4
     },
     {
       "id": "AS02",
@@ -1097,7 +1098,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 551
+      "ms": 66
     },
     {
       "id": "AS03",
@@ -1109,7 +1110,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 658
+      "ms": 68
     },
     {
       "id": "AS04",
@@ -1120,7 +1121,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 257
+      "ms": 40
     },
     {
       "id": "F10",
@@ -1131,7 +1132,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 607
+      "ms": 59
     },
     {
       "id": "AD01",
@@ -1144,7 +1145,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 810
+      "ms": 85
     },
     {
       "id": "AD02",
@@ -1155,7 +1156,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 247
+      "ms": 32
     },
     {
       "id": "AL01",
@@ -1166,7 +1167,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 501
+      "ms": 55
     },
     {
       "id": "AL02",
@@ -1177,7 +1178,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 517
+      "ms": 59
     },
     {
       "id": "AL03",
@@ -1188,7 +1189,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 276
+      "ms": 33
     },
     {
       "id": "AL04",
@@ -1199,7 +1200,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 0
     },
     {
       "id": "BN01",
@@ -1210,7 +1211,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2098
+      "ms": 246
     },
     {
       "id": "F05",
@@ -1221,7 +1222,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 593
+      "ms": 74
     },
     {
       "id": "F07",
@@ -1231,7 +1232,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 290
+      "ms": 37
     },
     {
       "id": "F08",
@@ -1241,7 +1242,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 220
+      "ms": 25
     },
     {
       "id": "F09",
@@ -1252,7 +1253,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 326
+      "ms": 47
     },
     {
       "id": "H01",
@@ -1264,7 +1265,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 347
+      "ms": 29
     },
     {
       "id": "H02",
@@ -1275,7 +1276,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 675
+      "ms": 86
     },
     {
       "id": "H03",
@@ -1287,7 +1288,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 246
+      "ms": 25
     },
     {
       "id": "S10",
@@ -1298,7 +1299,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6857
+      "ms": 784
     },
     {
       "id": "H04",
@@ -1311,7 +1312,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1079
+      "ms": 157
     },
     {
       "id": "H05",
@@ -1333,7 +1334,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 0
     },
     {
       "id": "I01",
@@ -1344,7 +1345,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 152
+      "ms": 20
     },
     {
       "id": "I02",
@@ -1355,7 +1356,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 3
     },
     {
       "id": "I03",
@@ -1366,7 +1367,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 0
     },
     {
       "id": "I04",
@@ -1384,7 +1385,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3309
+      "ms": 460
     },
     {
       "id": "I05",
@@ -1395,7 +1396,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6
+      "ms": 2
     },
     {
       "id": "M01",
@@ -1406,7 +1407,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "M02",
@@ -1416,7 +1417,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 1
     },
     {
       "id": "M03",
@@ -1427,7 +1428,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 52
+      "ms": 7
     },
     {
       "id": "M04",
@@ -1438,7 +1439,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 236
+      "ms": 28
     },
     {
       "id": "M05",
@@ -1448,7 +1449,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 0
     },
     {
       "id": "M06",
@@ -1459,7 +1460,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 0
     },
     {
       "id": "M07",
@@ -1469,7 +1470,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "M08",
@@ -1480,7 +1481,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6
+      "ms": 1
     },
     {
       "id": "M09",
@@ -1490,7 +1491,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 175
+      "ms": 26
     },
     {
       "id": "M10",
@@ -1501,7 +1502,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 0
     },
     {
       "id": "M11",
@@ -1511,7 +1512,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 208
+      "ms": 28
     },
     {
       "id": "M12",
@@ -1522,7 +1523,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 697
+      "ms": 86
     },
     {
       "id": "M13",
@@ -1532,7 +1533,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 238
+      "ms": 28
     },
     {
       "id": "M14",
@@ -1542,7 +1543,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 266
+      "ms": 36
     },
     {
       "id": "M15",
@@ -1552,7 +1553,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 229
+      "ms": 28
     },
     {
       "id": "M16",
@@ -1562,7 +1563,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 16
+      "ms": 2
     },
     {
       "id": "M17",
@@ -1572,7 +1573,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2309
+      "ms": 305
     },
     {
       "id": "M18",
@@ -1584,7 +1585,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 196
+      "ms": 30
     },
     {
       "id": "M19",
@@ -1595,7 +1596,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 0
     },
     {
       "id": "M20",
@@ -1606,7 +1607,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1029
+      "ms": 123
     },
     {
       "id": "M21",
@@ -1617,7 +1618,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 0
     },
     {
       "id": "M22",
@@ -1628,7 +1629,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1556
+      "ms": 215
     },
     {
       "id": "M23",
@@ -1639,7 +1640,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 227
+      "ms": 34
     },
     {
       "id": "M24",
@@ -1650,7 +1651,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "M25",
@@ -1660,7 +1661,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 0
     },
     {
       "id": "M26",
@@ -1671,7 +1672,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 218
+      "ms": 31
     },
     {
       "id": "M27",
@@ -1681,7 +1682,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 0
     },
     {
       "id": "M28",
@@ -1692,7 +1693,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1186
+      "ms": 163
     },
     {
       "id": "M29",
@@ -1703,7 +1704,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 2
     },
     {
       "id": "M30",
@@ -1713,7 +1714,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 3
+      "ms": 0
     },
     {
       "id": "M31",
@@ -1723,7 +1724,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "M32",
@@ -1734,7 +1735,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 0
     },
     {
       "id": "M34",
@@ -1744,7 +1745,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 1
     },
     {
       "id": "M35",
@@ -1755,7 +1756,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 0
     },
     {
       "id": "M36",
@@ -1766,7 +1767,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 1
     },
     {
       "id": "M37",
@@ -1776,7 +1777,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 5
+      "ms": 1
     },
     {
       "id": "M38",
@@ -1787,7 +1788,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 11
+      "ms": 1
     },
     {
       "id": "M39",
@@ -1798,7 +1799,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 2
     },
     {
       "id": "M40",
@@ -1809,7 +1810,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 9
+      "ms": 1
     },
     {
       "id": "M33",
@@ -1820,7 +1821,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 0
     },
     {
       "id": "A01",
@@ -1841,7 +1842,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 204
+      "ms": 27
     },
     {
       "id": "A03",
@@ -1852,7 +1853,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 242
+      "ms": 31
     },
     {
       "id": "A04",
@@ -1862,7 +1863,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 191
+      "ms": 25
     },
     {
       "id": "A05",
@@ -1872,7 +1873,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 241
+      "ms": 32
     },
     {
       "id": "A06",
@@ -1882,7 +1883,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 174
+      "ms": 25
     },
     {
       "id": "A07",
@@ -1892,7 +1893,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 396
+      "ms": 53
     },
     {
       "id": "A08",
@@ -1903,7 +1904,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 227
+      "ms": 30
     },
     {
       "id": "A09",
@@ -1915,7 +1916,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 257
+      "ms": 38
     },
     {
       "id": "A10",
@@ -1926,7 +1927,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "A11",
@@ -1936,7 +1937,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "TR01",
@@ -1946,7 +1947,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 0
     },
     {
       "id": "TR02",
@@ -1956,7 +1957,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 33
+      "ms": 4
     },
     {
       "id": "TR03",
@@ -1966,7 +1967,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 2
     },
     {
       "id": "TR04",
@@ -1976,7 +1977,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 48
+      "ms": 2
     },
     {
       "id": "TR05",
@@ -1986,7 +1987,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 32
+      "ms": 7
     },
     {
       "id": "TR06",
@@ -1996,7 +1997,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 14
+      "ms": 3
     },
     {
       "id": "TR07",
@@ -2006,7 +2007,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 10
+      "ms": 2
     },
     {
       "id": "TR08",
@@ -2016,7 +2017,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 10
+      "ms": 1
     },
     {
       "id": "TR09",
@@ -2026,7 +2027,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 0
     },
     {
       "id": "TR10",
@@ -2036,7 +2037,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 4
+      "ms": 1
     },
     {
       "id": "TR11",
@@ -2047,7 +2048,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 927
+      "ms": 126
     },
     {
       "id": "TR12",
@@ -2057,7 +2058,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 488
+      "ms": 212
     },
     {
       "id": "TR14",
@@ -2068,7 +2069,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 18
+      "ms": 3
     },
     {
       "id": "TR15",
@@ -2079,7 +2080,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 54
+      "ms": 7
     },
     {
       "id": "TR16",
@@ -2090,7 +2091,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 1
     },
     {
       "id": "TR13",
@@ -2101,7 +2102,180 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 12
+      "ms": 2
+    },
+    {
+      "id": "RV01",
+      "name": "Review items: five areas of 100 points in total with 16 scored items, three knock-out items without points, every item named in Korean and English",
+      "reqs": [
+        "REV-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RV02",
+      "name": "Scoring: GOOD 1, CAUTION 0.5, ISSUE 0, UNCHECKED 0 (an item nobody answered scores 0); grade bands A 80, B 70, C 50 with exact boundaries",
+      "reqs": [
+        "REV-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RV03",
+      "name": "The CEO guideline cases: 85+85 A and submitted; 73+72 B and submitted; 67+67 C rejected; 85+60 rejected (the lower counts); a knock-out with score 90 is D and rejected; the same person twice gives no judgement",
+      "reqs": [
+        "REV-2",
+        "REV-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RV04",
+      "name": "Review states: nothing done, one side only, a missing reviewer name; submit needs a lower score of exactly the line or more; each knock-out item makes D, other items never do",
+      "reqs": [
+        "REV-2",
+        "REV-3"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "RV05",
+      "name": "Answer checks: unknown items and values are refused",
+      "reqs": [
+        "REV-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "RV06",
+      "name": "Review settings: the values the CEO confirmed are in place and approved; every section is validated",
+      "reqs": [
+        "REV-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "RV07",
+      "name": "Credit review in the store: each side is scored by its own role, the reviewer is the signed-in person, earlier answers stay in the history, the decision follows when both sides are in, and nothing touches the ledger",
+      "reqs": [
+        "REV-2",
+        "REV-6",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 50
+    },
+    {
+      "id": "RV08",
+      "name": "The grade comes from the review, not from the data-driven score: the reference score is kept next to it, a verified critical fact still forces D, no review means NR",
+      "reqs": [
+        "REV-2",
+        "REV-6"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 25
+    },
+    {
+      "id": "RV09",
+      "name": "Only a passed review lets a request be drafted: the lower score must reach the submit line with no knock-out; a request for a C, D, unreviewed or same-reviewer contract is refused and nothing is stored",
+      "reqs": [
+        "REV-3",
+        "REV-6",
+        "M09-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 46
+    },
+    {
+      "id": "RV10",
+      "name": "Review data is protected like the rest: a stored review edited by hand is caught on load, and a reload gives the same decisions",
+      "reqs": [
+        "REV-6",
+        "D-3",
+        "D-5"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 50
+    },
+    {
+      "id": "SG01",
+      "name": "Signals S1-S8: each line of the CEO sits exactly where the standard puts it (boundary values stay in the lower colour)",
+      "reqs": [
+        "SIG-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 1
+    },
+    {
+      "id": "SG02",
+      "name": "Hotel colour: the worst signal wins, waiting-for-data never turns green, deposits/buyouts/monthly blocks have no signals, a closed hotel or a drop of two grades is red, a negative balance at least yellow",
+      "reqs": [
+        "SIG-2"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 0
+    },
+    {
+      "id": "SG03",
+      "name": "Signals in the model: red blocks the top-up request and zeroes the available top-up, yellow holds it, deposits and buyouts show no signal, and the portfolio counts add up",
+      "reqs": [
+        "SIG-3",
+        "SIG-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 29
+    },
+    {
+      "id": "SG04",
+      "name": "Risk codes are entered by the SCM or finance, checked against the list, kept in a history, and move signal S8 and the hotel colour",
+      "reqs": [
+        "SIG-5",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 36
+    },
+    {
+      "id": "SG06",
+      "name": "Limit basis (rooms, monthly room revenue): entered with a source, checked, kept in a history, and the limit follows; the gates in front of the request show for red signals and the December block",
+      "reqs": [
+        "LIM-5",
+        "D-4"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 64
+    },
+    {
+      "id": "SG05",
+      "name": "Year-end rule of 2026: December blocks new and top-up requests, the warning starts on 30 October, and the dates are settings the CEO can change",
+      "reqs": [
+        "SIG-6",
+        "CFG-1"
+      ],
+      "status": "PASS",
+      "error": null,
+      "ms": 99
     },
     {
       "id": "OU01",
@@ -2111,7 +2285,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 0
     },
     {
       "id": "OU02",
@@ -2121,7 +2295,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 7
+      "ms": 1
     },
     {
       "id": "OU03",
@@ -2132,7 +2306,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 5
+      "ms": 1
     },
     {
       "id": "OU04",
@@ -2143,7 +2317,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 6
+      "ms": 1
     },
     {
       "id": "OU05",
@@ -2153,7 +2327,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 8
+      "ms": 1
     },
     {
       "id": "OU06",
@@ -2166,7 +2340,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 172
+      "ms": 27
     },
     {
       "id": "LO01",
@@ -2176,7 +2350,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 2
+      "ms": 1
     },
     {
       "id": "LO02",
@@ -2186,7 +2360,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 1
+      "ms": 0
     },
     {
       "id": "LO03",
@@ -2197,7 +2371,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 568
+      "ms": 78
     },
     {
       "id": "LO04",
@@ -2208,7 +2382,7 @@
       ],
       "status": "PASS",
       "error": null,
-      "ms": 182
+      "ms": 25
     }
   ]
 }

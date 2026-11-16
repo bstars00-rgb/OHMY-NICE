@@ -2,7 +2,7 @@
    Designed so every engine path (grades, caps, guards, alerts) has at least one example.   */
 (function (root, factory) {
   const NS = root.OMH || (root.OMH = {});
-  const dep = typeof require === 'function' ? { Config: require('../core/config.js'), Ledger: require('../engine/ledger.js') } : { Config: NS.Config, Ledger: NS.Ledger };
+  const dep = typeof require === 'function' ? { Config: require('../core/config.js'), Ledger: require('../engine/ledger.js'), Review: require('../engine/review.js') } : { Config: NS.Config, Ledger: NS.Ledger, Review: NS.Review };
   const api = factory(dep);
   NS.Seed = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
@@ -11,7 +11,7 @@
   const { Config, Ledger } = dep;
   const B = (ko, en) => ({ ko, en });
   /** The release of the sample data. Saved data from another release is not an error: the store loads the new sample and keeps the old data under a separate key. Bump it whenever the sample data or the settings change shape. */
-  const DATA_VERSION = '2026-11-14';
+  const DATA_VERSION = '2026-11-16';
   const ENTITIES = {
     'OMH-SG': 'OHMYHOTEL Singapore HQ (sample entity)', 'OMH-KR': 'OHMYHOTEL Korea (sample entity)', 'OMH-JP': 'OHMYHOTEL Japan (sample entity)', 'OMH-VN': 'OHMYHOTEL Vietnam (sample entity)',
   };
@@ -43,7 +43,7 @@
     ['H020', 'ELLIS-90020', B('샘플 오사카 난바 호텔', 'Sample Osaka Namba Hotel'), 'JP', B('오사카', 'Osaka'), 'SAMPLE Namba Hotel KK', 'SCM-JP-02', {}],
   ].map(([hotelId, ellisHotelId, name, country, city, operatingCompany, scm, facts], i) => ({
     hotelId, ellisHotelId, name, brand: B('(브랜드 미상)', '(brand n/a)'), country, city, operatingCompany, owner: null /* Unknown */, status: 'ACTIVE',
-    assignedScm: scm, lastVerifiedDate: '2026-10-15', facts: Object.assign({ closure: null, ownershipChange: 'UNKNOWN' }, facts), isSample: true,
+    assignedScm: scm, lastVerifiedDate: '2026-10-15', rooms: ({ H001: 180, H002: 120, H003: 90, H013: 60, H015: 30 })[hotelId] || null, monthlyRoomRevenueMinor: ({ H001: 800e6, H002: 500e6, H003: 400e6, H013: 150e6, H015: 40e6 })[hotelId] || null, facts: Object.assign({ closure: null, ownershipChange: 'UNKNOWN' }, facts), isSample: true,
   }));
   // hotel-level status follows verified facts only
   HOTELS.find(h => h.hotelId === 'H006').status = 'CLOSED_CONFIRMED';
@@ -120,7 +120,7 @@
         contractId: s.id, hotelId: s.hotelId, omhEntity: s.entity, omhEntityName: ENTITIES[s.entity], counterparty: { legalName: hotel.operatingCompany, bizRegNo: 'SAMPLE-' + s.id.replace(/\D/g, '') },
         contractType: s.type === 'SECURITY_DEPOSIT' ? 'DEPOSIT_AGREEMENT' : 'ALLOTMENT_PREPAY', prepaymentType: s.type, currency: s.ccy, startDate: s.start, endDate: s.end, assignedScm: hotel.assignedScm,
         refund, transfer: { eligible: s.transfer }, collateral: s.collateral ? { type: 'BANK_GUARANTEE', amountMinor: s.collateral, currency: s.ccy, verified: true } : null,
-        renewal: null, facts, isSample: true, topUp: (TOPUP_INFO[s.id] || {}).topUp || null, plannedTopUp: (TOPUP_INFO[s.id] || {}).plannedTopUp || null, allotment: (TOPUP_INFO[s.id] || {}).allotment || null,
+        renewal: null, facts, isSample: true, riskFlags: (({ 'CT-JP-004': ['C3'], 'CT-VN-004': ['C4', 'G8'], 'CT-VN-002': ['G1'], 'CT-KR-003': ['G5'], 'CT-JP-003': ['G8'] })[s.id] || []).slice(), planMonthlyMinor: ({ 'CT-KR-001': 30e6, 'CT-KR-002': 20e6, 'CT-JP-001': 5e6 })[s.id] || null, topUp: (TOPUP_INFO[s.id] || {}).topUp || null, plannedTopUp: (TOPUP_INFO[s.id] || {}).plannedTopUp || null, allotment: (TOPUP_INFO[s.id] || {}).allotment || null,
       };
       contracts.push(c); ctxBase.contractsById[c.contractId] = c;
       const add = (tx) => { const r = Ledger.append(ledger, Object.assign({ contractId: s.id, currency: s.ccy, source: 'SEED' }, tx), ctxBase); if (!r.ok) throw new Error('seed ledger invalid ' + s.id + ' ' + JSON.stringify(tx) + ' ' + r.errors); };
@@ -134,12 +134,19 @@
     }
     ratings['CT-KR-001'].scmOpinion = { text: '소진·대사 모두 안정적. 정기 모니터링 유지. (샘플 의견)', by: 'SCM-KR-01 (sample)', at: '2026-10-31' };
     ratings['CT-JP-004'].scmOpinion = { text: '폐업 확인. 반환 청구 중, 회수 방안(법무 검토) 필요. (샘플 의견)', by: 'SCM-JP-02 (sample)', at: '2026-10-25' };
+    // sample credit reviews: sales | finance, written as the items that are not GOOD ("F1" = unchecked, "~H2" = caution, "!K3" = issue)
+    const { Review } = dep; const reviews = {};
+    const RV = { 'CT-KR-001': ['F1', 'F1 F3'], 'CT-JP-001': ['F1 F3', 'F1 F3 O3'], 'CT-KR-002': ['F1 F2 F3', 'F1 F2 F3 O3'], 'CT-KR-003': ['F1 F3 ~H2 ~H3', 'F1 F3 O3 ~H2'], 'CT-KR-004': ['F1 F2 F3 O3', 'F1 F2 F3 O3'], 'CT-KR-005': ['F1 F3 H1', 'F1 F3 H1'],
+      'CT-JP-002': ['F1 F3 O3 H1', 'F1 F3 O3 H1'], 'CT-JP-003': ['F1 F2 F3 H4 O3', 'F1 F2 F3 H4 O3'], 'CT-JP-004': ['F1 F2 F3 !K3 !H3', 'F1 F2 F3 !K3'], 'CT-JP-005': ['F1 F2 F3 L2 O3', 'F1 F2 F3 L2 O3'], 'CT-JP-006': ['F1 F2 F3 O3', 'F1 F2 F3 O3'],
+      'CT-VN-001': ['F1 F2 F3 O3', 'F1 F2 F3 O3'], 'CT-VN-002': ['F1 F2 F3 O1', 'F1 F2 F3 O1'], 'CT-VN-004': ['F1 F2 F3 !K2', 'F1 F2 F3 !K3'], 'CT-SG-001': ['F1 F3 O3 H1', 'F1 F3 O3 H1'], 'CT-HK-001': ['F1 F2 F3', 'F1 F2 F3 O3'], 'CT-TW-001': ['F1 F3 H1 ~R1', 'F1 F3 H1 O3'], 'CT-TH-001': ['F1 F3 H1 H2', 'F1 F3 H1 H2'] };
+    const parse = spec => { const a = {}; for (const id of Review.ITEM_IDS) a[id] = 'GOOD'; for (const tok of spec.split(' ').filter(Boolean)) { if (tok[0] === '~') a[tok.slice(1)] = 'CAUTION'; else if (tok[0] === '!') a[tok.slice(1)] = 'ISSUE'; else a[tok] = 'UNCHECKED'; } return a; };
+    for (const [cid, [sales, fin]] of Object.entries(RV)) { const c = contracts.find(x => x.contractId === cid); reviews[cid] = { sales: { reviewer: c.assignedScm + ' (sample)', at: '2026-10-31', answers: parse(sales) }, support: { reviewer: 'SUPPORT-01 (sample)', at: '2026-10-31', answers: parse(fin) }, history: [] }; }
     const alerts = [
       { alertId: 'SALES_DECLINE:CT-KR-002', ruleId: 'SALES_DECLINE', hotelId: 'H002', contractId: 'CT-KR-002', severity: 'MEDIUM', action: 'HOLD_TOPUP', status: 'RESOLVED', source: 'AUTO', title: B('판매 감소 추세', 'Sales decline trend'), evidence: [{ k: 'changePct', v: -22 }], detectedAt: '2026-07-01', firstDetectedAt: '2026-07-01', lastDetectedAt: '2026-07-15', clearedAt: '2026-07-20', notes: [{ at: '2026-07-20', by: 'SCM-KR-01 (sample)', text: '성수기 반등 확인' }], assignedScm: 'SCM-KR-01', historical: true },
       { alertId: 'RECON_UNCONFIRMED:CT-JP-001', ruleId: 'RECON_UNCONFIRMED', hotelId: 'H004', contractId: 'CT-JP-001', severity: 'MEDIUM', action: 'RECONFIRM_BALANCE', status: 'RESOLVED', source: 'AUTO', title: B('잔액 확인 미완료', 'Balance confirmation incomplete'), evidence: [{ k: 'status', v: 'UNCONFIRMED' }], detectedAt: '2026-08-10', firstDetectedAt: '2026-08-10', lastDetectedAt: '2026-08-20', clearedAt: '2026-09-02', notes: [], assignedScm: 'SCM-JP-01', historical: true },
     ];
     return {
-      schemaVersion: 1, dataVersion: DATA_VERSION, isSample: true, config, hotels, contracts, ledger, confirmations, sales, ratings, alerts, approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [], entities: ENTITIES,
+      schemaVersion: 1, dataVersion: DATA_VERSION, isSample: true, config, hotels, contracts, ledger, confirmations, sales, ratings, alerts, reviews, approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [], entities: ENTITIES,
     };
   }
   return { buildSeed, ENTITIES, ORDER, DATA_VERSION };

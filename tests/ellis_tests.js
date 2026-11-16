@@ -242,7 +242,7 @@ module.exports = function (h) {
     // thorough forgery: edit the snapshot, fix its hash, and rebuild the audit chain, the state hash in the import entry and the anchor so every generic check passes
     storage = mkSaved(); blob = JSON.parse(storage.getItem(Store.DEFAULT_KEY));
     const hx = blob.ellis.snapshot.hotels.find(x => x.months.length); hx.months[0].byCurrency[0].billingMinor += 1; hx.months[0].byCurrency[0].krwBillingMinor += 1; blob.ellis.snapshot.hash = Ellis.hashOf(blob.ellis.snapshot); blob.ellis.batches[blob.ellis.batches.length - 1].hash = blob.ellis.snapshot.hash;
-    const parts = [blob.ledger, blob.hotels, blob.contracts, blob.ratings, blob.confirmations, blob.config, blob.sales, blob.ellis]; const last = blob.audit[blob.audit.length - 1]; a.eq(last.action, 'ELLIS_IMPORT_SNAPSHOT');
+    const parts = [blob.ledger, blob.hotels, blob.contracts, blob.ratings, blob.confirmations, blob.config, blob.sales, blob.reviews || {}, blob.ellis]; const last = blob.audit[blob.audit.length - 1]; a.eq(last.action, 'ELLIS_IMPORT_SNAPSHOT');
     last.detail.coreHash = env.Adapters.hash53(JSON.stringify(parts)); last.hash = env.Adapters.hash53(last.prevHash + JSON.stringify([last.seq, last.at, last.actor, last.role, last.action, last.entity, last.outcome, last.detail]));
     storage.setItem(Store.DEFAULT_KEY, JSON.stringify(blob)); storage.setItem(Store.DEFAULT_KEY + '.anchor', JSON.stringify({ seq: last.seq, hash: last.hash }));
     a.eq(env.newStore({ storage }).loadStatus, 'AUDIT_BROKEN', 'snapshot differs from the one named in the recorded import');

@@ -2,14 +2,14 @@
 (function (root, factory) {
   const NS = root.OMH || (root.OMH = {});
   const dep = typeof require === 'function'
-    ? { Money: require('../core/money.js'), Dates: require('../core/dates.js'), Ledger: require('./ledger.js'), Forecast: require('./forecast.js'), Rating: require('./rating.js'), Limit: require('./limit.js'), Alerts: require('./alerts.js'), Ellis: require('../adapters/ellis.js'), Outlook: require('./outlook.js') }
-    : { Money: NS.Money, Dates: NS.Dates, Ledger: NS.Ledger, Forecast: NS.Forecast, Rating: NS.Rating, Limit: NS.Limit, Alerts: NS.Alerts, Ellis: NS.Ellis, Outlook: NS.Outlook };
+    ? { Money: require('../core/money.js'), Dates: require('../core/dates.js'), Ledger: require('./ledger.js'), Forecast: require('./forecast.js'), Rating: require('./rating.js'), Review: require('./review.js'), Signals: require('./signals.js'), Limit: require('./limit.js'), Alerts: require('./alerts.js'), Ellis: require('../adapters/ellis.js'), Outlook: require('./outlook.js') }
+    : { Money: NS.Money, Dates: NS.Dates, Ledger: NS.Ledger, Forecast: NS.Forecast, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Limit: NS.Limit, Alerts: NS.Alerts, Ellis: NS.Ellis, Outlook: NS.Outlook };
   const api = factory(dep);
   NS.Model = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function (dep) {
   'use strict';
-  const { Money, Dates, Ledger, Forecast, Rating, Limit, Alerts, Ellis, Outlook } = dep;
+  const { Money, Dates, Ledger, Forecast, Rating, Review, Signals, Limit, Alerts, Ellis, Outlook } = dep;
 
   function latestConfirmation(state, contractId) {
     let best = null;
@@ -52,20 +52,37 @@
     derived.lastRecordAt = lastRec; derived.daysSinceLastRecord = lastRec ? Dates.diffDays(lastRec, asOf) : null; derived.refundRows = refundRows; derived.heldDays = contract.startDate ? Dates.diffDays(contract.startDate, asOf) : null;
     const rec = (state.ratings || {})[contract.contractId] || { history: [] };
     const auto = Rating.autoScores({ contract, hotel, balance, forecast: f, recon, derived, cfg });                  // nobody enters these: they follow from the data
-    const rating = Rating.evaluate({ scores: auto.scores, hotel, contract, derived, cfg });
+    const autoRating = Rating.evaluate({ scores: auto.scores, hotel, contract, derived, cfg });               // the data-driven score: a reference next to the review, not the grade
+    const decision = Review.decide((state.reviews || {})[contract.contractId], cfg.review);                  // the CEO's two-reviewer credit review decides the grade
+    const critical = autoRating.flags.some(x => x.cap === 'D');                                                // a verified closure, refund refusal, failed entity or critical legal risk makes it D whatever the review says
+    const weakKey = decision.status === 'DECIDED' ? (decision.lowerSide === 'SALES' ? 'sales' : 'support') : null; const weak = weakKey ? decision[weakKey] : null; const wans = weakKey ? state.reviews[contract.contractId][weakKey].answers : null; const cpct = weak ? Math.round(100 - weak.uncheckedWeight) : 0;
+    const rating = Object.assign({}, autoRating, { grade: critical ? 'D' : decision.grade, score: decision.lowerScore, rawScore: decision.lowerScore, scoreGrade: decision.lowerScore == null ? null : Review.gradeOf(decision.lowerScore, false, cfg.review), capped: critical && decision.grade !== 'D', reasons: decision.reasons.slice(),
+      confidence: { coverage: cpct / 100, pct: cpct, level: cpct >= 85 ? 'HIGH' : cpct >= 70 ? 'MEDIUM' : 'LOW', knownWeight: cpct, totalWeight: 100, unknownIds: wans ? Review.ITEM_IDS.filter(id => (wans[id] || 'UNCHECKED') === 'UNCHECKED') : Review.ITEM_IDS.slice() },
+      review: decision, auto: { grade: autoRating.grade, score: autoRating.score, confidence: autoRating.confidence, flags: autoRating.flags }, source: 'REVIEW' });
     const ratingDrop = Rating.dropNotches(rec.history, rating.grade, asOf, (cfg.alertRules.RATING_DROP.params || {}).windowDays || 90, Dates);
     const recov = Rating.recoverability(contract, balance.closingMinor, rating, auto.scores);
     const detected = Alerts.detect({ hotel, contract, balance, recon, forecast: f, rating, derived, ratingDrop, asOf, cfg });
     const persisted = {}; for (const p of state.alerts || []) persisted[p.alertId] = p;
     const alerts = detected.map(d => Object.assign({}, d, { status: persisted[d.alertId] ? persisted[d.alertId].status : 'OPEN', persisted: persisted[d.alertId] || null }));
     const live = alerts.filter(a => a.status !== 'DISMISSED');
-    const limit = Limit.compute({ grade: rating.grade, forecast: f, outstandingMinor: balance.closingMinor, contract, recoverability: recov, alerts: live, cfg, ratingFlags: rating.flags.map(x => x.id) });
+    const directMonths = contract.startDate ? Math.round(Math.max(0, Dates.diffDays(contract.startDate, asOf)) / 30.4 * 10) / 10 : null;      // how long we have traded directly: under three months halves the months of cover
+    const limit = Limit.compute({ grade: rating.grade, forecast: f, outstandingMinor: balance.closingMinor, contract, hotel, directMonths, recoverability: recov, alerts: live, cfg, ratingFlags: rating.flags.map(x => x.id) });
+    // weekly signals S1-S8 (the CEO's traffic lights): red blocks the top-up request, yellow holds it
+    const consByMonth = {}; for (const t of own) if (t.type === 'CONSUMPTION' && t.status === 'confirmed' && t.period) consByMonth[t.period] = (consByMonth[t.period] || 0) + t.amountMinor;
+    const histLast = (rec.history || []).length ? rec.history[rec.history.length - 1].grade : null;
+    const offSignals = contract.prepaymentType === 'SECURITY_DEPOSIT' || contract.prepaymentType === 'BUYOUT' || contract.monthlySettlement === true;
+    const signals = Signals.compute({ off: offSignals, hasData: own.some(t => t.type === 'OPENING' || t.type === 'TOPUP'), closed: rating.flags.some(x => x.id === 'CLOSURE_CONFIRMED'), balanceMinor: balance.closingMinor, depositTotalMinor: balance.openingMinor + balance.topupsMinor - balance.refundsMinor, avgMinor: f.avgMinor, consByMonth,
+      firstMonth: Object.keys(consByMonth).sort()[0] || null, startDate: contract.startDate, planFrom: (() => { const d0 = Object.keys(consByMonth).sort()[0]; const sd = contract.startDate || null; return d0 && (!sd || d0 + '-01' > sd) ? d0 + '-01' : sd; })(), endDate: contract.endDate, planMonthlyMinor: contract.planMonthlyMinor, recon, limitMinor: limit.recommendedLimitMinor, riskFlags: contract.riskFlags || [], grade: rating.grade, prevGrade: histLast, asOf, cfg });
+    const extraHolds = []; if (signals.color === 'bad') extraHolds.push('RED_SIGNAL'); else if (signals.color === 'warn') extraHolds.push('YELLOW_SIGNAL');
+    const ye = cfg.review.yearEnd; if (ye && Dates.cmp(asOf, ye.blockFrom) >= 0 && Dates.cmp(asOf, ye.blockTo) <= 0) extraHolds.push('YEAR_END_BLOCK');
+    if (ye && Dates.cmp(asOf, ye.warnFrom) >= 0 && Dates.cmp(asOf, ye.endDate) <= 0 && f.avgMinor != null && balance.closingMinor - f.avgMinor * Math.max(0, Dates.diffDays(asOf, ye.endDate) / 30.4) > 0 && limit.notes) limit.notes.push('YEAR_END_UNUSED');
+    Limit.applyHolds(limit, extraHolds);
     const pt = contract.plannedTopUp; const plannedSim = pt && Number.isSafeInteger(pt.amountMinor) && pt.amountMinor > 0 ? Limit.simulate(limit, f, pt.amountMinor, contract, { daysPerMonth: cfg.forecast.daysPerMonth, addDays: Dates.addDays, asOf }) : null;   // the tracker's planned top-up, checked against the limit
     const ellisOutlook = Ellis.outlook(state, contract.contractId, { cmp: pre.ellisCmp });                                  // what the ELLIS bookings say about the consumption speed (indicator, never written to the ledger)
     const topupPlan = Outlook.topupPlan({ forecast: f, limit, contract, balance }, ellisOutlook, cfg, asOf);              // section 7: when the next top-up has to be requested
     const relationship = Outlook.relationship({ rating, forecast: f, limit, contract, balance, derived });               // section 8: should the cooperation go on (a recommendation for the CEO)
     return { contractId: contract.contractId, hotelId: contract.hotelId, hotel, contract, balance, recon, forecast: f, derived, rating, ratingScores: auto.scores, ratingBasis: auto.basis, ratingRecord: rec, ratingDrop, recoverability: recov,
-      alerts, liveAlerts: live, limit, plannedSim, nextCheck: nextCheck(rating.grade, live, asOf), ellisOutlook, topupPlan, relationship, currency: contract.currency };
+      alerts, liveAlerts: live, limit, signals, plannedSim, nextCheck: nextCheck(rating.grade, live, asOf), ellisOutlook, topupPlan, relationship, currency: contract.currency };
   }
 
   /** Compute every contract view. */
@@ -107,6 +124,7 @@
       exposure: Money.sumByCurrency(vs.map(v => ({ currency: v.currency, minor: v.balance.closingMinor }))),
       byCountry: sumBy(v => v.hotel.country, v => v.balance.closingMinor), byEntity: sumBy(v => v.contract.omhEntity, v => v.balance.closingMinor),
       byType: sumBy(v => v.contract.prepaymentType, v => v.balance.closingMinor),
+      signalCounts: (() => { const n = { ok: 0, warn: 0, bad: 0, na: 0, off: 0 }; for (const v of vs) { const c = v.signals ? v.signals.color : 'na'; n[c] = (n[c] || 0) + 1; } return n; })(),
       grades, hotelGrades, highRiskHotels: [...hotelsHigh], limitExceeded: vs.filter(v => v.limit.overLimitMinor > 0).map(v => v.contractId),
       limitUnknown: vs.filter(v => v.limit.recommendedLimitMinor == null && v.balance.closingMinor > 0 && v.forecast.status !== 'NOT_APPLICABLE').map(v => v.contractId),
       refundPending: vs.filter(v => v.derived.refundPending).map(v => v.contractId),

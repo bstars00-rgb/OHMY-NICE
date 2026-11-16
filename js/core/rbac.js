@@ -6,17 +6,19 @@
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function () {
   'use strict';
-  const ROLES = ['VIEWER', 'SCM', 'CEO', 'ADMIN'];
+  const ROLES = ['VIEWER', 'SCM', 'SUPPORT', 'CEO', 'ADMIN'];      // SUPPORT = 경영지원 (finance support): verifies, settles, closes the month
   const PERMS = {
-    'ledger.write': ['SCM', 'ADMIN'], 'ledger.import': ['SCM', 'ADMIN'], 'ellis.import': ['SCM', 'ADMIN'], 'confirmation.write': ['SCM', 'ADMIN'],
-    'rating.edit': ['SCM', 'ADMIN'], 'rating.commit': ['SCM', 'ADMIN'], 'opinion.write': ['SCM', 'ADMIN'],
-    'alert.update': ['SCM', 'CEO', 'ADMIN'], 'alert.dismiss': ['CEO', 'ADMIN'],
-    'approval.create': ['SCM', 'ADMIN'], 'approval.submit': ['SCM', 'ADMIN'],
+    'ledger.write': ['SCM', 'SUPPORT', 'ADMIN'], 'ledger.import': ['SCM', 'SUPPORT', 'ADMIN'], 'ellis.import': ['SCM', 'SUPPORT', 'ADMIN'], 'confirmation.write': ['SCM', 'SUPPORT', 'ADMIN'],
+    'rating.edit': ['SCM', 'SUPPORT', 'ADMIN'], 'rating.commit': ['SCM', 'SUPPORT', 'ADMIN'], 'opinion.write': ['SCM', 'SUPPORT', 'ADMIN'],
+    'review.sales': ['SCM', 'ADMIN'],                          // the sales side of the credit review (담당 SCM)
+    'review.support': ['SUPPORT', 'ADMIN'],                    // the finance side, scored on its own from the registries and books (경영지원)
+    'alert.update': ['SCM', 'SUPPORT', 'CEO', 'ADMIN'], 'alert.dismiss': ['CEO', 'ADMIN'],
+    'approval.create': ['SCM', 'SUPPORT', 'ADMIN'], 'approval.submit': ['SCM', 'SUPPORT', 'ADMIN'],
     'approval.review': ['CEO'],                               // ONLY the CEO role reviews and gives feedback — ADMIN deliberately excluded
-    'master.write': ['SCM', 'ADMIN'],                          // register a hotel / contract (master data and the opening balance)
-    'limit.set': ['SCM', 'CEO', 'ADMIN'],                      // a hotel-level cap may be set or lowered by anyone in charge of the contract
+    'master.write': ['SCM', 'SUPPORT', 'ADMIN'],                          // register a hotel / contract (master data and the opening balance)
+    'limit.set': ['SCM', 'SUPPORT', 'CEO', 'ADMIN'],                      // a hotel-level cap may be set or lowered by anyone in charge of the contract
     'limit.relax': ['CEO', 'ADMIN'],                           // raising or lifting an existing cap needs the CEO or an admin
-    'ai.run': ['SCM', 'CEO', 'ADMIN'], 'config.edit': ['ADMIN'], 'data.reset': ['ADMIN'], 'data.export': ['SCM', 'CEO', 'ADMIN'], 'audit.read': ['CEO', 'ADMIN'],
+    'ai.run': ['SCM', 'SUPPORT', 'CEO', 'ADMIN'], 'config.edit': ['ADMIN'], 'data.reset': ['ADMIN'], 'data.export': ['SCM', 'SUPPORT', 'CEO', 'ADMIN'], 'audit.read': ['CEO', 'ADMIN'],
   };
   const can = (role, perm) => !!(PERMS[perm] && PERMS[perm].includes(role));
   class PermissionError extends Error { constructor(role, perm) { super('E_FORBIDDEN: ' + role + ' lacks ' + perm); this.code = 'E_FORBIDDEN'; this.role = role; this.perm = perm; } }

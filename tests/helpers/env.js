@@ -5,7 +5,7 @@ const R = p => require(path.join(__dirname, '../../js', p));
 const env = {};
 env.Dates = R('core/dates.js'); env.Money = R('core/money.js'); env.Config = R('core/config.js'); env.RBAC = R('core/rbac.js'); env.Auth = R('core/auth.js');
 env.Weighted = R('engine/weighted.js'); env.Rating = R('engine/rating.js'); env.Ledger = R('engine/ledger.js'); env.Forecast = R('engine/forecast.js');
-env.Limit = R('engine/limit.js'); env.Alerts = R('engine/alerts.js'); env.Csv = R('engine/csv.js'); env.Model = R('engine/model.js'); env.Outlook = R('engine/outlook.js');
+env.Limit = R('engine/limit.js'); env.Alerts = R('engine/alerts.js'); env.Csv = R('engine/csv.js'); env.Model = R('engine/model.js'); env.Outlook = R('engine/outlook.js'); env.Review = R('engine/review.js'); env.Signals = R('engine/signals.js');
 env.Tracker = R('engine/tracker.js'); env.Adapters = R('adapters/adapters.js'); env.Ellis = R('adapters/ellis.js'); env.Seed = R('data/seed.js'); env.Store = R('store.js');
 env.I18N_ja = R('i18n/ja.js'); env.I18N_vi = R('i18n/vi.js'); env.UI = R('ui/common.js'); env.ViewsA = R('ui/views_a.js'); env.ViewsB = R('ui/views_b.js'); env.ViewsC = R('ui/views_c.js'); env.ViewsAuth = R('ui/views_auth.js');
 env.root = path.join(__dirname, '../..');
@@ -17,7 +17,7 @@ env.as = (st, role) => { st.setSession('test.' + role.toLowerCase(), role); retu
 
 /** Single synthetic contract state for boundary tests. cons = [Aug, Sep, Oct] confirmed (null = no record). */
 env.synth = function (o) {
-  o = Object.assign({ ccy: 'KRW', cons: [30e6, 30e6, 30e6], opening: 100e6, topups: [], endDate: '2030-12-31', refundable: true, transfer: false, collateral: 0, strictCoverage: false,
+  o = Object.assign({ ccy: 'KRW', cons: [30e6, 30e6, 30e6], opening: 100e6, topups: [], endDate: '2030-12-31', refundable: true, transfer: false, collateral: 0, strictCoverage: false, review: 'A',
     asOf: '2026-11-06', facts: {}, hotelFacts: {}, conf: null, type: 'FLOATING', entity: 'OMH-KR', history: [], refund: null, renewal: null }, o || {});
   const { Config, Ledger, Rating, Model } = env; const cfg = Config.defaults(); cfg.asOf = o.asOf;
   if (!o.strictCoverage) { cfg.minCoverage = 0.3; cfg.lowConfidenceCoverage = 0.4; }      // the synthetic contract has no outside information; the coverage rules are tested on their own (R05)
@@ -25,7 +25,7 @@ env.synth = function (o) {
   const contract = { contractId: 'CT-T', hotelId: 'HT', omhEntity: o.entity, counterparty: { legalName: 'T Co', bizRegNo: 'X' }, prepaymentType: o.type, currency: o.ccy, startDate: '2025-01-01', endDate: o.endDate, assignedScm: 'SCM-T',
     refund: Object.assign({ refundable: o.refundable, requested: false }, o.refund || {}), transfer: { eligible: o.transfer }, collateral: o.collateral ? { type: 'BG', amountMinor: o.collateral, currency: o.ccy, verified: true } : null,
     renewal: o.renewal, facts: Object.assign({ counterpartyVerification: 'VERIFIED', counterpartyEvidence: { by: 'Kim', at: '2026-10-01', evidenceRef: 'REG-0001' }, refundRefused: null, legalRecoveryCritical: null }, o.facts) };
-  const state = { schemaVersion: 1, isSample: true, config: cfg, hotels: [hotel], contracts: [contract], ledger: [], confirmations: [], sales: {}, ratings: { 'CT-T': { evidence: {}, history: o.history, scmOpinion: null } },
+  const state = { schemaVersion: 1, isSample: true, config: cfg, hotels: [hotel], contracts: [contract], ledger: [], confirmations: [], sales: {}, reviews: (() => { if (o.review === 'NONE') return {}; const SPEC = { A: [], B: ['F1', 'F2', 'F3'], C: ['F1', 'F2', 'F3', 'L1'], D: [] }; const mk = () => { const a = {}; for (const id of env.Review.ITEM_IDS) a[id] = 'GOOD'; for (const id of SPEC[o.review]) a[id] = 'UNCHECKED'; if (o.review === 'D') a.K3 = 'ISSUE'; return a; }; return { 'CT-T': { sales: { reviewer: 'Kim', at: o.asOf, answers: mk() }, support: { reviewer: 'Lee', at: o.asOf, answers: mk() }, history: [] } }; })(), ratings: { 'CT-T': { evidence: {}, history: o.history, scmOpinion: null } },
     alerts: [], approvals: [], aiReports: {}, audit: [], configHistory: [], importBatches: [] };
   const cx = { contractsById: { 'CT-T': contract }, asOf: o.asOf };
   const add = tx => { const r = Ledger.append(state.ledger, Object.assign({ contractId: 'CT-T', currency: o.ccy }, tx), cx); if (!r.ok) throw new Error('synth ledger: ' + r.errors); };

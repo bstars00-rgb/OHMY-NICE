@@ -23,6 +23,21 @@
         reconScores: { MATCH: 5, MINOR: 3, MAJOR: 1 },
         countryLegal: { KR: 4, JP: 4, VN: 3 },   // legal recovery difficulty by country (placeholder until the CEO fixes the table)
       },
+      review: {                          // the CEO's standard (선급금·하드블럭 심사 기준, 2026-11-13). Changed only after the CEO approves.
+        approvedBy: 'CEO Jackie', approvedAt: '2026-11-13',
+        submitMin: 70,                   // only a lower score at or above this goes to the CEO's approval
+        gradeBands: { A: 80, B: 70, C: 50 },                                   // A >= 80, B 70-79, C 50-69, D below 50 (or a knock-out)
+        answerFactor: { GOOD: 1, CAUTION: 0.5, ISSUE: 0, UNCHECKED: 0 },        // an unchecked item scores 0
+        knockout: ['K1', 'K2', 'K3'],    // an ISSUE on any of these makes the grade D (the CEO's dashboard also marks L1, L3, F2, O2; kept off until the CEO confirms)
+        gradeMonths: { A: 2, B: 1, C: 0, D: 0 },                               // months of average purchases a prepayment may cover; C and D: no prepayment
+        shortHistoryMonths: 3, shortHistoryFactor: 0.5,                         // direct trade under 3 months: at most half a month
+        revenueShare: 0.1,               // limit <= 10% of the hotel's monthly room revenue
+        firstDepositShare: 0.5,          // the first deposit is at most half of the limit
+        roomCaps: [[50, 20000000], [150, 50000000], [300, 100000000]],         // Korea (KRW): up to N rooms -> cap
+        hotelMax: { KRW: 100000000, JPY: 10000000 },                           // the most one hotel may hold; other currencies: the CEO has not decided yet
+        yearEnd: { blockFrom: '2026-12-01', blockTo: '2026-12-31', warnFrom: '2026-10-30', endDate: '2026-12-31' },   // 2026: no new top-up requests in December; from 10/30 warn about money that will not be used this year
+        signals: { S1: [2, 4], S2: [0.7, 0.5], S3: [0.8, 0.5], S4: [14, 30], S5: [0, 0.3], S7: [1, 1.5], confirmFreshDays: 31, confirmStaleDays: 62, confirmGapDays: 30 },
+      },
       flagCaps: { CLOSURE_CONFIRMED: 'D', REFUND_REFUSED: 'D', ENTITY_FAILED: 'D', LEGAL_RECOVERY_CRITICAL: 'D', REFUND_OVERDUE: 'C',
                   RECON_MAJOR_MISMATCH: 'C', OWNERSHIP_CHANGE_UNRESOLVED: 'C', ENTITY_UNKNOWN: 'C', CONSUMPTION_COLLAPSE: 'B',
                   EXPIRY_BEFORE_DEPLETION: 'B', LOW_CONFIDENCE: 'B' },
@@ -105,6 +120,23 @@
       const cr = sc.collateralRatios; if (!(Array.isArray(cr) && cr.length === 3 && cr.every(x => isNum(x) && x > 0 && x <= 1) && cr[0] > cr[1] && cr[1] > cr[2])) e.push('E_RANGE:scoring.collateralRatios');
       const rs = sc.reconScores; const pt = x => Number.isInteger(x) && x >= 1 && x <= 5; if (!(rs && pt(rs.MATCH) && pt(rs.MINOR) && pt(rs.MAJOR) && rs.MATCH >= rs.MINOR && rs.MINOR >= rs.MAJOR)) e.push('E_RANGE:scoring.reconScores');
       const cl = sc.countryLegal; if (!(cl && typeof cl === 'object' && Object.keys(D.scoring.countryLegal).every(k => pt(cl[k])) && Object.keys(cl).every(k => k in D.scoring.countryLegal))) e.push('E_RANGE:scoring.countryLegal');
+    }
+    const rv = c.review; if (!rv || typeof rv !== 'object') e.push('E_CONFIG_SECTION:review');
+    else {
+      const f01 = x => isNum(x) && x >= 0 && x <= 1; const gb = rv.gradeBands || {}, af = rv.answerFactor || {}, gm = rv.gradeMonths || {}, sg = rv.signals || {};
+      if (!(isNum(rv.submitMin) && rv.submitMin > 0 && rv.submitMin <= 100)) e.push('E_RANGE:review.submitMin');
+      if (!(isNum(gb.A) && isNum(gb.B) && isNum(gb.C) && gb.A > gb.B && gb.B > gb.C && gb.C > 0 && gb.A <= 100)) e.push('E_RANGE:review.gradeBands');
+      if (!(f01(af.GOOD) && f01(af.CAUTION) && f01(af.ISSUE) && f01(af.UNCHECKED) && af.GOOD >= af.CAUTION && af.CAUTION >= af.ISSUE && af.ISSUE >= af.UNCHECKED)) e.push('E_RANGE:review.answerFactor');
+      if (!(Array.isArray(rv.knockout) && rv.knockout.every(k => typeof k === 'string'))) e.push('E_RANGE:review.knockout');
+      if (!(['A', 'B', 'C', 'D'].every(g => isNum(gm[g]) && gm[g] >= 0 && gm[g] <= 12) && gm.A >= gm.B && gm.B >= gm.C && gm.C >= gm.D)) e.push('E_RANGE:review.gradeMonths');
+      if (!(Number.isInteger(rv.shortHistoryMonths) && rv.shortHistoryMonths >= 1 && rv.shortHistoryMonths <= 24 && f01(rv.shortHistoryFactor))) e.push('E_RANGE:review.shortHistory');
+      if (!(f01(rv.revenueShare) && rv.revenueShare > 0 && f01(rv.firstDepositShare) && rv.firstDepositShare > 0)) e.push('E_RANGE:review.shares');
+      if (!(Array.isArray(rv.roomCaps) && rv.roomCaps.every((r, i) => Array.isArray(r) && r.length === 2 && Number.isInteger(r[0]) && r[0] > 0 && Number.isSafeInteger(r[1]) && r[1] > 0 && (i === 0 || r[0] > rv.roomCaps[i - 1][0])))) e.push('E_RANGE:review.roomCaps');
+      if (!(rv.hotelMax && typeof rv.hotelMax === 'object' && Object.keys(rv.hotelMax).every(k => /^[A-Z]{3}$/.test(k) && Number.isSafeInteger(rv.hotelMax[k]) && rv.hotelMax[k] > 0))) e.push('E_RANGE:review.hotelMax');
+      const pair = (p, lo, hi, asc) => Array.isArray(p) && p.length === 2 && isNum(p[0]) && isNum(p[1]) && p[0] >= lo && p[1] <= hi && (asc ? p[0] < p[1] : p[0] > p[1]);
+      if (!(pair(sg.S1, 0, 120, true) && pair(sg.S2, 0, 5, false) && pair(sg.S3, 0, 5, false) && pair(sg.S4, 0, 3650, true) && pair(sg.S5, 0, 5, true) && pair(sg.S7, 0, 10, true) && Number.isInteger(sg.confirmFreshDays) && Number.isInteger(sg.confirmStaleDays) && Number.isInteger(sg.confirmGapDays) && sg.confirmFreshDays < sg.confirmStaleDays && sg.confirmGapDays > 0)) e.push('E_RANGE:review.signals');
+      const ye = rv.yearEnd; const isD = x => /^\d{4}-\d{2}-\d{2}$/.test(String(x)) && isRealDate(x); if (!(ye && isD(ye.blockFrom) && isD(ye.blockTo) && isD(ye.warnFrom) && isD(ye.endDate) && ye.blockFrom <= ye.blockTo && ye.warnFrom <= ye.blockFrom)) e.push('E_RANGE:review.yearEnd');
+      if (typeof rv.approvedBy !== 'string' || !rv.approvedBy.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(String(rv.approvedAt))) e.push('E_RANGE:review.approval');
     }
     const range = (v, lo, hi, int, tag) => { if (!isNum(v) || v < lo || v > hi || (int && !Number.isInteger(v))) e.push('E_RANGE:' + tag); };
     if (c.guards) for (const k of ['nonRefundableMonths', 'unknownRefundMonths', 'lowRecoveryMonths']) range(c.guards[k], 0, 24, false, 'guards.' + k);

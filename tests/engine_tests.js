@@ -170,11 +170,11 @@ module.exports = function register(h) {
     const closed = env.synth({ hotelFacts: { closure: { claimed: true, source: 'SCM', verified: { by: 'Kim', at: '2026-10-01', evidenceRef: 'DOC-1' } } } }).view(); a.ok(closed.rating.score >= 80); a.eq(closed.rating.scoreGrade, 'A'); a.eq(closed.rating.grade, 'D'); a.ok(closed.rating.capped);
     a.eq(env.synth({ facts: { counterpartyVerification: 'FAILED' } }).view().rating.grade, 'D');
     a.eq(env.synth({ facts: { refundRefused: { claimed: true, source: 'SCM', verified: { by: 'Lee', at: '2026-10-01', evidenceRef: 'EML-1' } } } }).view().rating.grade, 'D');
-    a.eq(env.synth({ hotelFacts: { ownershipChange: 'PENDING' } }).view().rating.grade, 'C'); a.eq(env.synth({ hotelFacts: { ownershipChange: 'COMPLETED_RESOLVED' } }).view().rating.grade, 'A');
-    a.eq(env.synth({ facts: { counterpartyVerification: 'UNKNOWN' } }).view().rating.grade, 'C', 'unverified entity -> C cap');
-    a.eq(env.synth({ conf: [90e6, '2026-10-31'], opening: 100e6, cons: [0, 0, 0] }).view().rating.flags.some(f => f.id === 'RECON_MAJOR_MISMATCH'), true, '10% diff is major'); a.eq(env.synth({ conf: [50e6, '2026-10-31'] }).view().rating.grade, 'C');
-    a.eq(env.synth({ cons: [30e6, 30e6, 10e6] }).view().rating.grade, 'B', 'collapse (-50%) caps at B');
-    const s = seedState(); a.eq(view(s, 'CT-JP-003').rating.scoreGrade, 'B'); a.eq(view(s, 'CT-JP-003').rating.grade, 'C'); a.eq(view(s, 'CT-KR-001').rating.grade, 'B', 'no sample hotel reaches A while the outside information is missing'); a.ok(view(s, 'CT-KR-001').rating.flags.some(f => f.id === 'LOW_CONFIDENCE'));
+    a.eq(env.synth({ hotelFacts: { ownershipChange: 'PENDING' } }).view().rating.grade, 'A', 'an ownership change is a flag and a signal, not a cap on the reviewed grade'); a.ok(env.synth({ hotelFacts: { ownershipChange: 'PENDING' } }).view().rating.flags.some(f => f.id === 'OWNERSHIP_CHANGE_UNRESOLVED')); a.eq(env.synth({ hotelFacts: { ownershipChange: 'COMPLETED_RESOLVED' } }).view().rating.grade, 'A');
+    a.eq(env.synth({ facts: { counterpartyVerification: 'UNKNOWN' } }).view().rating.grade, 'A', 'an unverified entity is a flag; the review decides the grade');
+    a.eq(env.synth({ conf: [90e6, '2026-10-31'], opening: 100e6, cons: [0, 0, 0] }).view().rating.flags.some(f => f.id === 'RECON_MAJOR_MISMATCH'), true, '10% diff is major'); a.eq(env.synth({ conf: [50e6, '2026-10-31'] }).view().rating.grade, 'A', 'a balance mismatch is a signal; the grade comes from the review');
+    a.eq(env.synth({ cons: [30e6, 30e6, 10e6] }).view().rating.grade, 'A', 'a collapse holds the top-up (see M05), the grade stays');
+    const s = seedState(); a.eq(view(s, 'CT-JP-003').rating.scoreGrade, 'C'); a.eq(view(s, 'CT-JP-003').rating.grade, 'C'); a.eq(view(s, 'CT-KR-001').rating.grade, 'A'); a.eq(view(s, 'CT-KR-001').rating.score, 83, 'the lower of the two reviews');
   });
   t('R05', 'Low evidence: coverage < 50% → NR (despite a high raw score); 50–70% → capped at B', ['M03-2', 'M03-4'], a => {
     const cfg = Config.defaults(); const base = { cfg, hotel: { facts: {} }, contract: { facts: VER }, derived: {} };
@@ -192,7 +192,7 @@ module.exports = function register(h) {
     a.ok(Rating.isVerified({ claimed: true, verified: { by: 'Kim', at: 'x', evidenceRef: 'DOC-1' } }));
   });
   t('R07', 'Recoverability is a separate axis from credit grade', ['M03-5'], a => {
-    const nonref = env.synth({ refundable: false }).view(); a.eq(nonref.rating.grade, 'B', 'no refund clause lowers the score by itself'); a.eq(nonref.recoverability.tier, 'LOW');
+    const nonref = env.synth({ refundable: false }).view(); a.eq(nonref.rating.grade, 'A', 'the refund clause is not a review item: it lowers the recoverability, not the grade'); a.eq(nonref.recoverability.tier, 'LOW');
     const unk = env.synth({ refundable: null }).view(); a.eq(unk.recoverability.tier, 'UNKNOWN'); const med = env.synth({}).view(); a.eq(med.recoverability.tier, 'MEDIUM'); a.eq(med.recoverability.unsecuredMinor, med.balance.closingMinor);
     const coll = env.synth({ collateral: 500e6 }).view(); a.eq(coll.recoverability.tier, 'HIGH'); a.eq(coll.recoverability.unsecuredMinor, 0);
     const part = env.synth({ collateral: 5e6 }).view(); a.eq(part.recoverability.unsecuredMinor, part.balance.closingMinor - 5e6);
@@ -211,8 +211,8 @@ module.exports = function register(h) {
 
   /* ---------------- LIMIT ---------------- */
   const sim = (v, amt) => Limit.simulate(v.limit, v.forecast, amt, v.contract, { daysPerMonth: 30, addDays: Dates.addDays, asOf: '2026-11-06' });
-  t('M01', 'Grade multipliers A×2, B×1, C×0.5, D×0 on the 3-month average', ['M04-1'], a => {
-    const cases = { A: 60e6, B: 30e6, C: 15e6, D: 0 };
+  t('M01', 'Grade months A 2, B 1, C and D 0 on the 3-month average', ['M04-1'], a => {
+    const cases = { A: 60e6, B: 30e6, C: 0, D: 0 };
     for (const g of Object.keys(cases)) { const f = env.synth({}); const v = f.view(); const L = Limit.compute({ grade: g, forecast: v.forecast, outstandingMinor: v.balance.closingMinor, contract: v.contract, recoverability: { tier: 'MEDIUM' }, alerts: [], cfg: f.cfg }); a.eq(L.baseLimitMinor, cases[g], g); a.eq(L.recommendedLimitMinor, cases[g], g + ' (no guard binds)'); }
     a.eq(Limit.multiplier('NR', Config.defaults()), 0);
   });
@@ -226,11 +226,22 @@ module.exports = function register(h) {
     const v = view(seedState(), 'CT-KR-002'); a.eq(v.limit.recommendedLimitMinor, 20e6); a.eq(v.balance.closingMinor, 30e6); a.eq(v.limit.availableTopupMinor, 0); a.eq(v.limit.overLimitMinor, 10e6);
     const s = sim(v, 1); a.ok(s.limitExceeded && s.approvalRequired); a.eq(s.excessMinor, 10e6 + 1, '(30M+1) - 20M'); a.ok(Model.kpis(Model.compute(seedState()).views).limitExceeded.includes('CT-KR-002'));
   });
-  t('M04', 'Extra safeguards: contract end, non-refundable, refund unknown, low recoverability', ['M04-4'], a => {
-    const mk = (o) => { const f = env.synth(o); const v = f.view(); return Limit.compute({ grade: 'A', forecast: v.forecast, outstandingMinor: v.balance.closingMinor, contract: v.contract, recoverability: o.recov || { tier: 'MEDIUM' }, alerts: o.alerts || [], cfg: f.cfg }); };
-    const end = mk({ endDate: '2026-11-26' }); a.eq(end.recommendedLimitMinor, 20e6, '20 days x 30M / 30'); a.ok(end.guards.find(g => g.id === 'G_CONTRACT_END').binding);
-    a.eq(mk({ endDate: '2026-11-01' }).recommendedLimitMinor, 0, 'expired -> 0'); a.eq(mk({ refundable: false }).recommendedLimitMinor, 30e6); a.eq(mk({ refundable: null }).recommendedLimitMinor, 30e6);
-    a.eq(mk({ recov: { tier: 'LOW' } }).recommendedLimitMinor, 15e6); a.eq(mk({ refundable: false, recov: { tier: 'LOW' } }).recommendedLimitMinor, 15e6, 'tightest cap wins'); a.eq(mk({}).recommendedLimitMinor, 60e6);
+  t('M04', "The CEO's limit: the smallest of four values (purchases x grade months, room-count cap, 10% of room revenue, hotel maximum); short trade, grade months, first deposit and the hold over the maximum", ['M04-4', 'REV-5'], a => {
+    const mk = (o, hotel, extra, mut) => { const f = env.synth(o); if (mut) mut(f.cfg); const v = f.view(); return Limit.compute(Object.assign({ grade: 'A', forecast: v.forecast, outstandingMinor: v.balance.closingMinor, contract: v.contract, hotel: hotel || {}, alerts: [], cfg: f.cfg }, extra || {})); };
+    const base = mk({}); a.eq(base.recommendedLimitMinor, 60e6, 'A: 2 months of 30,000,000'); a.eq(base.baseLimitMinor, 60e6); a.eq(base.hotelMaxMinor, 100e6); a.ok(base.guards.some(g => g.id === 'L4_HOTEL_MAX' && !g.binding)); a.eq(base.firstDepositMaxMinor, 30e6, 'the first deposit is at most half');
+    a.eq(mk({}, {}, { grade: 'B' }).recommendedLimitMinor, 30e6); for (const g of ['C', 'D', 'NR']) a.eq(mk({}, {}, { grade: g }).recommendedLimitMinor, 0, g + ': no prepayment');
+    // ② room-count cap, Korea (KRW) only
+    for (const [rooms, cap] of [[40, 20e6], [50, 20e6], [51, 50e6], [150, 50e6], [151, 60e6], [300, 60e6]]) a.eq(mk({}, { rooms }).recommendedLimitMinor, cap, rooms + ' rooms'); a.ok(mk({}, { rooms: 40 }).guards.find(g => g.id === 'L2_ROOMS').binding); a.ok(mk({}, { rooms: 301 }).notes.includes('ROOMS_ABOVE_TABLE')); a.ok(mk({}).notes.includes('ROOMS_UNKNOWN'));
+    a.ok(!mk({ ccy: 'JPY' }, { rooms: 40 }).guards.some(g => g.id === 'L2_ROOMS'), 'the room cap is a Korean rule'); a.ok(!mk({ ccy: 'JPY' }).notes.includes('ROOMS_UNKNOWN'));
+    // ③ 10% of the hotel's monthly room revenue
+    a.eq(mk({}, { monthlyRoomRevenueMinor: 300e6 }).recommendedLimitMinor, 30e6); a.eq(mk({}, { monthlyRoomRevenueMinor: 333333333 }).recommendedLimitMinor, 33333333, 'rounded down'); a.eq(mk({}, { monthlyRoomRevenueMinor: 900e6 }).recommendedLimitMinor, 60e6, 'not binding'); a.ok(mk({}).notes.includes('REVENUE_UNKNOWN'));
+    // ④ the most one hotel may hold, by currency; a currency the CEO has not set is left out and marked
+    a.eq(mk({}, {}, {}, c => { c.review.hotelMax.KRW = 40e6; }).recommendedLimitMinor, 40e6); const jp = mk({ ccy: 'JPY' }); a.eq(jp.hotelMaxMinor, 10e6); a.eq(jp.recommendedLimitMinor, 10e6, 'yen: 10,000,000 beats 2 months of 30,000,000'); const sg = mk({ ccy: 'SGD' }); a.ok(sg.hotelMaxPending); a.ok(sg.notes.includes('HOTEL_MAX_PENDING')); a.eq(sg.recommendedLimitMinor, 60e6); a.ok(!sg.guards.some(g => g.id === 'L4_HOTEL_MAX'));
+    // direct trade under three months: at most half a month
+    a.eq(mk({}, {}, { directMonths: 2.9 }).recommendedLimitMinor, 15e6, 'A with a short history: 0.5 months'); a.ok(mk({}, {}, { directMonths: 2.9 }).shortHistory); a.eq(mk({}, {}, { directMonths: 3 }).recommendedLimitMinor, 60e6, 'three months is enough'); a.eq(mk({}, {}, { grade: 'B', directMonths: 1 }).recommendedLimitMinor, 15e6); a.eq(mk({}, {}, { directMonths: null }).recommendedLimitMinor, 60e6);
+    // the hold over the hotel maximum
+    const over = mk({ opening: 190e6 }, {}, {}, c => { c.review.hotelMax.KRW = 50e6; }); a.eq(over.outstandingMinor, 100e6); a.includes(over.holdReasons, 'OVER_HOTEL_MAX'); a.eq(over.availableTopupMinor, 0); const eq = mk({ opening: 190e6 }, {}, {}, c => { c.review.hotelMax.KRW = 100e6; }); a.ok(!eq.holdReasons.includes('OVER_HOTEL_MAX'), 'exactly the maximum is not over it');
+    a.ok(mk({}, {}, { grade: 'C' }).holdReasons.includes('GRADE_C_NO_PREPAY')); a.ok(mk({}, {}, { grade: 'D' }).holdReasons.includes('GRADE_D_NO_PREPAY')); a.ok(mk({}, {}, { grade: 'NR' }).holdReasons.includes('NOT_RATED')); a.ok(!mk({}).topupHold);
   });
   t('M05', 'Holds: grade D/NR, critical/high alerts and consumption collapse zero the available top-up', ['M04-4', 'M06-1'], a => {
     const s = seedState(); const d = view(s, 'CT-JP-004'); a.eq(d.rating.grade, 'D'); a.eq(d.limit.recommendedLimitMinor, 0); a.ok(d.limit.topupHold); a.includes(d.limit.holdReasons, 'GRADE_D_NO_PREPAY'); a.includes(d.limit.holdReasons, 'CRITICAL_ALERT_OPEN'); a.eq(d.limit.availableTopupMinor, 0);

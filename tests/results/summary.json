@@ -1,25 +1,25 @@
 {
   "generatedFrom": {
-    "node": "2026-11-12T04:40:21.204Z",
-    "ui": "2026-11-12T03:35:01.459Z",
-    "mutation": "2026-11-12T04:39:55.966Z"
+    "node": "2026-11-16T01:52:38.316Z",
+    "ui": "2026-11-16T01:52:28.664Z",
+    "mutation": "2026-11-16T01:51:00.805Z"
   },
   "nodeTests": {
-    "total": 201,
-    "passed": 201,
+    "total": 218,
+    "passed": 218,
     "failed": 0
   },
   "uiTests": {
-    "total": 31,
-    "passed": 31,
+    "total": 34,
+    "passed": 34,
     "failed": 0
   },
-  "totalTests": 232,
-  "totalPassed": 232,
+  "totalTests": 252,
+  "totalPassed": 252,
   "requirements": {
-    "total": 110,
-    "internal": 105,
-    "pass": 104,
+    "total": 122,
+    "internal": 117,
+    "pass": 116,
     "untested": 1,
     "fail": 0,
     "external": 5
@@ -30,7 +30,7 @@
     "passRatePct": 100
   },
   "mutation": {
-    "applied": 223,
-    "killed": 223
+    "applied": 252,
+    "killed": 252
   }
 }

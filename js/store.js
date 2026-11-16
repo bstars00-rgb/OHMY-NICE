@@ -3,17 +3,17 @@
 (function (root, factory) {
   const NS = root.OMH || (root.OMH = {});
   const dep = typeof require === 'function'
-    ? { Money: require('./core/money.js'), Dates: require('./core/dates.js'), Config: require('./core/config.js'), RBAC: require('./core/rbac.js'), Ledger: require('./engine/ledger.js'), Rating: require('./engine/rating.js'),
+    ? { Money: require('./core/money.js'), Dates: require('./core/dates.js'), Config: require('./core/config.js'), RBAC: require('./core/rbac.js'), Ledger: require('./engine/ledger.js'), Rating: require('./engine/rating.js'), Review: require('./engine/review.js'), Signals: require('./engine/signals.js'),
         Alerts: require('./engine/alerts.js'), Csv: require('./engine/csv.js'), Limit: require('./engine/limit.js'), Model: require('./engine/model.js'),
         Adapters: require('./adapters/adapters.js'), Auth: require('./core/auth.js'), Tracker: require('./engine/tracker.js'), Ellis: require('./adapters/ellis.js'), Seed: require('./data/seed.js') }
-    : { Money: NS.Money, Dates: NS.Dates, Config: NS.Config, RBAC: NS.RBAC, Ledger: NS.Ledger, Rating: NS.Rating, Alerts: NS.Alerts, Csv: NS.Csv, Limit: NS.Limit,
+    : { Money: NS.Money, Dates: NS.Dates, Config: NS.Config, RBAC: NS.RBAC, Ledger: NS.Ledger, Rating: NS.Rating, Review: NS.Review, Signals: NS.Signals, Alerts: NS.Alerts, Csv: NS.Csv, Limit: NS.Limit,
         Model: NS.Model, Adapters: NS.Adapters, Auth: NS.Auth, Tracker: NS.Tracker, Ellis: NS.Ellis, Seed: NS.Seed };
   const api = factory(dep);
   NS.Store = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : globalThis, function (dep) {
   'use strict';
-  const { Money, Dates, Config, RBAC, Ledger, Rating, Alerts, Csv, Limit, Model, Adapters, Auth, Tracker, Ellis, Seed } = dep;
+  const { Money, Dates, Config, RBAC, Ledger, Rating, Review, Signals, Alerts, Csv, Limit, Model, Adapters, Auth, Tracker, Ellis, Seed } = dep;
   const DEFAULT_KEY = 'omh_hfr_v1';                       // NEVER the legacy key 'omh_prg_v42'
   const REQUIRED_KEYS = ['hotels', 'contracts', 'ledger', 'config', 'ratings', 'alerts', 'audit'];
 
@@ -46,7 +46,7 @@
     return Config.validate(s.config).length === 0 && integrityOk(s, [s.config.asOf, nowDate].sort().pop());   // nothing may be dated after both the as-of date and today
   }
   /** Hash of everything the commands may change except alerts (which refresh by themselves): ledger, masters, ratings, confirmations, sales, config. */
-  function coreHashOf(s) { const parts = [s.ledger, s.hotels, s.contracts, s.ratings, s.confirmations, s.config, s.sales]; if (s.ellis) parts.push(s.ellis); return Adapters.hash53(JSON.stringify(parts)); }   // 'ellis' joins the hash only once imported, so states saved before it existed still verify
+  function coreHashOf(s) { const parts = [s.ledger, s.hotels, s.contracts, s.ratings, s.confirmations, s.config, s.sales, s.reviews || {}]; if (s.ellis) parts.push(s.ellis); return Adapters.hash53(JSON.stringify(parts)); }   // 'ellis' joins the hash only once imported, so states saved before it existed still verify
   /** The newest audit entry that carries a state hash must agree with the stored state (detects edits made outside the commands). */
   function coreOk(s) { for (let k = s.audit.length - 1; k >= 0; k--) { const d = s.audit[k].detail; if (d && d.coreHash) return d.coreHash === coreHashOf(s); } return true; }
   /** State that claims a decision happened must have a matching successful audit entry (forged approvals / dismissals are flagged). */
@@ -265,6 +265,28 @@
           return { ok: true, contractId, hotelId: hotel.hotelId, audit: { contractId, hotelId: hotel.hotelId, newHotel, entity: k.omhEntity, currency: k.currency, prepaymentType: k.prepaymentType, openingMinor: k.openingMinor } };
         });
       },
+      /** One reviewer's answers to the CEO's credit review. side SALES (the SCM in charge) or SUPPORT (finance support), each scored on its own; every item not listed counts as UNCHECKED (0 points).
+       *  The reviewer is the signed-in person. The same person on both sides gives no judgement; the earlier answers of a side stay in the history. */
+      submitCreditReview(contractId, side, answers) {
+        return mutate(side === 'SUPPORT' ? 'review.support' : 'review.sales', 'REVIEW_SUBMIT', contractId, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; if (!Review.SIDES.includes(side)) return { ok: false, errors: ['E_REVIEW_SIDE_INVALID'] };
+          const errs = Review.validateAnswers(answers); if (errs.length) return { ok: false, errors: errs };
+          s.reviews = s.reviews || {}; const rec = s.reviews[contractId] || (s.reviews[contractId] = { sales: null, support: null, history: [] }); const key = side === 'SUPPORT' ? 'support' : 'sales';
+          if (rec[key]) rec.history.push(Object.assign({ side, replacedAt: s.config.asOf }, rec[key]));
+          const full = {}; for (const id of Review.ITEM_IDS) full[id] = answers[id] || 'UNCHECKED'; rec[key] = { reviewer: session.actor, at: s.config.asOf, answers: full };
+          const dec = Review.decide(rec, s.config.review); const mine = side === 'SUPPORT' ? dec.support : dec.sales;
+          return { ok: true, decision: dec, audit: { side, score: mine.score, knockout: mine.knockout, status: dec.status, grade: dec.grade } };
+        });
+      },
+      /** The risk codes of a contract (C1-C5 severe, G1-G8 general): what the SCM or finance support found on site or in the papers. They feed signal S8. Replaces the list; the earlier list stays in the history. */
+      setRiskFlags(contractId, codes) {
+        return mutate('rating.edit', 'RISK_FLAGS', contractId, s => {
+          const c = contractOf(contractId); if (!c) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] }; if (!Array.isArray(codes) || codes.length > 20) return { ok: false, errors: ['E_ARGUMENT'] };
+          const bad = codes.filter(x => !(typeof x === 'string' && Object.prototype.hasOwnProperty.call(Signals.FLAGS, x))); if (bad.length) return { ok: false, errors: ['E_RISK_FLAG_UNKNOWN:' + bad[0]] };
+          const next = [...new Set(codes)].sort(); const before = (c.riskFlags || []).slice().sort(); if (JSON.stringify(next) === JSON.stringify(before)) return { ok: false, errors: ['E_NO_CHANGE'] };
+          c.riskFlagHistory = (c.riskFlagHistory || []).concat([{ at: s.config.asOf, by: session.actor, before, after: next }]); c.riskFlags = next; return { ok: true, audit: { before, after: next } };
+        });
+      },
       /** Records contract terms that the rating reads: whether the prepayment is refundable and the documented collateral amount (null = none).
        *  Needs the signed-in person and an evidence reference (clause, guarantee document number). Old values stay in the contract's terms history. */
       setContractTerms(contractId, terms, evidenceRef) {
@@ -284,6 +306,18 @@
           if (hasR) { c.refund.refundable = terms.refundable; c.refund.evidence = ev; }
           if (hasC) c.collateral = terms.collateralMinor ? { type: 'DOCUMENTED', amountMinor: terms.collateralMinor, currency: c.currency, verified: true, evidence: ev } : null;
           return { ok: true, audit: { before, after, evidenceRef: ev.evidenceRef } };      // terms never create a ledger row
+        });
+      },
+      /** The two hotel figures the CEO's limit reads: the number of rooms (room-count cap, Korea) and the monthly room revenue in the contract currency (10% cap). null clears a figure. A reference is required; the earlier values stay in the history. */
+      setHotelBasis(hotelId, basis, evidenceRef) {
+        return mutate('master.write', 'HOTEL_BASIS', hotelId, s => {
+          const h = typeof hotelId === 'string' ? s.hotels.find(x => x.hotelId === hotelId) : null; if (!h) return { ok: false, errors: ['E_TARGET_UNKNOWN'] }; if (!basis || typeof basis !== 'object') return { ok: false, errors: ['E_ARGUMENT'] };
+          const ev = String(evidenceRef == null ? '' : evidenceRef).trim(); if (ev.length < 3) return { ok: false, errors: ['E_EVIDENCE_REQUIRED'] };
+          const next = { rooms: h.rooms == null ? null : h.rooms, monthlyRoomRevenueMinor: h.monthlyRoomRevenueMinor == null ? null : h.monthlyRoomRevenueMinor };
+          if ('rooms' in basis) { if (basis.rooms !== null && !(Number.isInteger(basis.rooms) && basis.rooms >= 1 && basis.rooms <= 5000)) return { ok: false, errors: ['E_ROOMS_INVALID'] }; next.rooms = basis.rooms; }
+          if ('monthlyRoomRevenueMinor' in basis) { const x = basis.monthlyRoomRevenueMinor; if (x !== null && !(Number.isSafeInteger(x) && x > 0 && x <= 1e15)) return { ok: false, errors: ['E_AMOUNT_INVALID'] }; next.monthlyRoomRevenueMinor = x; }
+          const before = { rooms: h.rooms == null ? null : h.rooms, monthlyRoomRevenueMinor: h.monthlyRoomRevenueMinor == null ? null : h.monthlyRoomRevenueMinor }; if (JSON.stringify(before) === JSON.stringify(next)) return { ok: false, errors: ['E_NO_CHANGE'] };
+          h.limitBasisHistory = (h.limitBasisHistory || []).concat([{ at: s.config.asOf, by: session.actor, evidenceRef: ev, before, after: next }]); h.rooms = next.rooms; h.monthlyRoomRevenueMinor = next.monthlyRoomRevenueMinor; return { ok: true, audit: { before, after: next, evidenceRef: ev } };
         });
       },
       /** Records whether the operator or owner of a hotel changed. Any status but UNKNOWN needs the signed-in person and an evidence reference. */
@@ -381,6 +415,9 @@
         return mutate('approval.create', 'PORTAL_DRAFT', contractId, s => {
           const v = contractOf(contractId) && view(contractId); if (!v) return { ok: false, errors: ['E_CONTRACT_UNKNOWN'] };
           if (!Number.isSafeInteger(requestedMinor) || requestedMinor > 1e15) return { ok: false, errors: ['E_AMOUNT_INVALID'] };
+          if (!v.rating.review.submit) return { ok: false, errors: ['E_REVIEW_NOT_PASSED'] };                    // below the submit line, a knock-out, no review yet or the same person twice: no request
+          if (v.limit.holdReasons.includes('YEAR_END_BLOCK')) return { ok: false, errors: ['E_YEAR_END_BLOCK'] };   // December: no new or top-up requests
+          if (v.limit.holdReasons.includes('RED_SIGNAL')) return { ok: false, errors: ['E_SIGNAL_RED'] };            // otherwise a red signal blocks the request (propose a refund or transfer instead)
           const sim = Limit.simulate(v.limit, v.forecast, requestedMinor, v.contract, { daysPerMonth: s.config.forecast.daysPerMonth, addDays: Dates.addDays, asOf: s.config.asOf });
           if (!sim.ok) return { ok: false, errors: sim.errors };
           const packet = Adapters.Portal.buildPacket(v, sim, { asOf: s.config.asOf, scmOpinion: s.ratings[contractId].scmOpinion });

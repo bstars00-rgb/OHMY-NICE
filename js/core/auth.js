@@ -19,6 +19,7 @@
     { id: 'demo.viewer', role: 'VIEWER', name: B('시연 열람 계정', 'Demo viewer account') },
     { id: 'demo.scm', role: 'SCM', name: B('시연 SCM 담당 계정 1', 'Demo SCM account 1') },
     { id: 'demo.scm2', role: 'SCM', name: B('시연 SCM 담당 계정 2', 'Demo SCM account 2') },
+    { id: 'demo.support', role: 'SUPPORT', name: B('시연 경영지원 계정', 'Demo finance-support account') },
     { id: 'demo.ceo', role: 'CEO', name: B('시연 대표이사 계정', 'Demo CEO account') },
     { id: 'demo.admin', role: 'ADMIN', name: B('시연 관리자 계정', 'Demo admin account') },
   ];
