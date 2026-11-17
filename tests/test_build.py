@@ -86,32 +86,55 @@ class Parse(unittest.TestCase):
         self.assertEqual(len(build.build_data([copy_modified(f)], True, '2026-11-17')['payments']), 117)
 
 
+spec2 = importlib.util.spec_from_file_location('build_ceo', os.path.join(ROOT, 'tools', 'build_ceo.py'))
+build_ceo = importlib.util.module_from_spec(spec2); spec2.loader.exec_module(build_ceo)
+
+
+def run_ceo(*args):
+    return subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'build_ceo.py'), *args], capture_output=True, text=True, encoding='utf-8')
+
+
 class Assemble(unittest.TestCase):
-    def test_html_contains_data_and_no_markers(self):
-        html = build.assemble(build.build_data([SAMPLE], True, '2026-11-17'))
-        for m in ('/*__STYLE__*/', '/*__SCRIPT__*/', '/*__DATA__*/'):
+    def build_public(self, xlsx=SAMPLE):
+        out = os.path.join(tempfile.mkdtemp(), 'x.html')
+        r = run_ceo('--public', '--sg-in', xlsx, '--out', out, '--today', '2026-11-17')
+        self.assertEqual(r.returncode, 0, r.stderr + r.stdout)
+        with open(out, encoding='utf-8') as f:
+            return f.read()
+
+    def test_public_html_has_ceo_base_and_sg_tab(self):
+        html = self.build_public()
+        for m in ('/*__SEED__*/', '/*__SGDATA__*/'):
             self.assertNotIn(m, html)
-        self.assertIn('"synthetic":true', html); self.assertIn('Content-Security-Policy', html)
+        for t in ('id="v-sg"', 'data-v="sg"', 'data-v="board"', 'data-v="credit"', 'data-v="hard"', 'renderSG()', 'const SEED = {"hotels"'):
+            self.assertIn(t, html)
 
     def test_script_close_tag_in_data_is_escaped(self):
+        base = self.build_public().count('</script>')
         def f(wb):
             wb['②프리바이목록']['C5'] = 'x</script><script>alert(1)</script>'
-        html = build.assemble(build.build_data([copy_modified(f)], True, '2026-11-17'))
-        self.assertEqual(html.count('</script>'), 2, '데이터 안의 </script>가 태그를 닫으면 안 된다(자료 칸 1개 + 코드 칸 1개)')
+        html = self.build_public(copy_modified(f))
+        self.assertEqual(html.count('</script>'), base, '자료 안의 </script>가 태그를 닫으면 안 된다')
+
+    def test_csv_replaces_by_entity(self):
+        d = tempfile.mkdtemp(); p = os.path.join(d, 'u.csv')
+        with open(p, 'w', encoding='utf-8-sig', newline='') as f:
+            f.write('corp,code,ym,amt,cur\nKR,A1,2026-10,"1,500",KRW\nKR,A2,2026-10,300,KRW\n')
+        seed = {'hotels': [{'corp': 'KR', 'code': 'A1'}, {'corp': 'JP', 'code': 'J1'}], 'usage': [{'corp': 'KR', 'code': 'A1', 'ym': '2026-09', 'amt': 9}, {'corp': 'JP', 'code': 'J1', 'ym': '2026-09', 'amt': 7}]}
+        n, corps = build_ceo.merge_csv(seed, 'usage', p)
+        self.assertEqual((n, corps), (2, ['KR'])); self.assertEqual(sorted((u['corp'], u['code']) for u in seed['usage']), [('JP', 'J1'), ('KR', 'A1'), ('KR', 'A2')])
+        self.assertEqual([u for u in seed['usage'] if u['code'] == 'A1'][0]['amt'], 1500, '쉼표 있는 숫자')
 
 
 class Gate(unittest.TestCase):
-    def run_cli(self, *args):
-        return subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'build.py'), *args], capture_output=True, text=True, encoding='utf-8')
-
     def test_real_data_cannot_be_written_outside_private(self):
         out = os.path.join(tempfile.mkdtemp(), 'x.html')
-        r = self.run_cli('--in', SAMPLE, '--out', out)
+        r = run_ceo('--sg-in', SAMPLE, '--out', out)
         self.assertNotEqual(r.returncode, 0); self.assertFalse(os.path.exists(out)); self.assertIn('private', r.stdout + r.stderr)
 
-    def test_synthetic_flag_allows_other_folders(self):
+    def test_public_flag_allows_other_folders(self):
         out = os.path.join(tempfile.mkdtemp(), 'x.html')
-        r = self.run_cli('--in', SAMPLE, '--synthetic', '--out', out)
+        r = run_ceo('--public', '--sg-in', SAMPLE, '--out', out)
         self.assertEqual(r.returncode, 0, r.stderr); self.assertTrue(os.path.exists(out))
 
 

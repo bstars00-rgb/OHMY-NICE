@@ -1,7 +1,7 @@
 /* 화면 글: 한국어(ko) · 영어(en). 자료 안의 호텔 이름·비고 같은 값은 번역하지 않고 그대로 보인다. {이름} 자리는 값으로 바뀐다. */
 (function (root, factory) {
   const api = factory();
-  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.I18N = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.SGTEXT = api;
 })(typeof self !== 'undefined' ? self : globalThis, function () {
   'use strict';
   const ko = {
@@ -33,7 +33,7 @@
     payCount: '{n}곳 표시', rowsOf: '{from}-{to} / {n}', prev: '이전', next: '다음', sortHint: '머리글을 누르면 정렬합니다',
     // 프리바이
     preTitle: '프리바이(선급) 호텔', preType: '종류', preSignal: '신호', colEntityPre: '법인', colType: '종류', colLedger: '대장 잔액', colHotelBal: '호텔 확인', colGap: '차이', colAvgUse: '월평균 소진', colCover: '소진 개월', colCanUse: '12/31 소진', colEst: '12/31 예상 잔액',
-    colTransfer: '이관', colRefund: '반환', colSignal: '신호', colAsOf: '기준일', canUseYes: '가능', canUseNo: '불가', yes: '가능', no: '불가', unknown: '미확인', blankCell: '—',
+    colTransfer: '이관', colRefund: '반환', colSignal: '신호', colCeoSignal: '현황판 신호', colAsOf: '기준일', canUseYes: '가능', canUseNo: '불가', yes: '가능', no: '불가', unknown: '미확인', blankCell: '—',
     detail: '자세히', detailClose: '닫기', calcTitle: '계산 과정', calcCover: '소진 개월 = 대장 잔액 {ledger} ÷ 월평균 소진 {avg} = {months}개월', calcDays: '기준일 {asOf}부터 {yearEnd}까지 {days}일', calcEst: '12/31 예상 소진 {use}, 예상 잔액 {est}', calcCanUse: '예상 소진이 잔액 이상이면 12/31 소진 가능 → {r}', calcNoAvg: '월평균 소진이 0이거나 비어 있어 소진 개월을 계산하지 않습니다.', calcNoData: '대장 잔액·월평균 소진·기준일이 모두 있어야 계산합니다.',
     noteLabel: '비고', transferNote: '이관 조건·호텔 의견', refundNote: '반환 조건', ownerLabel: '작성 담당',
     // 결재
@@ -86,7 +86,7 @@
     payCandEmpty: 'No hotel is confirmed as A1 or A2 yet. Candidates appear once SCM fills in card acceptance.', pickList: 'Picked candidates', pickCopy: 'Copy picked list', pickCsv: 'Download CSV', pickClear: 'Clear picks', pickNone: 'Nothing picked.', pickSaved: 'Saved in this browser only.',
     payCount: '{n} shown', rowsOf: '{from}-{to} of {n}', prev: 'Prev', next: 'Next', sortHint: 'Click a header to sort',
     preTitle: 'Prebuy (prepaid) hotels', preType: 'Type', preSignal: 'Signal', colEntityPre: 'Entity', colType: 'Type', colLedger: 'Ledger', colHotelBal: 'Hotel-confirmed', colGap: 'Gap', colAvgUse: 'Avg monthly use', colCover: 'Months', colCanUse: 'Use by 12/31', colEst: 'Expected 12/31',
-    colTransfer: 'Transfer', colRefund: 'Refund', colSignal: 'Signal', colAsOf: 'As of', canUseYes: 'Yes', canUseNo: 'No', yes: 'Yes', no: 'No', unknown: 'Unknown', blankCell: '—',
+    colTransfer: 'Transfer', colRefund: 'Refund', colSignal: 'Signal', colCeoSignal: 'CEO board', colAsOf: 'As of', canUseYes: 'Yes', canUseNo: 'No', yes: 'Yes', no: 'No', unknown: 'Unknown', blankCell: '—',
     detail: 'Details', detailClose: 'Close', calcTitle: 'How it was calculated', calcCover: 'Months = ledger {ledger} ÷ monthly use {avg} = {months} months', calcDays: '{days} days from {asOf} to {yearEnd}', calcEst: 'Expected use by 12/31 {use}, expected balance {est}', calcCanUse: 'If expected use covers the balance, it can be used up by 12/31 → {r}', calcNoAvg: 'Monthly use is zero or blank, so months are not calculated.', calcNoData: 'Ledger balance, monthly use and as-of date are all needed.',
     noteLabel: 'Note', transferNote: 'Transfer conditions, hotel opinion', refundNote: 'Refund conditions', ownerLabel: 'Filled by',
     apTitle: 'Preparing the 11/20 approval', apNote: 'This only gathers material. The CEO decides on transfer, use-up, refund and talks.', apReady: 'Readiness', apReadyFinance: 'Finance input (ledger, as-of date, monthly use)', apReadyScm: 'SCM answers (hotel-confirmed balance, transfer, refund)', apReadyPay: 'Post-paid card and account answers', apReadyIssues: 'Check errors', apReadyClass: 'Classes settled (none to confirm)',

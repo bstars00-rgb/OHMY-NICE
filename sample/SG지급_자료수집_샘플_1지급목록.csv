@@ -1,0 +1,127 @@
+﻿① 후불 지급 목록 (가상 샘플 · 지급 실적 기준),,,,,,,,,,,,,
+회색 열: 미리 채워진 가상 지급 실적 · 주황 열: 나라별 SCM 작성 · 월평균 = 8~10월 합계 ÷ 3,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+나라,"ELLIS
+거래처코드","호텔명
+(ELLIS 등록 영문)",지급 구분,현재 지급 법인,현재 지급 방식,지급 통화,"최근 3개월
+월평균 지급액
+(지급 통화)","A1 카드
+수용 여부","A2 수취 계좌
+(법인 계좌 여부)",분류 (자동),비고,작성 담당,작성일
+VN,S10103,Sample Amber Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,575424699,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 328건,,
+VN,S10116,Sample Bamboo Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,491803561,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 37건,SCM-VN-B,2026-11-16
+VN,S10147,Sample Pearl Resort,후불,VN 법인 (Citi VN VCC),VCC,USD,347903897,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 335건,SCM-VN-B,2026-11-16
+VN,S10174,Sample Amber Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,235095257,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 123건,SCM-VN-B,2026-11-16
+VN,S10214,Sample Aurora Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,134966617,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 121건,,
+VN,S10248,Sample Granite Villa,선불,VN 법인 (Citi VN VCC),VCC,VND,274620915,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 79건,,
+VN,S10273,Sample Jade Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,621432692,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 129건,SCM-VN-B,2026-11-16
+VN,S10310,Sample Willow Lodge,후불,VN 법인 (Citi VN VCC),VCC,VND,458549892,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 123건,SCM-VN-B,2026-11-16
+VN,S10340,Sample Bamboo Grand Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,174739868,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 281건,SCM-VN-B,2026-11-16
+VN,S10353,Sample Silver Grand Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,215863110,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 20건,,
+VN,S10373,Sample Amber Suites,후불,VN 법인 (Citi VN VCC),VCC,VND,288343473,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 183건,SCM-VN-B,2026-11-16
+VN,S10384,Sample Willow Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,497862336,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 92건,SCM-VN-B,2026-11-16
+VN,S10416,Sample Harbor Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,559525155,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 39건,,
+VN,S10435,Sample Bamboo Grand Hotel VN,후불,VN 법인 (Citi VN VCC),VCC,VND,66392800,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 25건,SCM-VN-B,2026-11-16
+VN,S10463,Sample Cedar Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,602685102,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 415건,,
+VN,S10491,Sample Lotus Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,125244469,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 41건,,
+VN,S10525,Sample Willow Lodge VN,후불,VN 법인 (Citi VN VCC),VCC,VND,466377036,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 252건,,
+VN,S10554,Sample Silver Suites,후불,VN 법인 (Citi VN VCC),VCC,VND,274733251,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 295건,SCM-VN-B,2026-11-16
+VN,S10563,Sample Coral Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,146527080,X,미등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 172건,SCM-VN-B,2026-11-16
+VN,S10589,Sample Meadow Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,459535540,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 61건,,
+VN,S10617,Sample Orchid Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,456026908,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 37건,,
+VN,S10632,Sample Granite Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,244845333,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 163건,,
+VN,S10655,Sample Cedar Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,333273213,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 205건,,
+VN,S10660,Sample Summit Lodge,후불,VN 법인 (Citi VN VCC),VCC,VND,533627154,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 275건,,
+VN,S10664,Sample Bamboo Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,638606113,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 208건,SCM-VN-B,2026-11-16
+VN,S10691,Sample Meadow Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,201943290,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 221건,,
+VN,S10728,Sample Summit Lodge VN,후불,VN 법인 (Citi VN VCC),VCC,VND,582087538,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 201건,SCM-VN-B,2026-11-16
+VN,S10757,Sample Bamboo Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,154679819,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 136건,,
+VN,S10790,Sample Orchid Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,90750014,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 270건,,
+VN,S10813,Sample Maple Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,61509093,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 159건,SCM-VN-B,2026-11-16
+VN,S10827,Sample Coral Lodge,후불,VN 법인 (Citi VN VCC),VCC,VND,511254752,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 200건,,
+VN,S10853,Sample Willow Resort VN,후불,VN 법인 (Citi VN VCC),VCC,VND,516477060,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 320건,,
+VN,S10858,Sample Cedar Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,73422576,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 281건,SCM-VN-B,2026-11-16
+VN,S10862,Sample Willow Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,454056730,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 346건,,
+VN,S10899,Sample Pearl Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,48678315,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 35건,SCM-VN-B,2026-11-16
+VN,S10911,Sample Aurora Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,424926063,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 100건,,
+VN,S10916,Sample Bamboo Residence,후불,VN 법인 (Citi VN VCC),VCC,VND,164681711,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 25건,,
+VN,S10943,Sample Bamboo Lodge,후불,VN 법인 (Citi VN VCC),VCC,VND,544685613,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 36건,,
+VN,S10969,Sample Silver Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,314875233,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 332건,SCM-VN-B,2026-11-16
+VN,S11001,Sample Summit Resort,후불,VN 법인 (Citi VN VCC),VCC,VND,274191475,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 159건,,
+VN,S11029,Sample Maple Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,339862010,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 344건,,
+VN,S11056,Sample Silver Lodge,후불,VN 법인 (Citi VN VCC),VCC,VND,454115235,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 354건,SCM-VN-B,2026-11-16
+VN,S11083,Sample Coral Lodge VN,후불,VN 법인 (Citi VN VCC),VCC,VND,417076090,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 323건,,
+VN,S11099,Sample Harbor Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,141066832,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 76건,,
+VN,S11107,Sample Granite Grand Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,166350444,X,미등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 299건,SCM-VN-B,2026-11-16
+VN,S11133,Sample Willow Villa VN,후불,VN 법인 (Citi VN VCC),VCC,VND,543830436,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 251건,,
+VN,S11167,Sample Coral Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,562961457,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 317건,SCM-VN-B,2026-11-16
+VN,S11201,Sample Maple Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,431786685,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 84건,,
+VN,S11239,Sample Jade Resort VN,후불,VN 법인 (Citi VN VCC),VCC,VND,481448785,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 76건,,
+VN,S11252,Sample Amber Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,399018051,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 363건,,
+VN,S11283,Sample Meadow Inn VN,후불,VN 법인 (Citi VN VCC),VCC,VND,256840712,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 292건,,
+VN,S11291,Sample Aurora Suites,후불,VN 법인 (Citi VN VCC),VCC,VND,134547481,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 295건,SCM-VN-B,2026-11-16
+VN,S11329,Sample Maple Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,172250970,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 335건,,
+VN,S11369,Sample Orchid Inn VN,후불,VN 법인 (Citi VN VCC),VCC,VND,65278130,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 27건,,
+VN,S11398,Sample Jade Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,156352968,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 406건,,
+VN,S11406,Sample Granite Residence,후불,VN 법인 (Citi VN VCC),VCC,VND,504615661,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 122건,,
+VN,S11437,Sample Aurora Grand Hotel,후불,VN 법인 (Citi VN VCC),VCC,VND,470787294,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 43건,,
+VN,S11442,Sample Silver Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,194004738,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 190건,,
+VN,S11445,Sample Orchid Villa,후불,VN 법인 (Citi VN VCC),VCC,VND,157870807,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 185건,SCM-VN-B,2026-11-16
+VN,S11460,Sample Coral Villa VN,후불,VN 법인 (Citi VN VCC),VCC,VND,620634789,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 309건,SCM-VN-B,2026-11-16
+KR,S11479,Sample Summit Resort,후불,KR 법인 (Citi KR VCC),VCC,KRW,166774053,미확인,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 27건,SCM-KR-A,2026-11-16
+KR,S11487,Sample Maple Residence,후불,KR 법인 (Citi KR VCC),VCC,KRW,73673952,X,미등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 389건,SCM-KR-A,2026-11-16
+KR,S11518,Sample Summit Hotel,후불,KR 법인 (Citi KR VCC),VCC,KRW,30625493,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 399건,SCM-KR-A,2026-11-16
+KR,S11539,Sample Orchid Hotel,후불,KR 법인 (Citi KR VCC),VCC,KRW,117759194,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 44건,SCM-KR-A,2026-11-16
+KR,S11544,Sample Meadow Residence,후불,KR 법인 (Citi KR VCC),VCC,KRW,96907898,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 256건,SCM-KR-A,2026-11-16
+KR,S11565,Sample Silver Grand Hotel,후불,KR 법인 (Citi KR VCC),VCC,KRW,90408261,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 156건,SCM-KR-A,2026-11-16
+KR,S11592,Sample Lotus Villa,후불,KR 법인 (Citi KR VCC),VCC,KRW,27962058,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 76건,SCM-KR-A,2026-11-16
+KR,S11609,Sample Coral Suites,후불,KR 법인 (Citi KR VCC),VCC,KRW,13155451,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 292건,SCM-KR-A,2026-11-16
+KR,S11627,Sample Granite Residence,후불,KR 법인 (Citi KR VCC),VCC,KRW,176595234,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 147건,SCM-KR-A,2026-11-16
+KR,S11630,Sample Pearl Grand Hotel,후불,KR 법인 (Citi KR VCC),VCC,KRW,122565723,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 401건,SCM-KR-A,2026-11-16
+KR,S11660,Sample Bamboo Hotel,후불,KR 법인 (Citi KR VCC),VCC,KRW,4772791,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 308건,SCM-KR-A,2026-11-16
+KR,S11693,Sample Cedar Lodge,후불,KR 법인 (Citi KR VCC),VCC,KRW,154361027,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 41건,SCM-KR-A,2026-11-16
+KR,S11718,Sample Pearl Villa,후불,KR 법인 (Citi KR VCC),VCC,KRW,129139325,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 188건,SCM-KR-A,2026-11-16
+KR,S11750,Sample Orchid Residence,후불,KR 법인 (Citi KR VCC),VCC,KRW,118272612,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 119건,,
+KR,S11766,Sample Pearl Resort,후불,KR 법인 (Citi KR VCC),VCC,KRW,131547265,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 36건,SCM-KR-A,2026-11-16
+KR,S11799,Sample Jade Inn,후불,KR 법인 (Citi KR VCC),VCC,KRW,111666482,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 399건,,
+KR,S11824,Sample Lotus Grand Hotel,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,71464476,X,미등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 132건,SCM-KR-A,2026-11-16
+KR,S11840,Sample Jade Suites,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,27520372,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 50건,SCM-KR-A,2026-11-16
+KR,S11858,Sample Silver Suites,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,56465421,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 368건,SCM-KR-A,2026-11-16
+KR,S11880,Sample Granite Inn,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,15890196,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 274건,SCM-KR-A,2026-11-16
+KR,S11899,Sample Harbor Lodge,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,64766280,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 123건,,
+KR,S11921,Sample Coral Resort,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,19685436,X,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 65건,SCM-KR-A,2026-11-16
+KR,S11925,Sample Aurora Suites,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,88029150,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 24건,SCM-KR-A,2026-11-16
+KR,S11941,Sample Silver Grand Hotel,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,10235651,미확인,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 300건,SCM-KR-A,2026-11-16
+KR,S11969,Sample Silver Resort,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,6610529,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 52건,SCM-KR-A,2026-11-16
+KR,S12002,Sample Silver Inn,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,40215914,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 341건,SCM-KR-A,2026-11-16
+KR,S12028,Sample Summit Inn,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,60937205,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 346건,SCM-KR-A,2026-11-16
+KR,S12043,Sample Granite Lodge,후불,KR 법인 (Hana KR 선불 VCC),VCC,KRW,48731552,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 323건,SCM-KR-A,2026-11-16
+TH,S12075,Sample Silver Lodge,후불,KR 법인 (Citi KR VCC),VCC,THB,786352,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 149건,SCM-TH-C,2026-11-16
+TH,S12110,Sample Lotus Lodge,후불,KR 법인 (Citi KR VCC),VCC,THB,1542940,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 261건,,
+TH,S12145,Sample Pearl Villa,후불,KR 법인 (Citi KR VCC),VCC,THB,1481092,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 342건,SCM-TH-C,2026-11-16
+TH,S12158,Sample Jade Hotel,후불,KR 법인 (Citi KR VCC),VCC,THB,427171,미확인,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 303건,SCM-TH-C,2026-11-16
+TH,S12162,Sample Maple Lodge,후불,KR 법인 (Citi KR VCC),VCC,THB,1058759,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 108건,,
+TH,S12195,Sample Meadow Villa,후불,KR 법인 (Citi KR VCC),VCC,THB,310127,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 103건,SCM-TH-C,2026-11-16
+TH,S12218,Sample Coral Hotel,후불,KR 법인 (Citi KR VCC),VCC,THB,1178293,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 56건,,
+TH,S12250,Sample Lotus Suites,후불,KR 법인 (Citi KR VCC),VCC,THB,606617,X,미확인,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 292건,SCM-TH-C,2026-11-16
+TH,S12263,Sample Cedar Suites,후불,KR 법인 (Citi KR VCC),VCC,THB,953872,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 200건,SCM-TH-C,2026-11-16
+TH,S12291,Sample Aurora Lodge,후불,KR 법인 (Citi KR VCC),VCC,THB,1597131,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 87건,,
+TH,S12323,Sample Amber Suites,후불,KR 법인 (Citi KR VCC),VCC,THB,167661,X,법인 계좌 등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 356건,SCM-TH-C,2026-11-16
+TH,S12341,Sample Harbor Suites,후불,KR 법인 (Citi KR VCC),VCC,THB,1301768,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 89건,,
+TH,S12355,Sample Meadow Villa TH,후불,KR 법인 (Citi KR VCC),VCC,THB,1427126,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 221건,,
+TH,S12382,Sample Jade Grand Hotel,후불,KR 법인 (Citi KR VCC),VCC,THB,140087,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 279건,SCM-TH-C,2026-11-16
+HK,S12389,Sample Cedar Suites,후불,KR 법인 (Citi KR VCC),VCC,HKD,502071,X,미등록,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 14건,SCM-HK-D,2026-11-16
+HK,S12407,Sample Cedar Lodge,후불,KR 법인 (Citi KR VCC),VCC,HKD,512468,X,현금 수령,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 192건,SCM-HK-D,2026-11-16
+HK,S12432,Sample Maple Lodge,후불,KR 법인 (Citi KR VCC),VCC,HKD,135504,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 384건,SCM-HK-D,2026-11-16
+HK,S12472,Sample Maple Resort,후불,KR 법인 (Citi KR VCC),VCC,HKD,353387,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 159건,SCM-HK-D,2026-11-16
+HK,S12502,Sample Harbor Villa,후불,KR 법인 (Citi KR VCC),VCC,HKD,451209,O,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 140건,SCM-HK-D,2026-11-16
+TW,S12522,Sample Lotus Grand Hotel,후불,KR 법인 (Citi KR VCC),VCC,TWD,646620,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 288건,,
+TW,S12547,Sample Aurora Inn,후불,KR 법인 (Citi KR VCC),VCC,TWD,586256,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 111건,,
+TW,S12555,Sample Summit Lodge,후불,KR 법인 (Citi KR VCC),VCC,TWD,493076,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 38건,,
+TW,S12578,Sample Jade Inn,후불,KR 법인 (Citi KR VCC),VCC,TWD,1073362,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 330건,,
+MY,S12592,Sample Pearl Hotel,후불,KR 법인 (Citi KR VCC),VCC,MYR,26686,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 208건,,
+MY,S12597,Sample Jade Residence,후불,KR 법인 (Citi KR VCC),VCC,MYR,152647,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 118건,,
+MY,S12630,Sample Jade Grand Hotel,후불,KR 법인 (Citi KR VCC),VCC,MYR,120133,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 378건,,
+MO,S12663,Sample Harbor Grand Hotel,후불,KR 법인 (Citi KR VCC),VCC,MOP,136719,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 372건,,
+MO,S12695,Sample Meadow Villa,후불,KR 법인 (Citi KR VCC),VCC,MOP,149276,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 136건,,
+VN,S10214,Sample Aurora Inn,후불,VN 법인 (Citi VN VCC),VCC,VND,134966617,,,,[참고] 현재 VCC 결제 중 · 가상 지급 실적 121건,,

@@ -1,0 +1,40 @@
+﻿② 프리바이(선급) 목록 — Floating · 買取 · 하드블럭 선급 · 보증금 (가상 샘플),,,,,,,,,,,,,,,,,,,,
+출처: 가상 샘플. 기준일 KR 11/2 · JP 9/30 · VN 10월말. 모든 호텔·금액은 지어낸 값입니다.,,,,,,,,,,,,,,,,,,,,
+SG 전환 관련 기준: VN Deposit 잔액은 2027 이월 불가 → 연말 잔액이 남지 않게 충전 축소·잔액 반환 요청.,,,,,,,,,,,,,,,,,,,,
+법인,나라,"호텔명
+(ELLIS 등록 영문)","ELLIS
+호텔코드",프리바이 종류,통화,"대장 상 잔액
+(통화 그대로)","호텔 확인 잔액
+(SCM, 호텔에 확인)","기준일
+(대장 기준)","잔액 차이
+(대장−호텔)","최근 3개월
+월평균 소진액","소진 예상
+개월","12/31까지
+소진 가능","이관 가능
+(3자 합의)",이관 조건·호텔 의견,반환 가능,"반환 조건
+(기간·절차)",참고 분류 (자동),비고,작성 담당,"12/31 예상 잔액
+(참고 · 자동)"
+KR,KR,Sample Maple Resort,S10001,Floating,KRW,13158177,13485855,2026-11-02,,921081,,,X,,O,12/20까지 반환 가능 (가상),,,SCM-KR-A,
+KR,KR,Sample Harbor Inn,S10002,Floating,KRW,32273119,26463957,2026-11-02,,2190629,,,미확인,,O,12/20까지 반환 가능 (가상),,,SCM-KR-A,
+KR,KR,Sample Coral Suites,S10003,Floating,KRW,23934910,,2026-11-02,,0,,,,,,,,월평균 소진이 있었으나 운영 중단(11/3)으로 0 처리 · 가압류 검토 중,,
+KR,KR,Sample Willow Villa,S10004,Floating,KRW,9649848,9649848,2026-11-02,,8041540,,,X,,O,12/20까지 반환 가능 (가상),,,SCM-KR-A,
+JP,JP,Sample Cedar Hotel Tokyo,S20001,Floating,JPY,-250000,,2026-09-30,,908978,,,,,,,,,,
+JP,JP,Sample Amber Hotel Osaka,S20002,Floating,JPY,10280880,9555501,2026-08-31,,2103332,,,,,,,,,,
+JP,JP,Sample Jade Resort Okinawa,S20003,Floating,VND,8165864,8001083,2026-09-30,,1308408,,,,,,,,,,
+JP,JP,Sample Pearl Hotel Sapporo,S20004,Floating,JPY,12621962,12177069,2026-09-30,,12621962,,,X,,X,,,,SCM-JP-F,
+JP,JP,Sample Orchid Suites,,Floating,JPY,13843536,14307804,2026-09-30,,692176,,,X,3자 합의 가능 · 11/25까지 회신 (가상),X,,,,SCM-JP-F,
+JP,JP,Sample Lotus Lodge,S20341,Deposit,JPY,3564513,,2026-09-30,,0,,,,,,,,,,
+JP,JP,Sample Summit Resort,S20367,Deposit,JPY,11159990,,2026-09-30,,0,,,X,,O,12/20까지 반환 가능 (가상),,,SCM-JP-F,
+JP,JP,Sample Harbor Lodge,S20422,買取,JPY,5870670,5870670,2026-09-30,,2059719,,,,,,,,,,
+JP,JP,Sample Silver Lodge,S20441,買取,JPY,5261775,5300801,2026-09-30,,2578919,,,,,,,,,,
+JP,JP,Sample Orchid Grand Hotel,S20444,하드블럭 선급,JPY,3201986,,2026-09-30,,3849364,,,미확인,,O,12/20까지 반환 가능 (가상),,,SCM-JP-F,
+VN,VN,Sample Lotus Resort Da Nang,S30001,Floating,VND,403859568,403859568,2026-10-31,,225545951,,,,,,,,,,
+VN,VN,Sample Bamboo Hotel Hanoi,S30002,Floating,VND,610271381,610271381,2026-10-31,,40684758,,,X,,미확인,,,,SCM-VN-B,
+VN,VN,Sample Orchid Resort Nha Trang,S30003,Floating,VND,203071505,203071505,2026-10-31,,135381003,,,X,3자 합의 가능 · 11/25까지 회신 (가상),,,,,SCM-VN-B,
+VN,VN,Sample Summit Inn,S20532,Floating,VND,639316827,639316827,2026-10-31,,106552804,,,X,,O,12/20까지 반환 가능 (가상),,,SCM-VN-B,
+VN,VN,Sample Pearl Suites,S20588,Deposit,VND,436868177,436868177,2026-10-31,,0,,,X,,O,12/20까지 반환 가능 (가상),,,SCM-VN-B,
+VN,VN,Sample Maple Villa P,S20617,Deposit,VND,662093092,662093092,2026-10-31,,0,,,O,3자 합의 가능 (가상),,,,,SCM-VN-B,
+VN,VN,Sample Meadow Residence,S20620,Deposit,VND,445253678,445253678,2026-10-31,,0,,,O,3자 합의 가능 · 11/25까지 회신 (가상),,,,,SCM-VN-B,
+VN,VN,Sample Meadow Grand Hotel,S20658,Commit,VND,404881761,383443705,2026-10-31,,191575786,,,,,,,,,,
+VN,VN,Sample Willow Inn,S20707,Commit,VND,678173212,678173212,2026-10-31,,266540976,,,X,,O,,,,SCM-VN-B,
+VN,VN,Sample Maple Suites,,Commit,VND,793890158,,2026-10-31,,688723931,,,O,3자 합의 가능 · 11/25까지 회신 (가상),,,,,SCM-VN-B,

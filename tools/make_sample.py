@@ -142,6 +142,9 @@ def make_pre(wb, rng):
                     r_note = '12/20까지 반환 가능 (가상)' if rng.random() < 0.7 else None
         ws.append([ent, ctry, nm, ('S%05d' % code) if rng.random() < 0.5 else None, typ, ccy, ledger, hotel_bal, dt.date.fromisoformat(asof), None, avg, None, None, transfer, t_note, refund, r_note, None, note, SCM_NAMES[ctry] if transfer else None, None])
         r += 1
+    # 공개용 처음 자료(tools/make_seed_public.py)와 같은 호텔로 맞춘다: 같은 ELLIS 호텔코드면 대표님 현황판 신호가 함께 보인다
+    for row, code, name in [(5, 'S10001', 'Sample Maple Resort'), (6, 'S10002', 'Sample Harbor Inn'), (7, 'S10003', 'Sample Coral Suites'), (8, 'S10004', 'Sample Willow Villa'), (9, 'S20001', 'Sample Cedar Hotel Tokyo'), (10, 'S20002', 'Sample Amber Hotel Osaka'), (11, 'S20003', 'Sample Jade Resort Okinawa'), (12, 'S20004', 'Sample Pearl Hotel Sapporo'), (19, 'S30001', 'Sample Lotus Resort Da Nang'), (20, 'S30002', 'Sample Bamboo Hotel Hanoi'), (21, 'S30003', 'Sample Orchid Resort Nha Trang')]:
+        ws.cell(row=row, column=4, value=code); ws.cell(row=row, column=3, value=name)
     # 분류가 골고루 보이도록 몇 줄을 맞춘다: (행, 잔액÷월평균 소진, 이관, 반환)
     for row, div, tr, rf in [(8, 1.2, 'X', 'O'), (12, 1.0, 'X', 'X'), (13, 20, 'X', 'X'), (20, 15, 'X', '미확인'), (21, 1.5, 'X', None), (22, 6, 'X', 'O'), (23, None, 'X', 'O'), (24, None, 'O', None)]:
         led = ws.cell(row=row, column=7).value
@@ -180,6 +183,16 @@ def main():
     rng = random.Random(20261116)
     wb = Workbook(); make_guide(wb); make_pay(wb, rng, dt.date(2026, 11, 16)); make_pre(wb, rng)
     os.makedirs(os.path.dirname(a.out), exist_ok=True); wb.save(a.out); print('가상 샘플을 만들었습니다:', a.out)
+    # 엑셀에서 "CSV UTF-8로 저장"한 것과 같은 모양의 CSV(수식 열은 비워 둔다): 화면의 파일 올리기를 시험하고 시연하는 데 쓴다
+    import csv
+    base = os.path.splitext(a.out)[0]
+    for name, tag in (('①지급목록', '_1지급목록'), ('②프리바이목록', '_2프리바이목록')):
+        ws = wb[name]
+        with open(base + tag + '.csv', 'w', encoding='utf-8-sig', newline='') as f:
+            w = csv.writer(f)
+            for row in ws.iter_rows(values_only=True):
+                w.writerow(['' if v is None or (isinstance(v, str) and v.startswith('=')) else (v.date().isoformat() if hasattr(v, 'date') and not isinstance(v, str) else v) for v in row])
+    print('CSV도 만들었습니다:', base + '_1지급목록.csv', base + '_2프리바이목록.csv')
 
 
 if __name__ == '__main__':
