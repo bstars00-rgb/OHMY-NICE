@@ -65,8 +65,17 @@ def merge_csv(seed, key, path):
 
 
 def inject_sg(tpl, sg_data):
-    css = 'button.pill{border:0;cursor:pointer;font:inherit}\n.hrow.detail td{cursor:default}\n'
+    css = ('button.pill{border:0;cursor:pointer;font:inherit}\n.hrow.detail td{cursor:default}\n'
+           '.tile.bad{background:var(--bad-bg)} .tile.warn{background:var(--warn-bg)} .tile.ok{background:var(--ok-bg)} .tile.na{background:var(--na-bg)}\n')
     tpl = once(tpl, '</style>', css + '</style>', '</style>')
+    # 현황판 위 신호등 카드: 색 이름만 있으면 다른 담당자가 무엇을 센 숫자인지 모른다. 제목에 뜻을 덧붙인다(대표님 코드 줄 그대로 찾아 바꾼다).
+    for color, ko, en, ja in (('bad', '충전 차단 호텔 수', 'hotels blocked for top-ups', '追加不可の施設数'),
+                              ('warn', '충전 보류 호텔 수', 'hotels on hold for top-ups', '追加保留の施設数'),
+                              ('ok', '정상 호텔 수', 'healthy hotels', '正常な施設数'),
+                              ('na', '자료 없는 호텔 수', 'hotels without data', 'データなしの施設数')):
+        old = '<div class="k">${cn(\'%s\')}</div><div class="v num">${cnt(\'%s\')}</div>' % (color, color)
+        new = ('<div class="k">${cn(\'%s\')} · ${T(\'%s\',\'%s\',\'%s\')}</div><div class="v num">${cnt(\'%s\')}</div>' % (color, ko, en, ja, color))
+        tpl = once(tpl, old, new, '현황판 %s 카드' % color)
     tpl = once(tpl, '<button role="tab" data-v="data" aria-selected="false" data-i="tData">데이터</button>', '<button role="tab" data-v="sg" aria-selected="false">SG 전환</button>\n  <button role="tab" data-v="data" aria-selected="false" data-i="tData">데이터</button>', '데이터 탭 단추')
     tpl = once(tpl, '<!-- ===== 데이터 ===== -->', '<!-- ===== SG 전환 ===== -->\n<section class="view" id="v-sg"></section>\n\n<!-- ===== 데이터 ===== -->', '데이터 탭 구역')
     old_tabs = "['board','credit','check','monitor','deposit','data','rule','hard']"
