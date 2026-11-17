@@ -1,3 +1,4 @@
-node_modules/
-.DS_Store
-_site/
+private/
+out/
+__pycache__/
+*.pyc

@@ -1,68 +1,652 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
-<title>OMH-NICE 2.0 · Hotel Floating Risk</title>
-<link rel="stylesheet" href="css/app.css?v=20261117f">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+<title>OMH-NICE 2.0 선급·SG 지급 대시보드</title>
+<style>:root{--bg:#fbf7f0;--surface:#fff;--ink:#26221d;--muted:#7a7166;--line:#e7dfd3;--accent:#FF6000;--green:#009538;
+  --ok:#0b8a3e;--warn:#b57d00;--bad:#d6342a;--na:#8f877c;--ok-bg:#e5f4e4;--warn-bg:#fbf0d6;--bad-bg:#fbe7e5;--na-bg:#f0ece6;
+  --a1:#0b8a3e;--a2:#2b7bd1;--exc:#8a4fc4;--tbd:#a8a097;--b1:#0b8a3e;--b2u:#2b7bd1;--b2r:#d97a00;--b2t:#d6342a;
+  --font:-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1916;--surface:#24211d;--ink:#f1ebe2;--muted:#a99f92;--line:#3a352e;--ok:#3fbf6c;--warn:#f0b72f;--bad:#ff6b5f;--na:#7d766c;--ok-bg:#1f3325;--warn-bg:#3a3020;--bad-bg:#3d2422;--na-bg:#2e2a25;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1916;--surface:#24211d;--ink:#f1ebe2;--muted:#a99f92;--line:#3a352e;--ok:#3fbf6c;--warn:#f0b72f;--bad:#ff6b5f;--na:#7d766c;--ok-bg:#1f3325;--warn-bg:#3a3020;--bad-bg:#3d2422;--na-bg:#2e2a25;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+header{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:3px solid var(--accent);background:var(--surface);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+header h1{font-size:17px;margin:0;font-weight:700}header .sub{color:var(--muted);font-size:12px}.spacer{flex:1}
+button,select,input{font:inherit;color:var(--ink)}button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px}button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}button.sm{padding:3px 9px;font-size:12px}
+.seg{display:flex;gap:4px}.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+nav.tabs{display:flex;gap:4px;padding:10px 20px 0;flex-wrap:wrap;background:var(--bg);position:sticky;top:57px;z-index:4}
+nav.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;padding:8px 12px;color:var(--muted);font-weight:500}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:700}
+main{padding:16px 20px 40px;max-width:1500px;margin:0 auto}
+h2{font-size:16px;margin:22px 0 8px}h3{font-size:14px;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:12px}
+.banner{border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:13px;border:1px solid var(--line)}.banner.syn{background:var(--ok-bg)}.banner.int{background:var(--warn-bg);border-color:var(--warn)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.chip{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;background:var(--na-bg);color:var(--ink);border:1px solid var(--line);white-space:nowrap}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}.chip.warn{background:var(--warn-bg);color:var(--warn)}.chip.bad{background:var(--bad-bg);color:var(--bad)}.chip.na{background:var(--na-bg);color:var(--na)}
+.chip.A1,.chip.B1{background:var(--ok-bg);color:var(--ok)}.chip.A2,.chip.B2_USE{background:#e3effc;color:#1f66b3}.chip.EXC{background:#efe5f9;color:#7a3db3}.chip.TBD{background:var(--na-bg);color:var(--na)}.chip.B2_REFUND{background:#fdecd6;color:#a85a00}.chip.B2_TALK{background:var(--bad-bg);color:var(--bad)}.chip.PRE{background:var(--na-bg)}
+button.chip{cursor:pointer}button.chip[aria-pressed="true"]{outline:2px solid var(--accent)}
+.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.card .k{color:var(--muted);font-size:12px}.card .v{font-size:26px;font-weight:700;line-height:1.2}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:2px 0;border-bottom:1px dotted var(--line)}.kv:last-child{border-bottom:0}
+.bar{display:flex;height:16px;border-radius:5px;overflow:hidden;background:var(--na-bg);margin:4px 0}.bar i{display:block;height:100%}.bar .A1{background:var(--a1)}.bar .A2{background:var(--a2)}.bar .EXC{background:var(--exc)}.bar .TBD{background:var(--tbd)}.bar .ok{background:var(--ok)}.bar .warn{background:var(--warn)}.bar .bad{background:var(--bad)}.bar .na{background:var(--na)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:8px 0}.tools label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}.tools select,.tools input{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);min-width:110px}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);max-height:70vh}table{border-collapse:collapse;width:100%}th,td{padding:6px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{position:sticky;top:0;background:var(--surface);font-size:12px;color:var(--muted);white-space:nowrap;cursor:pointer;user-select:none;z-index:1}th.num{text-align:right}th[data-dir="asc"]::after{content:" ▲"}th[data-dir="desc"]::after{content:" ▼"}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--na-bg)}tr.sel td{background:var(--warn-bg)}td.note{max-width:340px;font-size:12px;color:var(--muted)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}.dot.na{background:var(--na)}
+.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin:8px 0}
+.detail{background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin:10px 0}.detail .row{display:flex;gap:16px;flex-wrap:wrap}.detail .col{flex:1;min-width:260px}
+.prog{margin:6px 0}.prog .l{display:flex;justify-content:space-between;font-size:12px}.ready{display:flex;gap:8px;align-items:center;padding:4px 0}.tick{font-weight:700}.tick.ok{color:var(--ok)}.tick.no{color:var(--bad)}
+pre.text{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--font);font-size:13px;max-height:380px;overflow:auto}
+ul.rules{margin:4px 0 0;padding-left:20px}ul.rules li{margin:3px 0}code{font-family:var(--mono);font-size:12px;background:var(--na-bg);padding:1px 5px;border-radius:4px}
+@media (max-width:700px){main{padding:12px}.g2{grid-template-columns:1fr}header{padding:10px 12px}nav.tabs{padding:8px 12px 0;top:96px}}
+@media print{header,nav.tabs,.tools,.pager,button{display:none!important}.tw{max-height:none;overflow:visible}}
+</style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar no-print">
-    <div class="brand">
-      <h1>OMH-NICE 2.0</h1>
-      <p>Hotel Floating &amp; Prepayment Risk</p>
-      <div class="langtog" role="group" aria-label="Language"><button type="button" id="lang-ko">한국어</button><span>·</span><button type="button" id="lang-en">EN</button><span>·</span><button type="button" id="lang-ja" lang="ja">日本語</button><span>·</span><button type="button" id="lang-vi" lang="vi">Tiếng Việt</button></div>
-    </div>
-    <nav class="nav" id="nav" aria-label="Main"></nav>
-    <div class="partner-link"><a href="legacy/index.html" id="partner-a">◂ 파트너 평가 (기존 OMH-NICE, A–E)</a></div>
-    <div class="foot"><span id="foot"></span></div>
-  </aside>
-  <main class="main">
-    <div id="banner" class="banner no-print" role="status"></div>
-    <div class="topbar no-print">
-      <div><h2 id="page-title"></h2><div class="sub" id="page-sub"></div></div>
-      <div class="topright"><span class="asof" id="asof"></span>
-        <span class="userbox"><span id="user-name"></span> <span class="chip" id="user-role"></span> <code id="user-id" class="small"></code> <button type="button" class="btn sm" id="logout-btn"></button></span></div>
-    </div>
-    <div class="content" id="content"></div>
-  </main>
-</div>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="js/core/dates.js?v=20261117f"></script>
-<script src="js/core/money.js?v=20261117f"></script>
-<script src="js/core/config.js?v=20261117f"></script>
-<script src="js/core/rbac.js?v=20261117f"></script>
-<script src="js/core/auth.js?v=20261117f"></script>
-<script src="js/engine/weighted.js?v=20261117f"></script>
-<script src="js/engine/rating.js?v=20261117f"></script>
-<script src="js/engine/ledger.js?v=20261117f"></script>
-<script src="js/engine/forecast.js?v=20261117f"></script>
-<script src="js/engine/limit.js?v=20261117f"></script>
-<script src="js/engine/alerts.js?v=20261117f"></script>
-<script src="js/engine/csv.js?v=20261117f"></script>
-<script src="js/engine/tracker.js?v=20261117f"></script>
-<script src="js/engine/outlook.js?v=20261117f"></script>
-<script src="js/engine/review.js?v=20261117f"></script>
-<script src="js/engine/signals.js?v=20261117f"></script>
-<script src="js/engine/routine.js?v=20261117f"></script>
-<script src="js/engine/deposits.js?v=20261117f"></script>
-<script src="js/adapters/adapters.js?v=20261117f"></script>
-<script src="js/adapters/ellis.js?v=20261117f"></script>
-<script src="js/engine/model.js?v=20261117f"></script>
-<script src="js/data/seed.js?v=20261117f"></script>
-<script src="js/data/ellis_sample.js?v=20261117f"></script>
-<script src="js/data/tracker_sample.js?v=20261117f"></script>
-<script src="js/store.js?v=20261117f"></script>
-<script src="js/i18n/ja.js?v=20261117f"></script>
-<script src="js/i18n/vi.js?v=20261117f"></script>
-<script src="js/ui/common.js?v=20261117f"></script>
-<script src="js/ui/views_a.js?v=20261117f"></script>
-<script src="js/ui/views_b.js?v=20261117f"></script>
-<script src="js/ui/views_c.js?v=20261117f"></script>
-<script src="js/ui/views_d.js?v=20261117f"></script>
-<script src="js/ui/views_auth.js?v=20261117f"></script>
-<script src="js/app.js?v=20261117f"></script>
+<header>
+  <div><h1 id="h-title"></h1><div class="sub" id="h-sub"></div></div>
+  <div class="spacer"></div>
+  <div class="seg" id="lang" role="group" aria-label="language"><button data-lang="ko" aria-pressed="true">한국어</button><button data-lang="en" aria-pressed="false">English</button></div>
+  <button id="theme" class="sm" aria-label="theme">◐</button>
+</header>
+<nav class="tabs" id="tabs" role="tablist"></nav>
+<main id="view"></main>
+<script id="data" type="application/json">{"meta":{"schema":1,"synthetic":true,"builtAt":"2026-11-17T10:36:48","today":"2026-11-17","sources":[{"name":"SG지급_자료수집_샘플.xlsx","payRows":117,"preRows":24}],"asOfMin":"2026-08-31","asOfMax":"2026-11-02","config":{"yearEnd":"2026-12-31","deadlines":{"finance":"2026-11-16","scm":"2026-11-17","approval":"2026-11-20"}},"parseIssues":[]},"payments":[{"sourceRow":5,"country":"VN","code":"S10103","hotel":"Sample Amber Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":575424699,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 328건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":6,"country":"VN","code":"S10116","hotel":"Sample Bamboo Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":491803561,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 37건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":7,"country":"VN","code":"S10147","hotel":"Sample Pearl Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"USD","avg":347903897,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 335건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":8,"country":"VN","code":"S10174","hotel":"Sample Amber Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":235095257,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 123건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":9,"country":"VN","code":"S10214","hotel":"Sample Aurora Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":134966617,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 121건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":10,"country":"VN","code":"S10248","hotel":"Sample Granite Villa","kind":"선불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":274620915,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 79건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":11,"country":"VN","code":"S10273","hotel":"Sample Jade Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":621432692,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 129건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":12,"country":"VN","code":"S10310","hotel":"Sample Willow Lodge","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":458549892,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 123건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":13,"country":"VN","code":"S10340","hotel":"Sample Bamboo Grand Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":174739868,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 281건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":14,"country":"VN","code":"S10353","hotel":"Sample Silver Grand Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":215863110,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 20건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":15,"country":"VN","code":"S10373","hotel":"Sample Amber Suites","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":288343473,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 183건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":16,"country":"VN","code":"S10384","hotel":"Sample Willow Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":497862336,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 92건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":17,"country":"VN","code":"S10416","hotel":"Sample Harbor Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":559525155,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 39건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":18,"country":"VN","code":"S10435","hotel":"Sample Bamboo Grand Hotel VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":66392800,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 25건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":19,"country":"VN","code":"S10463","hotel":"Sample Cedar Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":602685102,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 415건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":20,"country":"VN","code":"S10491","hotel":"Sample Lotus Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":125244469,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 41건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":21,"country":"VN","code":"S10525","hotel":"Sample Willow Lodge VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":466377036,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 252건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":22,"country":"VN","code":"S10554","hotel":"Sample Silver Suites","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":274733251,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 295건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":23,"country":"VN","code":"S10563","hotel":"Sample Coral Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":146527080,"card":"X","account":"미등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 172건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":24,"country":"VN","code":"S10589","hotel":"Sample Meadow Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":459535540,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 61건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":25,"country":"VN","code":"S10617","hotel":"Sample Orchid Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":456026908,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 37건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":26,"country":"VN","code":"S10632","hotel":"Sample Granite Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":244845333,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 163건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":27,"country":"VN","code":"S10655","hotel":"Sample Cedar Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":333273213,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 205건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":28,"country":"VN","code":"S10660","hotel":"Sample Summit Lodge","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":533627154,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 275건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":29,"country":"VN","code":"S10664","hotel":"Sample Bamboo Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":638606113,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 208건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":30,"country":"VN","code":"S10691","hotel":"Sample Meadow Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":201943290,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 221건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":31,"country":"VN","code":"S10728","hotel":"Sample Summit Lodge VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":582087538,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 201건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":32,"country":"VN","code":"S10757","hotel":"Sample Bamboo Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":154679819,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 136건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":33,"country":"VN","code":"S10790","hotel":"Sample Orchid Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":90750014,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 270건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":34,"country":"VN","code":"S10813","hotel":"Sample Maple Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":61509093,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 159건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":35,"country":"VN","code":"S10827","hotel":"Sample Coral Lodge","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":511254752,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 200건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":36,"country":"VN","code":"S10853","hotel":"Sample Willow Resort VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":516477060,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 320건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":37,"country":"VN","code":"S10858","hotel":"Sample Cedar Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":73422576,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 281건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":38,"country":"VN","code":"S10862","hotel":"Sample Willow Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":454056730,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 346건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":39,"country":"VN","code":"S10899","hotel":"Sample Pearl Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":48678315,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 35건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":40,"country":"VN","code":"S10911","hotel":"Sample Aurora Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":424926063,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 100건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":41,"country":"VN","code":"S10916","hotel":"Sample Bamboo Residence","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":164681711,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 25건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":42,"country":"VN","code":"S10943","hotel":"Sample Bamboo Lodge","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":544685613,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 36건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":43,"country":"VN","code":"S10969","hotel":"Sample Silver Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":314875233,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 332건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":44,"country":"VN","code":"S11001","hotel":"Sample Summit Resort","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":274191475,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 159건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":45,"country":"VN","code":"S11029","hotel":"Sample Maple Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":339862010,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 344건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":46,"country":"VN","code":"S11056","hotel":"Sample Silver Lodge","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":454115235,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 354건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":47,"country":"VN","code":"S11083","hotel":"Sample Coral Lodge VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":417076090,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 323건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":48,"country":"VN","code":"S11099","hotel":"Sample Harbor Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":141066832,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 76건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":49,"country":"VN","code":"S11107","hotel":"Sample Granite Grand Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":166350444,"card":"X","account":"미등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 299건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":50,"country":"VN","code":"S11133","hotel":"Sample Willow Villa VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":543830436,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 251건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":51,"country":"VN","code":"S11167","hotel":"Sample Coral Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":562961457,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 317건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":52,"country":"VN","code":"S11201","hotel":"Sample Maple Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":431786685,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 84건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":53,"country":"VN","code":"S11239","hotel":"Sample Jade Resort VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":481448785,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 76건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":54,"country":"VN","code":"S11252","hotel":"Sample Amber Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":399018051,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 363건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":55,"country":"VN","code":"S11283","hotel":"Sample Meadow Inn VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":256840712,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 292건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":56,"country":"VN","code":"S11291","hotel":"Sample Aurora Suites","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":134547481,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 295건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":57,"country":"VN","code":"S11329","hotel":"Sample Maple Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":172250970,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 335건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":58,"country":"VN","code":"S11369","hotel":"Sample Orchid Inn VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":65278130,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 27건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":59,"country":"VN","code":"S11398","hotel":"Sample Jade Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":156352968,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 406건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":60,"country":"VN","code":"S11406","hotel":"Sample Granite Residence","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":504615661,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 122건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":61,"country":"VN","code":"S11437","hotel":"Sample Aurora Grand Hotel","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":470787294,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 43건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":62,"country":"VN","code":"S11442","hotel":"Sample Silver Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":194004738,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 190건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":63,"country":"VN","code":"S11445","hotel":"Sample Orchid Villa","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":157870807,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 185건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":64,"country":"VN","code":"S11460","hotel":"Sample Coral Villa VN","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":620634789,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 309건","owner":"SCM-VN-B","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":65,"country":"KR","code":"S11479","hotel":"Sample Summit Resort","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":166774053,"card":"미확인","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 27건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":66,"country":"KR","code":"S11487","hotel":"Sample Maple Residence","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":73673952,"card":"X","account":"미등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 389건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":67,"country":"KR","code":"S11518","hotel":"Sample Summit Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":30625493,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 399건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":68,"country":"KR","code":"S11539","hotel":"Sample Orchid Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":117759194,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 44건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":69,"country":"KR","code":"S11544","hotel":"Sample Meadow Residence","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":96907898,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 256건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":70,"country":"KR","code":"S11565","hotel":"Sample Silver Grand Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":90408261,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 156건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":71,"country":"KR","code":"S11592","hotel":"Sample Lotus Villa","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":27962058,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 76건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":72,"country":"KR","code":"S11609","hotel":"Sample Coral Suites","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":13155451,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 292건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":73,"country":"KR","code":"S11627","hotel":"Sample Granite Residence","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":176595234,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 147건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":74,"country":"KR","code":"S11630","hotel":"Sample Pearl Grand Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":122565723,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 401건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":75,"country":"KR","code":"S11660","hotel":"Sample Bamboo Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":4772791,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 308건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":76,"country":"KR","code":"S11693","hotel":"Sample Cedar Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":154361027,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 41건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":77,"country":"KR","code":"S11718","hotel":"Sample Pearl Villa","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":129139325,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 188건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":78,"country":"KR","code":"S11750","hotel":"Sample Orchid Residence","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":118272612,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 119건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":79,"country":"KR","code":"S11766","hotel":"Sample Pearl Resort","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":131547265,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 36건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":80,"country":"KR","code":"S11799","hotel":"Sample Jade Inn","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"KRW","avg":111666482,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 399건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":81,"country":"KR","code":"S11824","hotel":"Sample Lotus Grand Hotel","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":71464476,"card":"X","account":"미등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 132건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":82,"country":"KR","code":"S11840","hotel":"Sample Jade Suites","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":27520372,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 50건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":83,"country":"KR","code":"S11858","hotel":"Sample Silver Suites","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":56465421,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 368건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":84,"country":"KR","code":"S11880","hotel":"Sample Granite Inn","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":15890196,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 274건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":85,"country":"KR","code":"S11899","hotel":"Sample Harbor Lodge","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":64766280,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 123건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":86,"country":"KR","code":"S11921","hotel":"Sample Coral Resort","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":19685436,"card":"X","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 65건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":87,"country":"KR","code":"S11925","hotel":"Sample Aurora Suites","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":88029150,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 24건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":88,"country":"KR","code":"S11941","hotel":"Sample Silver Grand Hotel","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":10235651,"card":"미확인","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 300건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":89,"country":"KR","code":"S11969","hotel":"Sample Silver Resort","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":6610529,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 52건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":90,"country":"KR","code":"S12002","hotel":"Sample Silver Inn","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":40215914,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 341건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":91,"country":"KR","code":"S12028","hotel":"Sample Summit Inn","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":60937205,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 346건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":92,"country":"KR","code":"S12043","hotel":"Sample Granite Lodge","kind":"후불","entity":"KR 법인 (Hana KR 선불 VCC)","method":"VCC","ccy":"KRW","avg":48731552,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 323건","owner":"SCM-KR-A","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":93,"country":"TH","code":"S12075","hotel":"Sample Silver Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":786352,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 149건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":94,"country":"TH","code":"S12110","hotel":"Sample Lotus Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1542940,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 261건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":95,"country":"TH","code":"S12145","hotel":"Sample Pearl Villa","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1481092,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 342건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":96,"country":"TH","code":"S12158","hotel":"Sample Jade Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":427171,"card":"미확인","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 303건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":97,"country":"TH","code":"S12162","hotel":"Sample Maple Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1058759,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 108건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":98,"country":"TH","code":"S12195","hotel":"Sample Meadow Villa","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":310127,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 103건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":99,"country":"TH","code":"S12218","hotel":"Sample Coral Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1178293,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 56건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":100,"country":"TH","code":"S12250","hotel":"Sample Lotus Suites","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":606617,"card":"X","account":"미확인","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 292건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":101,"country":"TH","code":"S12263","hotel":"Sample Cedar Suites","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":953872,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 200건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":102,"country":"TH","code":"S12291","hotel":"Sample Aurora Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1597131,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 87건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":103,"country":"TH","code":"S12323","hotel":"Sample Amber Suites","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":167661,"card":"X","account":"법인 계좌 등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 356건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":104,"country":"TH","code":"S12341","hotel":"Sample Harbor Suites","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1301768,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 89건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":105,"country":"TH","code":"S12355","hotel":"Sample Meadow Villa TH","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":1427126,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 221건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":106,"country":"TH","code":"S12382","hotel":"Sample Jade Grand Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"THB","avg":140087,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 279건","owner":"SCM-TH-C","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":107,"country":"HK","code":"S12389","hotel":"Sample Cedar Suites","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"HKD","avg":502071,"card":"X","account":"미등록","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 14건","owner":"SCM-HK-D","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":108,"country":"HK","code":"S12407","hotel":"Sample Cedar Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"HKD","avg":512468,"card":"X","account":"현금 수령","sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 192건","owner":"SCM-HK-D","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":109,"country":"HK","code":"S12432","hotel":"Sample Maple Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"HKD","avg":135504,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 384건","owner":"SCM-HK-D","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":110,"country":"HK","code":"S12472","hotel":"Sample Maple Resort","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"HKD","avg":353387,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 159건","owner":"SCM-HK-D","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":111,"country":"HK","code":"S12502","hotel":"Sample Harbor Villa","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"HKD","avg":451209,"card":"O","account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 140건","owner":"SCM-HK-D","filledAt":"2026-11-16","file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":112,"country":"TW","code":"S12522","hotel":"Sample Lotus Grand Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"TWD","avg":646620,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 288건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":113,"country":"TW","code":"S12547","hotel":"Sample Aurora Inn","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"TWD","avg":586256,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 111건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":114,"country":"TW","code":"S12555","hotel":"Sample Summit Lodge","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"TWD","avg":493076,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 38건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":115,"country":"TW","code":"S12578","hotel":"Sample Jade Inn","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"TWD","avg":1073362,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 330건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":116,"country":"MY","code":"S12592","hotel":"Sample Pearl Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"MYR","avg":26686,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 208건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":117,"country":"MY","code":"S12597","hotel":"Sample Jade Residence","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"MYR","avg":152647,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 118건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":118,"country":"MY","code":"S12630","hotel":"Sample Jade Grand Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"MYR","avg":120133,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 378건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":119,"country":"MO","code":"S12663","hotel":"Sample Harbor Grand Hotel","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"MOP","avg":136719,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 372건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":120,"country":"MO","code":"S12695","hotel":"Sample Meadow Villa","kind":"후불","entity":"KR 법인 (Citi KR VCC)","method":"VCC","ccy":"MOP","avg":149276,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 136건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":121,"country":"VN","code":"S10214","hotel":"Sample Aurora Inn","kind":"후불","entity":"VN 법인 (Citi VN VCC)","method":"VCC","ccy":"VND","avg":134966617,"card":null,"account":null,"sheetClass":null,"note":"[참고] 현재 VCC 결제 중 · 가상 지급 실적 121건","owner":null,"filledAt":null,"file":"SG지급_자료수집_샘플.xlsx"}],"prebuy":[{"sourceRow":5,"entity":"KR","country":"KR","hotel":"Sample Cedar Lodge","code":null,"type":"Floating","ccy":"KRW","ledger":13158177,"hotelBal":13485855,"asOf":"2026-11-02","gap":null,"avg":921081,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-KR-A","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":6,"entity":"KR","country":"KR","hotel":"Sample Jade Lodge","code":null,"type":"Floating","ccy":"KRW","ledger":32273119,"hotelBal":26463957,"asOf":"2026-11-02","gap":null,"avg":2190629,"months":null,"canUse":null,"transfer":"미확인","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-KR-A","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":7,"entity":"KR","country":"KR","hotel":"Sample Harbor Inn","code":null,"type":"Floating","ccy":"KRW","ledger":23934910,"hotelBal":null,"asOf":"2026-11-02","gap":null,"avg":0,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":"월평균 소진이 있었으나 운영 중단(11/3)으로 0 처리 · 가압류 검토 중","owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":8,"entity":"KR","country":"KR","hotel":"Sample Harbor Suites","code":"S20164","type":"Floating","ccy":"KRW","ledger":9649848,"hotelBal":9649848,"asOf":"2026-11-02","gap":null,"avg":8041540,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-KR-A","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":9,"entity":"JP","country":"JP","hotel":"Sample Bamboo Residence","code":null,"type":"Floating","ccy":"JPY","ledger":-250000,"hotelBal":null,"asOf":"2026-09-30","gap":null,"avg":908978,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":10,"entity":"JP","country":"JP","hotel":"Sample Silver Hotel","code":null,"type":"Floating","ccy":"JPY","ledger":10280880,"hotelBal":9555501,"asOf":"2026-08-31","gap":null,"avg":2103332,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":11,"entity":"JP","country":"JP","hotel":"Sample Maple Villa","code":null,"type":"Floating","ccy":"VND","ledger":8165864,"hotelBal":8001083,"asOf":"2026-09-30","gap":null,"avg":1308408,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":12,"entity":"JP","country":"JP","hotel":"Sample Harbor Suites P","code":"S20284","type":"Floating","ccy":"JPY","ledger":12621962,"hotelBal":12177069,"asOf":"2026-09-30","gap":null,"avg":12621962,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"X","refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-JP-F","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":13,"entity":"JP","country":"JP","hotel":"Sample Orchid Suites","code":null,"type":"Floating","ccy":"JPY","ledger":13843536,"hotelBal":14307804,"asOf":"2026-09-30","gap":null,"avg":692176,"months":null,"canUse":null,"transfer":"X","transferNote":"3자 합의 가능 · 11/25까지 회신 (가상)","refund":"X","refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-JP-F","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":14,"entity":"JP","country":"JP","hotel":"Sample Lotus Lodge","code":"S20341","type":"Deposit","ccy":"JPY","ledger":3564513,"hotelBal":null,"asOf":"2026-09-30","gap":null,"avg":0,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":15,"entity":"JP","country":"JP","hotel":"Sample Summit Resort","code":"S20367","type":"Deposit","ccy":"JPY","ledger":11159990,"hotelBal":null,"asOf":"2026-09-30","gap":null,"avg":0,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-JP-F","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":16,"entity":"JP","country":"JP","hotel":"Sample Harbor Lodge","code":"S20422","type":"買取","ccy":"JPY","ledger":5870670,"hotelBal":5870670,"asOf":"2026-09-30","gap":null,"avg":2059719,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":17,"entity":"JP","country":"JP","hotel":"Sample Silver Lodge","code":"S20441","type":"買取","ccy":"JPY","ledger":5261775,"hotelBal":5300801,"asOf":"2026-09-30","gap":null,"avg":2578919,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":18,"entity":"JP","country":"JP","hotel":"Sample Orchid Grand Hotel","code":"S20444","type":"하드블럭 선급","ccy":"JPY","ledger":3201986,"hotelBal":null,"asOf":"2026-09-30","gap":null,"avg":3849364,"months":null,"canUse":null,"transfer":"미확인","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-JP-F","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":19,"entity":"VN","country":"VN","hotel":"Sample Cedar Hotel","code":"S20462","type":"Floating","ccy":"VND","ledger":403859568,"hotelBal":403859568,"asOf":"2026-10-31","gap":null,"avg":225545951,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":20,"entity":"VN","country":"VN","hotel":"Sample Meadow Suites","code":null,"type":"Floating","ccy":"VND","ledger":610271381,"hotelBal":610271381,"asOf":"2026-10-31","gap":null,"avg":40684758,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"미확인","refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":21,"entity":"VN","country":"VN","hotel":"Sample Amber Residence","code":null,"type":"Floating","ccy":"VND","ledger":203071505,"hotelBal":203071505,"asOf":"2026-10-31","gap":null,"avg":135381003,"months":null,"canUse":null,"transfer":"X","transferNote":"3자 합의 가능 · 11/25까지 회신 (가상)","refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":22,"entity":"VN","country":"VN","hotel":"Sample Summit Inn","code":"S20532","type":"Floating","ccy":"VND","ledger":639316827,"hotelBal":639316827,"asOf":"2026-10-31","gap":null,"avg":106552804,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":23,"entity":"VN","country":"VN","hotel":"Sample Pearl Suites","code":"S20588","type":"Deposit","ccy":"VND","ledger":436868177,"hotelBal":436868177,"asOf":"2026-10-31","gap":null,"avg":0,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"O","refundNote":"12/20까지 반환 가능 (가상)","sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":24,"entity":"VN","country":"VN","hotel":"Sample Maple Villa P","code":"S20617","type":"Deposit","ccy":"VND","ledger":662093092,"hotelBal":662093092,"asOf":"2026-10-31","gap":null,"avg":0,"months":null,"canUse":null,"transfer":"O","transferNote":"3자 합의 가능 (가상)","refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":25,"entity":"VN","country":"VN","hotel":"Sample Meadow Residence","code":"S20620","type":"Deposit","ccy":"VND","ledger":445253678,"hotelBal":445253678,"asOf":"2026-10-31","gap":null,"avg":0,"months":null,"canUse":null,"transfer":"O","transferNote":"3자 합의 가능 · 11/25까지 회신 (가상)","refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":26,"entity":"VN","country":"VN","hotel":"Sample Meadow Grand Hotel","code":"S20658","type":"Commit","ccy":"VND","ledger":404881761,"hotelBal":383443705,"asOf":"2026-10-31","gap":null,"avg":191575786,"months":null,"canUse":null,"transfer":null,"transferNote":null,"refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":null,"est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":27,"entity":"VN","country":"VN","hotel":"Sample Willow Inn","code":"S20707","type":"Commit","ccy":"VND","ledger":678173212,"hotelBal":678173212,"asOf":"2026-10-31","gap":null,"avg":266540976,"months":null,"canUse":null,"transfer":"X","transferNote":null,"refund":"O","refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"},{"sourceRow":28,"entity":"VN","country":"VN","hotel":"Sample Maple Suites","code":null,"type":"Commit","ccy":"VND","ledger":793890158,"hotelBal":null,"asOf":"2026-10-31","gap":null,"avg":688723931,"months":null,"canUse":null,"transfer":"O","transferNote":"3자 합의 가능 · 11/25까지 회신 (가상)","refund":null,"refundNote":null,"sheetClass":null,"note":null,"owner":"SCM-VN-B","est":null,"file":"SG지급_자료수집_샘플.xlsx"}]}</script>
+<script>/* OMH-NICE 2.0 — 선급·SG 지급 대시보드 계산부.
+   엑셀(재무·SCM 작성 양식)에서 읽어 낸 정규화 자료를 받아 분류·소진 계산·신호·수집 현황·점검 결과를 만든다.
+   화면(app.js)과 시험(tests/)이 같은 이 파일을 쓴다. 상태나 시계를 갖지 않는다(오늘 날짜는 인자로 받는다).
+   양식의 엑셀 수식(분류 K열, 소진 L·M·U열, 분류 R열)과 같은 결과가 나오게 쓰고, 값은 통화 그대로 다룬다(환산·통화 간 합산 없음). */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.CALC = api;
+})(typeof self !== 'undefined' ? self : globalThis, function () {
+  'use strict';
+  const DAY = 86400000;
+  const blank = v => v === null || v === undefined || v === '';
+  const toDay = s => { if (blank(s)) return null; const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s)); if (!m) return null; return Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / DAY); };
+  const daysBetween = (from, to) => { const a = toDay(from), b = toDay(to); return a === null || b === null ? null : b - a; };
+  const addDays = (s, n) => { const d = toDay(s); if (d === null) return null; return new Date((d + n) * DAY).toISOString().slice(0, 10); };
+  const round1 = x => Math.round(x * 10) / 10;
+
+  /** 나라별 통화(양식의 나라·통화 선택지와 같은 범위). */
+  const CCY_BY_COUNTRY = { KR: 'KRW', JP: 'JPY', VN: 'VND', TH: 'THB', SG: 'SGD', TW: 'TWD', HK: 'HKD', MY: 'MYR', MO: 'MOP' };
+  const CCY_DECIMALS = { KRW: 0, JPY: 0, VND: 0, THB: 2, SGD: 2, TWD: 0, HKD: 2, MYR: 2, MOP: 2, USD: 2 };
+
+  /** 설정: 대표 확정 기준(2026-11-13)과 양식의 약속. 값은 build가 meta로 덮어쓸 수 있다. */
+  const DEFAULTS = {
+    yearEnd: '2026-12-31', staleAsOfDays: 30, signalS1: [2, 4],                    // 소진 개월: 2 초과 노랑, 4 초과 빨강(대표 S1)
+    diffMatchPct: 0.1, diffMinorPct: 2,                                              // 잔액 차이: 0.1% 이내 일치, 2% 이내 경미, 넘으면 큰 차이
+    deadlines: { finance: '2026-11-16', scm: '2026-11-17', approval: '2026-11-20' },
+    criticalWords: ['운영 중단', '폐업', '가압류', '휴업', '압류', '부도', '회생', '파산'],
+  };
+  const cfgOf = data => Object.assign({}, DEFAULTS, (data && data.meta && data.meta.config) || {});
+
+  /* ================= ① 후불 지급 목록 ================= */
+  /** 분류(자동): 양식 K열과 같다. PRE = 선불이라 ②로, A1 = 카드 수용, A2 = 카드 미수용·법인 계좌 등록, EXC = 예외 목록 검토(개인 계좌·현금·미등록·미확인 계좌), TBD = 확인 필요. */
+  function payClass(p) {
+    if (blank(p.hotel)) return 'NONE';
+    if (p.kind === '선불') return 'PRE';
+    if (p.card === 'O') return 'A1';
+    if (p.card === 'X') return p.account === '법인 계좌 등록' ? 'A2' : 'EXC';
+    return 'TBD';
+  }
+  /** 작성 상태: DONE 답이 끝남, UNKNOWN 미확인으로 답함, PARTIAL 카드 미수용인데 계좌 칸이 비었음, EMPTY 비었음. */
+  function payFill(p) {
+    if (p.card === 'O') return 'DONE';
+    if (p.card === 'X') return blank(p.account) ? 'PARTIAL' : (p.account === '미확인' ? 'UNKNOWN' : 'DONE');
+    if (p.card === '미확인') return 'UNKNOWN';
+    return 'EMPTY';
+  }
+
+  /* ================= ② 프리바이 목록 ================= */
+  /** 12/31까지 남은 일수(기준일부터). 기준일이 없으면 null. */
+  const daysToYearEnd = (asOf, cfg) => { const d = daysBetween(asOf, cfg.yearEnd); return d === null ? null : Math.max(0, d); };
+  /** 소진 예상 개월(L열): 잔액 ÷ 월평균 소진액, 소수 첫째 자리. 소진액이 0이거나 비면 없음. */
+  const monthsOfCover = h => (blank(h.ledger) || blank(h.avg) || h.avg === 0) ? null : round1(h.ledger / h.avg);
+  /** 12/31 소진 가능(M열): 남은 일수 ÷ 30 개월 동안의 예상 소진액이 잔액 이상이면 '가능'. 잔액·소진액·기준일이 모두 있어야 판정한다. */
+  function canUseByYearEnd(h, cfg) {
+    if (blank(h.ledger) || blank(h.avg) || blank(h.asOf)) return null;
+    const d = daysToYearEnd(h.asOf, cfg); if (d === null) return null;
+    return h.ledger <= h.avg * d / 30 ? '가능' : '불가';
+  }
+  /** 12/31 예상 잔액(U열). */
+  function estYearEnd(h, cfg) {
+    if (blank(h.ledger) || blank(h.avg) || blank(h.asOf)) return null;
+    const d = daysToYearEnd(h.asOf, cfg); if (d === null) return null;
+    return Math.max(0, h.ledger - h.avg * d / 30);
+  }
+  /** 참고 분류(R열): B1 이관, B2 소진, B2 반환, B2 협의 필요, 확인 필요(TBD). 이관 칸이 비었거나 미확인이면 확인 필요. */
+  function prebuyClass(h, cfg) {
+    if (blank(h.hotel)) return 'NONE';
+    if (blank(h.transfer) || h.transfer === '미확인') return 'TBD';
+    if (h.transfer === 'O') return 'B1';
+    const m = canUseByYearEnd(h, cfg);
+    if (m === '가능') return 'B2_USE';
+    if (m === '불가') return h.refund === 'O' ? 'B2_REFUND' : 'B2_TALK';
+    return 'TBD';
+  }
+  const gap = h => (blank(h.ledger) || blank(h.hotelBal)) ? null : h.ledger - h.hotelBal;
+  const gapPct = h => { const g = gap(h); return g === null || !h.ledger ? null : Math.abs(g) / Math.abs(h.ledger) * 100; };
+  /** 잔액 대조: MATCH 일치, MINOR 경미, MAJOR 큰 차이, NONE 호텔 확인 없음. */
+  function reconOf(h, cfg) {
+    const p = gapPct(h); if (p === null) return 'NONE';
+    return p <= cfg.diffMatchPct ? 'MATCH' : p <= cfg.diffMinorPct ? 'MINOR' : 'MAJOR';
+  }
+  const critical = (h, cfg) => cfg.criticalWords.some(w => String(h.note || '').includes(w));
+  /** 신호: S1(소진 개월) · 잔액 대조 · 중대 메모 중 가장 나쁜 색. ok / warn / bad / na. 자료가 없으면 na(초록으로 치지 않는다). */
+  function prebuySignal(h, cfg) {
+    const out = { s1: 'na', recon: 'na', critical: false, color: 'na' };
+    const isDeposit = h.type === '보증금' || h.type === 'Deposit';
+    if (!blank(h.ledger) && h.ledger > 0 && !blank(h.avg)) {
+      if (isDeposit) out.s1 = 'na';
+      else if (h.avg === 0) out.s1 = 'bad';
+      else { const m = h.ledger / h.avg; out.s1 = m > cfg.signalS1[1] ? 'bad' : m > cfg.signalS1[0] ? 'warn' : 'ok'; }
+    } else if (!blank(h.ledger) && h.ledger <= 0) out.s1 = 'ok';
+    const r = reconOf(h, cfg); out.recon = r === 'NONE' ? 'na' : r === 'MATCH' ? 'ok' : r === 'MINOR' ? 'warn' : 'bad';
+    out.critical = critical(h, cfg);
+    const rank = { ok: 0, warn: 1, bad: 2 }; const list = [out.s1, out.recon].filter(c => c in rank);
+    let color = list.length ? list.reduce((w, c) => rank[c] > rank[w] ? c : w, 'ok') : 'na';
+    if (out.critical) color = 'bad'; out.color = color; return out;
+  }
+  /** 한 호텔의 계산 결과를 한 번에. */
+  function prebuyView(h, cfg) {
+    return Object.assign({}, h, { cover: monthsOfCover(h), canUse: canUseByYearEnd(h, cfg), est: estYearEnd(h, cfg), gap: gap(h), gapPct: gapPct(h), recon: reconOf(h, cfg), cls: prebuyClass(h, cfg), sig: prebuySignal(h, cfg), daysLeft: daysToYearEnd(h.asOf, cfg) });
+  }
+  /** 호텔별 처리 안(대표 결재 자료): 분류에 따른 권장 조치. 결정은 대표가 한다. */
+  const ACTION = { B1: 'TRANSFER', B2_USE: 'CONSUME', B2_REFUND: 'REFUND', B2_TALK: 'NEGOTIATE', TBD: 'CONFIRM' };
+
+  /* ================= 집계 ================= */
+  const inc = (o, k, n) => { o[k] = (o[k] || 0) + n; };
+  function paymentStats(payments) {
+    const rows = payments.map(p => Object.assign({}, p, { cls: payClass(p), fill: payFill(p) }));
+    const byCountry = {}, byMethod = {}; const total = { n: 0, A1: 0, A2: 0, EXC: 0, TBD: 0, PRE: 0 };
+    for (const r of rows) {
+      if (r.cls === 'NONE') continue; total.n++; total[r.cls]++;
+      const c = byCountry[r.country] || (byCountry[r.country] = { n: 0, A1: 0, A2: 0, EXC: 0, TBD: 0, PRE: 0, avgByCcy: {} }); c.n++; c[r.cls]++; if (!blank(r.avg)) inc(c.avgByCcy, r.ccy, r.avg);
+      inc(byMethod, r.method || '—', 1);
+    }
+    const done = rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE' && r.fill === 'DONE').length, due = rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE').length;
+    return { rows, total, byCountry, byMethod, answered: done, due };
+  }
+  /** 12월 SG 직접 지급 테스트 후보: A1·A2로 확정된 호텔을 월평균 지급액이 큰 순서로. (선정 기준은 대표 결정, 여기서는 정렬만 한다.) */
+  function testCandidates(rows, country, limit) {
+    return rows.filter(r => (r.cls === 'A1' || r.cls === 'A2') && (!country || r.country === country) && !blank(r.avg)).sort((a, b) => b.avg - a.avg).slice(0, limit || 20);
+  }
+  function prebuyStats(prebuy, cfg) {
+    const rows = prebuy.map(h => prebuyView(h, cfg)).filter(r => r.cls !== 'NONE');
+    const byClass = {}, byCcy = {}, signals = { ok: 0, warn: 0, bad: 0, na: 0 };
+    for (const r of rows) {
+      const c = byClass[r.cls] || (byClass[r.cls] = { n: 0, byCcy: {} }); c.n++;
+      const cc = c.byCcy[r.ccy] || (c.byCcy[r.ccy] = { n: 0, ledger: 0, hotel: 0, est: 0, estKnown: 0 }); cc.n++; cc.ledger += r.ledger || 0; cc.hotel += r.hotelBal || 0; if (r.est !== null) { cc.est += r.est; cc.estKnown++; }
+      const t = byCcy[r.ccy] || (byCcy[r.ccy] = { n: 0, ledger: 0, hotel: 0, est: 0, estKnown: 0, avg: 0 }); t.n++; t.ledger += r.ledger || 0; t.hotel += r.hotelBal || 0; t.avg += r.avg || 0; if (r.est !== null) { t.est += r.est; t.estKnown++; }
+      signals[r.sig.color]++;
+    }
+    return { rows, byClass, byCcy, signals, count: rows.length };
+  }
+
+  /* ================= 수집 현황 ================= */
+  /** 재무가 써야 하는 칸(②): 대장 상 잔액, 기준일, 월평균 소진액. 한 행이 끝났으면 true. */
+  const financeDone = h => !blank(h.ledger) && !blank(h.asOf) && !blank(h.avg);
+  /** SCM이 써야 하는 칸(②): 호텔 확인 잔액, 이관 가능, 반환 가능(이관 불가일 때 반환을 묻는다). 미확인은 '답은 했지만 확인 못 함'. */
+  function scmFill(h) {
+    const miss = []; if (blank(h.hotelBal)) miss.push('hotelBal'); if (blank(h.transfer)) miss.push('transfer'); if (blank(h.refund)) miss.push('refund');
+    const unknown = ['transfer', 'refund'].filter(k => h[k] === '미확인');
+    return { missing: miss, unknown, done: miss.length === 0 && unknown.length === 0, answered: miss.length === 0 };
+  }
+  /** 조건 칸: 이관 O면 이관 조건, 반환 O면 반환 조건이 있어야 한다. */
+  const conditionMissing = h => { const m = []; if (h.transfer === 'O' && blank(h.transferNote)) m.push('transferNote'); if (h.refund === 'O' && blank(h.refundNote)) m.push('refundNote'); return m; };
+
+  function progress(data, today) {
+    const cfg = cfgOf(data); const pay = paymentStats(data.payments); const pre = (data.prebuy || []).filter(h => !blank(h.hotel));
+    const payDue = pay.rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE');
+    const byCountry = {}; for (const r of payDue) { const c = byCountry[r.country] || (byCountry[r.country] = { due: 0, done: 0, unknown: 0, empty: 0, partial: 0 }); c.due++; if (r.fill === 'DONE') c.done++; else if (r.fill === 'UNKNOWN') c.unknown++; else if (r.fill === 'PARTIAL') c.partial++; else c.empty++; }
+    const preByCountry = {}; for (const h of pre) { const c = preByCountry[h.country] || (preByCountry[h.country] = { n: 0, finance: 0, scm: 0, scmAnswered: 0, ownerSet: 0 }); c.n++; if (financeDone(h)) c.finance++; const s = scmFill(h); if (s.done) c.scm++; if (s.answered) c.scmAnswered++; if (!blank(h.owner)) c.ownerSet++; }
+    const tot = (o, k) => Object.values(o).reduce((s, c) => s + c[k], 0);
+    const dl = cfg.deadlines; const left = k => (today ? daysBetween(today, dl[k]) : null);
+    return {
+      payments: { due: payDue.length, done: tot(byCountry, 'done'), unknown: tot(byCountry, 'unknown'), partial: tot(byCountry, 'partial'), empty: tot(byCountry, 'empty'), byCountry },
+      prebuy: { n: pre.length, finance: tot(preByCountry, 'finance'), scm: tot(preByCountry, 'scm'), scmAnswered: tot(preByCountry, 'scmAnswered'), byCountry: preByCountry },
+      deadlines: { finance: { date: dl.finance, daysLeft: left('finance') }, scm: { date: dl.scm, daysLeft: left('scm') }, approval: { date: dl.approval, daysLeft: left('approval') } },
+    };
+  }
+
+  /* ================= 점검 ================= */
+  /** 자료 점검. 각 항목은 { sev: 'error'|'warn'|'info', sheet: 'pay'|'pre', row, hotel, code, params }. 문장은 화면이 코드별로 만든다. */
+  function validate(data) {
+    const cfg = cfgOf(data); const out = []; const add = (sev, sheet, r, code, params) => out.push({ sev, sheet, row: r.sourceRow || r.row || null, hotel: r.hotel || '', code, params: params || {} });
+    const seen = new Map();
+    for (const p of data.payments || []) {
+      if (blank(p.hotel)) continue;
+      const exp = CCY_BY_COUNTRY[p.country]; if (exp && !blank(p.ccy) && p.ccy !== exp) add('warn', 'pay', p, 'PAY_CCY_MISMATCH', { country: p.country, ccy: p.ccy, expected: exp });
+      if (p.card === 'X' && blank(p.account)) add('warn', 'pay', p, 'PAY_X_NO_ACCOUNT');
+      if (p.card !== 'X' && !blank(p.account)) add('warn', 'pay', p, 'PAY_ACCOUNT_WITHOUT_CARD_X', { account: p.account });
+      if (p.account === '개인 계좌' || p.account === '현금 수령') add('info', 'pay', p, 'PAY_EXCEPTION_ACCOUNT', { account: p.account });
+      if (p.card === 'X' && p.account === '미등록') add('info', 'pay', p, 'PAY_ACCOUNT_NOT_REGISTERED');
+      const key = [p.code, p.hotel, p.entity, p.method].join('|'); seen.set(key, (seen.get(key) || 0) + 1);
+    }
+    for (const [k, n] of seen) if (n > 1) { const [code, hotel] = k.split('|'); out.push({ sev: 'info', sheet: 'pay', row: null, hotel, code: 'PAY_DUPLICATE', params: { code, n } }); }
+    const rowsPre = (data.prebuy || []).filter(h => !blank(h.hotel)); const asOfs = rowsPre.map(h => h.asOf).filter(a => !blank(a)).sort(); const maxAsOf = asOfs.length ? asOfs[asOfs.length - 1] : null;
+    const ccyOfCountry = { KR: ['KRW'], JP: ['JPY'], VN: ['VND'], TH: ['THB'], SG: ['SGD', 'USD', 'JPY', 'KRW', 'VND', 'THB', 'TWD', 'HKD'] };
+    for (const h of rowsPre) {
+      const v = prebuyView(h, cfg);
+      if (!blank(h.ledger) && h.ledger < 0) add('error', 'pre', h, 'PRE_NEG_BALANCE');
+      if (!blank(h.ledger) && blank(h.asOf)) add('warn', 'pre', h, 'PRE_NO_ASOF');
+      if (!blank(h.asOf) && maxAsOf && daysBetween(h.asOf, maxAsOf) > cfg.staleAsOfDays) add('info', 'pre', h, 'PRE_STALE_ASOF', { asOf: h.asOf, days: daysBetween(h.asOf, maxAsOf) });
+      if (v.recon === 'MAJOR') add('warn', 'pre', h, 'PRE_DIFF_BIG', { pct: round1(v.gapPct) }); else if (v.recon === 'MINOR') add('info', 'pre', h, 'PRE_DIFF_MINOR', { pct: round1(v.gapPct) });
+      const okCcy = ccyOfCountry[h.entity || h.country]; if (okCcy && !blank(h.ccy) && !okCcy.includes(h.ccy)) add('error', 'pre', h, 'PRE_CCY_ENTITY', { entity: h.entity || h.country, ccy: h.ccy });
+      if (h.transfer === 'O' && blank(h.transferNote)) add('warn', 'pre', h, 'PRE_TRANSFER_NO_NOTE');
+      if (h.refund === 'O' && blank(h.refundNote)) add('warn', 'pre', h, 'PRE_REFUND_NO_NOTE');
+      const dep = h.type === '보증금' || h.type === 'Deposit';
+      if (!dep && !blank(h.ledger) && h.ledger > 0 && h.avg === 0) add('warn', 'pre', h, 'PRE_ZERO_USAGE');
+      if (h.type === 'Deposit' && h.country === 'VN' && h.ledger > 0) add('info', 'pre', h, 'PRE_VN_DEPOSIT_CARRY');
+      if (v.cls === 'B2_TALK') add('warn', 'pre', h, 'PRE_NEEDS_TALK');
+      if (!blank(h.sheetClass) && !blank(h.transfer) && h.transfer !== '미확인' && labelOf(v.cls) !== h.sheetClass && h.sheetClass !== '확인 필요') add('info', 'pre', h, 'PRE_SHEET_MISMATCH', { sheet: h.sheetClass, calc: labelOf(v.cls) });
+      if (v.sig.critical) add('warn', 'pre', h, 'PRE_CRITICAL_NOTE');
+    }
+    const order = { error: 0, warn: 1, info: 2 }; return out.sort((a, b) => order[a.sev] - order[b.sev]);
+  }
+  /** 분류 이름(양식의 R열과 같은 글자). */
+  const LABELS = { B1: 'B1 이관', B2_USE: 'B2 소진', B2_REFUND: 'B2 반환', B2_TALK: 'B2 협의 필요', TBD: '확인 필요' };
+  const labelOf = c => LABELS[c] || '';
+
+  /* ================= 결재 자료 ================= */
+  /** 11/20 결재용 요약: 통화별로 분류마다 건수·대장 잔액·12/31 예상 잔액. 이관 B1은 금액 전체, B2 소진은 12/31까지 쓰고 남는 예상 잔액, 반환·협의는 12/31 예상 잔액만큼이 연말 정리 대상. */
+  function approvalPacket(data) {
+    const cfg = cfgOf(data); const st = prebuyStats(data.prebuy || [], cfg); const lines = [];
+    for (const cls of ['B1', 'B2_USE', 'B2_REFUND', 'B2_TALK', 'TBD']) { const c = st.byClass[cls]; if (!c) continue; for (const ccy of Object.keys(c.byCcy).sort()) { const x = c.byCcy[ccy]; lines.push({ cls, ccy, n: x.n, ledger: x.ledger, hotel: x.hotel, est: x.est, estKnown: x.estKnown }); } }
+    const pay = paymentStats(data.payments || []);
+    return { lines, prebuy: st, payments: pay, asOf: data.meta && data.meta.asOfMax || null };
+  }
+
+  return { DAY, blank, toDay, daysBetween, addDays, round1, CCY_BY_COUNTRY, CCY_DECIMALS, DEFAULTS, cfgOf, payClass, payFill, monthsOfCover, canUseByYearEnd, estYearEnd, prebuyClass, gap, gapPct, reconOf, prebuySignal, prebuyView, ACTION, LABELS, labelOf, paymentStats, testCandidates, prebuyStats, financeDone, scmFill, conditionMissing, progress, validate, approvalPacket };
+});
+
+/* 화면 글: 한국어(ko) · 영어(en). 자료 안의 호텔 이름·비고 같은 값은 번역하지 않고 그대로 보인다. {이름} 자리는 값으로 바뀐다. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.I18N = api;
+})(typeof self !== 'undefined' ? self : globalThis, function () {
+  'use strict';
+  const ko = {
+    appTitle: '선급·SG 지급 대시보드', appSub: 'OMH-NICE 2.0 · 재무·SCM 자료 수집 양식을 읽어 만든 화면',
+    tabBoard: '보드', tabPay: 'SG 지급(후불)', tabPre: '프리바이 처리', tabApproval: '결재 준비', tabCollect: '수집·점검', tabRules: '기준',
+    synthetic: '가상 샘플', internal: '내부 자료', syntheticNote: '이 화면의 호텔과 금액은 모두 지어낸 값입니다.', internalNote: '실제 자료로 만든 화면입니다. 깃허브나 공개 페이지에 올리지 마세요.',
+    built: '만든 시각', asOf: '기준일', source: '자료 파일', rows: '행', today: '오늘', language: '언어', theme: '밝기',
+    deadlineFinance: '재무 회수', deadlineScm: 'SCM 회수', deadlineApproval: '대표 결재', dLeft: '{n}일 남음', dToday: '오늘', dPast: '{n}일 지남',
+    perCurrencyNote: '통화별 합계입니다. 환율 환산은 하지 않습니다.',
+    // 분류
+    A1: 'A1 카드', A2: 'A2 송금', EXC: '예외 검토', TBD: '확인 필요', PRE: '→ 프리바이',
+    A1d: '후불·카드 수용(SG 가상카드)', A2d: '후불·카드 미수용(SG 가상 송금, 법인 계좌 등록)', EXCd: '개인 계좌·현금·계좌 미등록·미확인이라 예외 목록에서 따로 검토', TBDd: '카드 수용 여부가 아직 비어 있거나 미확인', PREd: '선불이라 프리바이 목록에서 다룸',
+    B1: 'B1 이관', B2_USE: 'B2 소진', B2_REFUND: 'B2 반환', B2_TALK: 'B2 협의 필요',
+    B1d: '선불 이관 가능(호텔·기존 법인·SG 3자 합의)', B2_USEd: '이관 불가, 12/31까지 소진 가능', B2_REFUNDd: '이관 불가, 12/31까지 소진 불가, 반환 가능', B2_TALKd: '이관 불가, 소진 불가, 반환 가능 여부가 불가·미확인이라 협의',
+    actTRANSFER: 'SG 이관 3자 합의 진행', actCONSUME: '12/31까지 소진 모니터링, 충전 보류', actREFUND: '12/31 예상 잔액 반환 요청', actNEGOTIATE: '호텔·법인과 협의(이관·소진·반환 모두 어려움)', actCONFIRM: '재무·SCM 입력 확인',
+    // 신호
+    sigOk: '정상', sigWarn: '주의', sigBad: '위험', sigNa: '자료 대기', reconMATCH: '일치', reconMINOR: '경미한 차이', reconMAJOR: '큰 차이', reconNONE: '호텔 확인 없음',
+    // 보드
+    boardPayTitle: '후불 지급 호텔', boardPayNote: '지급 실적이 있는 호텔(선불 제외)', boardClassTitle: 'SG 지급 분류 진행', boardPreTitle: '프리바이 잔액', boardPreNote: '대장 상 잔액(통화 그대로)',
+    boardCollectTitle: '수집률', boardClassByCountry: '후불 지급 분류, 나라별', boardPreByClass: '프리바이 호텔별 처리, 통화별', boardWatch: '지금 봐야 할 호텔', boardWatchNote: '신호가 빨강인 프리바이 호텔',
+    boardIssues: '자료 점검', boardIssuesNone: '점검에서 걸린 것이 없습니다.', openCollect: '수집·점검 열기', openPre: '프리바이 목록 열기', openPay: '지급 목록 열기',
+    hotels: '곳', count: '건수', ledger: '대장 잔액', hotelBal: '호텔 확인 잔액', est1231: '12/31 예상 잔액', avgUse: '월평균 소진', total: '합계',
+    // 후불
+    payTitle: '후불 지급 호텔', payFilters: '거르기', country: '나라', cls: '분류', method: '지급 방식', entity: '지급 법인', fill: '작성 상태', search: '검색(호텔명·코드)', all: '전체', reset: '거르기 해제',
+    fillDONE: '답함', fillUNKNOWN: '미확인', fillPARTIAL: '계좌 칸 비음', fillEMPTY: '비어 있음',
+    colCountry: '나라', colCode: '거래처코드', colHotel: '호텔', colEntity: '지급 법인', colMethod: '방식', colCcy: '통화', colAvgPay: '월평균 지급액', colCard: '카드 수용', colAccount: '수취 계좌', colClass: '분류', colOwner: '담당', colNote: '비고', colPick: '후보',
+    payCand: '12월 SG 직접 지급 테스트 후보', payCandNote: '카드 수용 또는 법인 계좌 등록이 확인된(A1·A2) 호텔을 월평균 지급액이 큰 순서로 보여 줍니다. 선정 기준은 대표가 정하고, 여기서는 정렬만 합니다.',
+    payCandEmpty: '아직 A1·A2로 확인된 호텔이 없습니다. SCM이 카드 수용 여부를 채우면 후보가 나타납니다.', pickList: '선택한 후보', pickCopy: '선택 목록 복사', pickCsv: 'CSV 내려받기', pickClear: '선택 비우기', pickNone: '선택한 호텔이 없습니다.', pickSaved: '이 브라우저에만 저장됩니다.',
+    payCount: '{n}곳 표시', rowsOf: '{from}-{to} / {n}', prev: '이전', next: '다음', sortHint: '머리글을 누르면 정렬합니다',
+    // 프리바이
+    preTitle: '프리바이(선급) 호텔', preType: '종류', preSignal: '신호', colEntityPre: '법인', colType: '종류', colLedger: '대장 잔액', colHotelBal: '호텔 확인', colGap: '차이', colAvgUse: '월평균 소진', colCover: '소진 개월', colCanUse: '12/31 소진', colEst: '12/31 예상 잔액',
+    colTransfer: '이관', colRefund: '반환', colSignal: '신호', colAsOf: '기준일', canUseYes: '가능', canUseNo: '불가', yes: '가능', no: '불가', unknown: '미확인', blankCell: '—',
+    detail: '자세히', detailClose: '닫기', calcTitle: '계산 과정', calcCover: '소진 개월 = 대장 잔액 {ledger} ÷ 월평균 소진 {avg} = {months}개월', calcDays: '기준일 {asOf}부터 {yearEnd}까지 {days}일', calcEst: '12/31 예상 소진 {use}, 예상 잔액 {est}', calcCanUse: '예상 소진이 잔액 이상이면 12/31 소진 가능 → {r}', calcNoAvg: '월평균 소진이 0이거나 비어 있어 소진 개월을 계산하지 않습니다.', calcNoData: '대장 잔액·월평균 소진·기준일이 모두 있어야 계산합니다.',
+    noteLabel: '비고', transferNote: '이관 조건·호텔 의견', refundNote: '반환 조건', ownerLabel: '작성 담당',
+    // 결재
+    apTitle: '11/20 결재 준비', apNote: '결재 자료만 모읍니다. 이관·소진·반환·협의는 대표가 정합니다.', apReady: '준비 상태', apReadyFinance: '재무 입력(대장 잔액·기준일·월평균 소진)', apReadyScm: 'SCM 답변(호텔 확인 잔액·이관·반환)', apReadyPay: '후불 카드·계좌 확인', apReadyIssues: '점검 오류', apReadyClass: '분류 확정(확인 필요 없음)',
+    apPacket: '프리바이 호텔별 처리 안, 통화별', apDecide: '결정이 필요한 호텔', apDecideNone: '결정이 필요한 호텔이 없습니다.', apText: '기안 문안', apCopy: '문안 복사', apCopied: '복사했습니다', apCopyFail: '복사하지 못했습니다. 글을 직접 선택해 복사하세요.',
+    apMissing: '빠진 칸: {f}', apTalkWhy: '이관·소진·반환이 모두 어려움', apGapWhy: '호텔 확인 잔액이 {pct}% 다름', apCritWhy: '비고에 중대한 내용',
+    fldLedger: '대장 잔액', fldAsOf: '기준일', fldAvg: '월평균 소진', fldHotelBal: '호텔 확인 잔액', fldTransfer: '이관 가능', fldRefund: '반환 가능',
+    // 수집
+    colTitle: '수집·점검', colProgress: '작성 진행', colPay: '① 후불 지급(SCM)', colPreFin: '② 프리바이(재무)', colPreScm: '② 프리바이(SCM)', colDone: '완료', colAnswered: '답함', colTotal: '대상',
+    colIssues: '자료 점검', sevError: '오류', sevWarn: '확인', sevInfo: '참고', sevAll: '전체', sheetPay: '①지급', sheetPre: '②프리바이', colRow: '엑셀 행', colWhat: '내용', colSeverity: '구분', colSheet: '시트',
+    colMissing: '빠진 칸', colMissingNone: '빠진 칸이 없습니다.', parseIssues: '읽지 못한 칸', parseNone: '엑셀에서 읽지 못한 칸이 없습니다.',
+    // 점검 문장
+    PAY_CCY_MISMATCH: '나라 {country}의 통화는 보통 {expected}인데 {ccy}로 적혀 있습니다', PAY_X_NO_ACCOUNT: '카드 미수용(X)인데 수취 계좌 칸이 비어 있습니다', PAY_ACCOUNT_WITHOUT_CARD_X: '카드 수용이 X가 아닌데 수취 계좌({account})가 적혀 있습니다',
+    PAY_EXCEPTION_ACCOUNT: '{account}라서 예외 목록에서 따로 검토합니다', PAY_ACCOUNT_NOT_REGISTERED: '법인 계좌가 등록되지 않았습니다', PAY_DUPLICATE: '같은 거래처코드·호텔·법인·방식이 {n}줄 있습니다',
+    PRE_NEG_BALANCE: '대장 잔액이 음수입니다', PRE_NO_ASOF: '대장 잔액은 있는데 기준일이 없습니다', PRE_STALE_ASOF: '기준일 {asOf}이 가장 늦은 기준일보다 {days}일 앞섭니다', PRE_DIFF_BIG: '호텔 확인 잔액이 대장과 {pct}% 다릅니다', PRE_DIFF_MINOR: '호텔 확인 잔액이 대장과 {pct}% 다릅니다(경미)',
+    PRE_CCY_ENTITY: '법인 {entity}의 통화가 {ccy}로 적혀 있습니다', PRE_TRANSFER_NO_NOTE: '이관 가능(O)인데 이관 조건이 비어 있습니다', PRE_REFUND_NO_NOTE: '반환 가능(O)인데 반환 조건이 비어 있습니다', PRE_ZERO_USAGE: '월평균 소진이 0인데 잔액이 있습니다',
+    PRE_VN_DEPOSIT_CARRY: '베트남 보증금은 2027년으로 넘길 수 없어 연말에 잔액이 남지 않게 정리해야 합니다', PRE_NEEDS_TALK: '이관·소진·반환이 모두 어려워 협의가 필요합니다', PRE_SHEET_MISMATCH: '엑셀의 분류({sheet})와 계산한 분류({calc})가 다릅니다', PRE_CRITICAL_NOTE: '비고에 중대한 내용(운영 중단·폐업·가압류 등)이 있습니다',
+    // 기준
+    rulesTitle: '기준과 계산', rulesTerms: '분류 용어', rulesFormulas: '계산식', rulesSignals: '신호 기준', rulesCeo: '대표 확정 기준(2026-11-13)', rulesData: '자료 취급과 갱신', rulesBuild: '이 화면의 출처',
+    fS1: '소진 개월 = 대장 잔액 ÷ 최근 3개월 월평균 소진액(소수 첫째 자리). 소진액이 0이거나 비면 계산하지 않습니다.', fCan: '12/31 소진 가능 = 대장 잔액 ≤ 월평균 소진 × (기준일부터 12/31까지 일수 ÷ 30). 잔액·소진·기준일이 모두 있어야 판정합니다.', fEst: '12/31 예상 잔액 = max(0, 대장 잔액 − 월평균 소진 × 남은 일수 ÷ 30)',
+    fCls: '프리바이 분류 = 이관이 비었거나 미확인이면 확인 필요, 이관 O면 B1, 이관 X면 12/31 소진 가능일 때 B2 소진, 불가일 때 반환 가능(O)이면 B2 반환, 아니면 B2 협의 필요', fPay: '후불 분류 = 선불이면 프리바이로, 카드 수용 O면 A1, X면 법인 계좌 등록일 때 A2, 아니면 예외 검토, 비었거나 미확인이면 확인 필요', fGap: '잔액 차이 = 대장 − 호텔 확인. 대장의 0.1% 이내 일치, 2% 이내 경미, 넘으면 큰 차이',
+    sigRule1: '소진 개월 2 초과 노랑, 4 초과 빨강(대표 S1). 잔액이 있는데 월평균 소진이 0이면 빨강. 보증금은 소진을 보지 않습니다.', sigRule2: '잔액 대조: 큰 차이는 빨강, 경미한 차이는 노랑.', sigRule3: '비고에 운영 중단·폐업·가압류 등이 있으면 빨강. 자료가 없으면 초록으로 치지 않고 자료 대기로 둡니다. 호텔 색은 가장 나쁜 색입니다.',
+    ceo1: '등급: A 80점 이상, B 70~79점, C 50~69점, D 50점 미만. B 이상(70점 이상)만 대표 결재로 올립니다.', ceo2: '호텔당 최대 선급 한도: 한국 1억 원, 일본 1천만 엔. 베트남·태국·싱가포르는 대표 결정 대기.', ceo3: '정산: 청구서를 받을 때와 매월 1영업일에 마감합니다.',
+    ceo4: '연말(2026): 12월 신규·충전 없음, 올해 소진되지 않을 금액은 충전 보류·감액. 베트남 보증금은 2027년으로 넘길 수 없음.', ceo5: '12월분 정산은 현지 법인과 싱가포르 법인으로 나눠 약 1주 안에 마감(대표 11/12 방향).', ceo6: '신용 심사(100점, 영업·경영지원 이중 채점)와 주간 신호 S1~S8 전체는 이 화면의 범위 밖입니다. 이 화면은 S1(소진 개월)과 잔액 대조만 씁니다.',
+    dataH1: '실제 자료로 만든 화면은 내부 파일입니다. 깃허브나 공개 페이지에 올리지 않습니다.', dataH2: '수취 계좌 번호는 엑셀에도 적지 않고, 이 화면에도 없습니다. 법인 계좌 등록 여부만 씁니다.', dataH3: '엑셀 수식 결과는 쓰지 않고 입력값으로 다시 계산합니다. 엑셀 분류와 다르면 점검에 표시합니다.',
+    dataH4: '갱신: 채운 엑셀을 Claude에게 주면 이 화면을 다시 만듭니다. 여러 파일(나라별 회신)을 한꺼번에 줘도 합쳐서 만듭니다.', dataH5: '분류 용어 A1·A2·B1·B2는 양식의 작성안내와 같은 뜻입니다.',
+    sourcesTitle: '읽은 파일', rowsPay: '①지급 {n}행', rowsPre: '②프리바이 {n}행',
+  };
+  const en = {
+    appTitle: 'Prepayment and SG payment dashboard', appSub: 'OMH-NICE 2.0 · built from the finance and SCM data collection form',
+    tabBoard: 'Board', tabPay: 'SG payment (post-paid)', tabPre: 'Prebuy handling', tabApproval: 'Approval prep', tabCollect: 'Collection & checks', tabRules: 'Rules',
+    synthetic: 'Synthetic sample', internal: 'Internal data', syntheticNote: 'All hotels and amounts on this screen are made up.', internalNote: 'Built from real data. Do not put it on GitHub or any public page.',
+    built: 'Built at', asOf: 'As of', source: 'Source files', rows: 'rows', today: 'Today', language: 'Language', theme: 'Theme',
+    deadlineFinance: 'Finance due', deadlineScm: 'SCM due', deadlineApproval: 'CEO approval', dLeft: '{n} days left', dToday: 'today', dPast: '{n} days ago',
+    perCurrencyNote: 'Totals per currency. No FX conversion.',
+    A1: 'A1 Card', A2: 'A2 Transfer', EXC: 'Exception review', TBD: 'To confirm', PRE: '→ Prebuy',
+    A1d: 'Post-paid, hotel accepts cards (SG virtual card)', A2d: 'Post-paid, no card (SG virtual transfer to a registered corporate account)', EXCd: 'Personal account, cash, unregistered or unknown account: reviewed separately', TBDd: 'Card acceptance is blank or unknown', PREd: 'Pre-paid: handled in the prebuy list',
+    B1: 'B1 Transfer', B2_USE: 'B2 Use up', B2_REFUND: 'B2 Refund', B2_TALK: 'B2 Needs talks',
+    B1d: 'Prepayment can move (hotel, current entity and SG agree)', B2_USEd: 'Cannot move; can be used up by 12/31', B2_REFUNDd: 'Cannot move or be used up by 12/31; refund possible', B2_TALKd: 'Cannot move or be used up; refund not possible or unknown, so talks are needed',
+    actTRANSFER: 'Go ahead with the three-party transfer', actCONSUME: 'Monitor usage until 12/31, hold top-ups', actREFUND: 'Ask for the expected 12/31 balance back', actNEGOTIATE: 'Talk to the hotel and entity (transfer, use and refund are all hard)', actCONFIRM: 'Check finance and SCM input',
+    sigOk: 'OK', sigWarn: 'Watch', sigBad: 'Risk', sigNa: 'Waiting for data', reconMATCH: 'Match', reconMINOR: 'Minor gap', reconMAJOR: 'Major gap', reconNONE: 'No hotel confirmation',
+    boardPayTitle: 'Post-paid hotels', boardPayNote: 'Hotels with payments (pre-paid excluded)', boardClassTitle: 'SG payment classification', boardPreTitle: 'Prebuy balance', boardPreNote: 'Ledger balance (own currency)',
+    boardCollectTitle: 'Collection rate', boardClassByCountry: 'Post-paid classification by country', boardPreByClass: 'Prebuy handling by currency', boardWatch: 'Hotels to look at', boardWatchNote: 'Prebuy hotels with a red signal',
+    boardIssues: 'Data checks', boardIssuesNone: 'The checks found nothing.', openCollect: 'Open collection & checks', openPre: 'Open prebuy list', openPay: 'Open payment list',
+    hotels: 'hotels', count: 'Count', ledger: 'Ledger balance', hotelBal: 'Hotel-confirmed', est1231: 'Expected 12/31 balance', avgUse: 'Avg monthly use', total: 'Total',
+    payTitle: 'Post-paid hotels', payFilters: 'Filters', country: 'Country', cls: 'Class', method: 'Payment method', entity: 'Paying entity', fill: 'Fill status', search: 'Search (hotel, code)', all: 'All', reset: 'Clear filters',
+    fillDONE: 'Answered', fillUNKNOWN: 'Unknown', fillPARTIAL: 'Account missing', fillEMPTY: 'Empty',
+    colCountry: 'Country', colCode: 'Vendor code', colHotel: 'Hotel', colEntity: 'Paying entity', colMethod: 'Method', colCcy: 'Ccy', colAvgPay: 'Avg monthly payment', colCard: 'Accepts card', colAccount: 'Receiving account', colClass: 'Class', colOwner: 'Owner', colNote: 'Note', colPick: 'Pick',
+    payCand: 'Candidates for the December SG direct payment test', payCandNote: 'Hotels confirmed as A1 or A2, biggest monthly payment first. The CEO sets the selection rule; this screen only sorts.',
+    payCandEmpty: 'No hotel is confirmed as A1 or A2 yet. Candidates appear once SCM fills in card acceptance.', pickList: 'Picked candidates', pickCopy: 'Copy picked list', pickCsv: 'Download CSV', pickClear: 'Clear picks', pickNone: 'Nothing picked.', pickSaved: 'Saved in this browser only.',
+    payCount: '{n} shown', rowsOf: '{from}-{to} of {n}', prev: 'Prev', next: 'Next', sortHint: 'Click a header to sort',
+    preTitle: 'Prebuy (prepaid) hotels', preType: 'Type', preSignal: 'Signal', colEntityPre: 'Entity', colType: 'Type', colLedger: 'Ledger', colHotelBal: 'Hotel-confirmed', colGap: 'Gap', colAvgUse: 'Avg monthly use', colCover: 'Months', colCanUse: 'Use by 12/31', colEst: 'Expected 12/31',
+    colTransfer: 'Transfer', colRefund: 'Refund', colSignal: 'Signal', colAsOf: 'As of', canUseYes: 'Yes', canUseNo: 'No', yes: 'Yes', no: 'No', unknown: 'Unknown', blankCell: '—',
+    detail: 'Details', detailClose: 'Close', calcTitle: 'How it was calculated', calcCover: 'Months = ledger {ledger} ÷ monthly use {avg} = {months} months', calcDays: '{days} days from {asOf} to {yearEnd}', calcEst: 'Expected use by 12/31 {use}, expected balance {est}', calcCanUse: 'If expected use covers the balance, it can be used up by 12/31 → {r}', calcNoAvg: 'Monthly use is zero or blank, so months are not calculated.', calcNoData: 'Ledger balance, monthly use and as-of date are all needed.',
+    noteLabel: 'Note', transferNote: 'Transfer conditions, hotel opinion', refundNote: 'Refund conditions', ownerLabel: 'Filled by',
+    apTitle: 'Preparing the 11/20 approval', apNote: 'This only gathers material. The CEO decides on transfer, use-up, refund and talks.', apReady: 'Readiness', apReadyFinance: 'Finance input (ledger, as-of date, monthly use)', apReadyScm: 'SCM answers (hotel-confirmed balance, transfer, refund)', apReadyPay: 'Post-paid card and account answers', apReadyIssues: 'Check errors', apReadyClass: 'Classes settled (none to confirm)',
+    apPacket: 'Prebuy handling proposal by currency', apDecide: 'Hotels that need a decision', apDecideNone: 'No hotel needs a decision.', apText: 'Draft text', apCopy: 'Copy text', apCopied: 'Copied', apCopyFail: 'Copy failed. Select the text and copy it by hand.',
+    apMissing: 'Missing: {f}', apTalkWhy: 'Transfer, use-up and refund are all hard', apGapWhy: 'Hotel-confirmed balance differs by {pct}%', apCritWhy: 'Serious remark in the note',
+    fldLedger: 'ledger balance', fldAsOf: 'as-of date', fldAvg: 'monthly use', fldHotelBal: 'hotel-confirmed balance', fldTransfer: 'transfer answer', fldRefund: 'refund answer',
+    colTitle: 'Collection & checks', colProgress: 'Filling progress', colPay: '① Post-paid (SCM)', colPreFin: '② Prebuy (finance)', colPreScm: '② Prebuy (SCM)', colDone: 'Done', colAnswered: 'Answered', colTotal: 'Due',
+    colIssues: 'Data checks', sevError: 'Error', sevWarn: 'Check', sevInfo: 'Note', sevAll: 'All', sheetPay: '①Payments', sheetPre: '②Prebuy', colRow: 'Excel row', colWhat: 'What', colSeverity: 'Level', colSheet: 'Sheet',
+    colMissing: 'Missing cells', colMissingNone: 'Nothing is missing.', parseIssues: 'Cells that could not be read', parseNone: 'Every cell could be read.',
+    PAY_CCY_MISMATCH: 'Country {country} usually pays in {expected}, but {ccy} is entered', PAY_X_NO_ACCOUNT: 'Card not accepted (X) but the receiving-account cell is empty', PAY_ACCOUNT_WITHOUT_CARD_X: 'Card is not marked X but a receiving account ({account}) is entered',
+    PAY_EXCEPTION_ACCOUNT: '{account}: reviewed separately as an exception', PAY_ACCOUNT_NOT_REGISTERED: 'No corporate account is registered', PAY_DUPLICATE: 'The same vendor code, hotel, entity and method appears {n} times',
+    PRE_NEG_BALANCE: 'Ledger balance is negative', PRE_NO_ASOF: 'A ledger balance is entered but the as-of date is missing', PRE_STALE_ASOF: 'As-of {asOf} is {days} days older than the latest one', PRE_DIFF_BIG: 'Hotel-confirmed balance differs from the ledger by {pct}%', PRE_DIFF_MINOR: 'Hotel-confirmed balance differs from the ledger by {pct}% (minor)',
+    PRE_CCY_ENTITY: 'Entity {entity} is entered with currency {ccy}', PRE_TRANSFER_NO_NOTE: 'Transfer is O but the conditions are empty', PRE_REFUND_NO_NOTE: 'Refund is O but the conditions are empty', PRE_ZERO_USAGE: 'Monthly use is zero but a balance is left',
+    PRE_VN_DEPOSIT_CARRY: 'A Vietnam deposit cannot be carried into 2027, so no balance may be left at year end', PRE_NEEDS_TALK: 'Transfer, use-up and refund are all hard, so talks are needed', PRE_SHEET_MISMATCH: 'The sheet class ({sheet}) differs from the calculated class ({calc})', PRE_CRITICAL_NOTE: 'The note has a serious remark (suspension, closure, attachment)',
+    rulesTitle: 'Rules and calculation', rulesTerms: 'Class terms', rulesFormulas: 'Formulas', rulesSignals: 'Signal rules', rulesCeo: 'CEO-confirmed standard (2026-11-13)', rulesData: 'Data handling and updating', rulesBuild: 'Where this screen comes from',
+    fS1: 'Months = ledger balance ÷ average monthly use of the last 3 months (one decimal). Not calculated when use is zero or blank.', fCan: 'Use by 12/31 = ledger ≤ monthly use × (days from the as-of date to 12/31 ÷ 30). Needs ledger, use and as-of date.', fEst: 'Expected 12/31 balance = max(0, ledger − monthly use × days left ÷ 30)',
+    fCls: 'Prebuy class = to confirm if transfer is blank or unknown; B1 if transfer is O; if X, B2 use-up when it can be used up by 12/31, else B2 refund when refund is O, else B2 needs talks', fPay: 'Post-paid class = prebuy if pre-paid; A1 if the card is accepted (O); if X, A2 when a corporate account is registered, else exception review; to confirm if blank or unknown', fGap: 'Gap = ledger − hotel-confirmed. Within 0.1% of the ledger is a match, within 2% minor, above that major',
+    sigRule1: 'Months of cover above 2 yellow, above 4 red (CEO S1). A balance with zero monthly use is red. Deposits are not judged on usage.', sigRule2: 'Balance match: a major gap is red, a minor gap yellow.', sigRule3: 'A note with suspension, closure or attachment is red. No data is never counted as green. The hotel colour is the worst colour.',
+    ceo1: 'Grades: A 80+, B 70-79, C 50-69, D below 50. Only B or better (70+) goes to CEO approval.', ceo2: 'Per-hotel maximum prepayment: Korea 100M KRW, Japan 10M JPY. Vietnam, Thailand and Singapore wait for the CEO.', ceo3: 'Settlement: when an invoice arrives and on the first business day of every month.',
+    ceo4: 'Year end (2026): no new or top-up requests in December; money that will not be used this year is held or cut. A Vietnam deposit cannot be carried into 2027.', ceo5: 'December settlement is split between the local entity and the Singapore entity and closed in about a week (CEO direction of 11/12).', ceo6: 'The 100-point credit review (two reviewers) and the full weekly signals S1-S8 are outside this screen. It uses S1 (months of cover) and the balance match only.',
+    dataH1: 'A screen built from real data is an internal file. Do not put it on GitHub or any public page.', dataH2: 'Receiving account numbers are not in the Excel form and not on this screen. Only whether a corporate account is registered.', dataH3: 'Excel formula results are not used; everything is recalculated from the inputs. A different Excel class is flagged in the checks.',
+    dataH4: 'Updating: give the filled Excel to Claude and the screen is rebuilt. Several files (one per country) can be given together and are merged.', dataH5: 'The terms A1, A2, B1 and B2 mean the same as in the guide sheet of the form.',
+    sourcesTitle: 'Files read', rowsPay: '①Payments {n} rows', rowsPre: '②Prebuy {n} rows',
+  };
+  return { ko, en };
+});
+
+/* 화면. 자료는 <script id="data">에서 읽고, 계산은 calc.js에 맡긴다. 네트워크를 쓰지 않는다. */
+(function () {
+  'use strict';
+  const DATA = JSON.parse(document.getElementById('data').textContent);
+  const META = DATA.meta, CFG = CALC.cfgOf(DATA), TODAY = META.today;
+  const PAY = CALC.paymentStats(DATA.payments);
+  PAY.rows.forEach((r, i) => { r.id = 'p' + i; });
+  const PRE = CALC.prebuyStats(DATA.prebuy, CFG);
+  PRE.rows.forEach((r, i) => { r.id = 'h' + i; });
+  const PROG = CALC.progress(DATA, TODAY);
+  const ISSUES = CALC.validate(DATA);
+  const PACKET = CALC.approvalPacket(DATA);
+  const safe = (fn, fb) => { try { return fn(); } catch (e) { return fb; } };
+  const S = { tab: 'board', lang: safe(() => localStorage.getItem('omh_lang'), null) || 'ko', f: { pay: {}, pre: {}, col: { sev: '' } }, tables: {}, open: null, picks: new Set(), focus: null };
+  const PICK_KEY = 'omh_sg_picks:' + (META.synthetic ? 'sample' : 'real');
+  safe(() => { (JSON.parse(localStorage.getItem(PICK_KEY) || '[]')).forEach(x => S.picks.add(x)); });
+  const savePicks = () => safe(() => localStorage.setItem(PICK_KEY, JSON.stringify([...S.picks])));
+
+  /* ---------- 글·숫자 ---------- */
+  const t = (k, p) => { let s = (I18N[S.lang] && I18N[S.lang][k]) || I18N.ko[k] || k; if (p) for (const x of Object.keys(p)) s = s.split('{' + x + '}').join(p[x]); return s; };
+  const L = (ko, en) => S.lang === 'ko' ? ko : en;
+  const esc = v => String(v === null || v === undefined ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const blank = CALC.blank;
+  const loc = () => S.lang === 'ko' ? 'ko-KR' : 'en-US';
+  const fmt = (n, ccy) => { if (blank(n)) return '—'; const d = CALC.CCY_DECIMALS[ccy] === undefined ? 0 : CALC.CCY_DECIMALS[ccy]; return new Intl.NumberFormat(loc(), { maximumFractionDigits: d, minimumFractionDigits: 0 }).format(n); };
+  const money = (n, ccy) => blank(n) ? '—' : fmt(n, ccy) + ' <span class="muted small">' + esc(ccy) + '</span>';
+  const pct = (n, d) => blank(n) ? '—' : (Math.round(n * Math.pow(10, d || 0)) / Math.pow(10, d || 0)).toLocaleString(loc()) + '%';
+  const chip = (cls, text) => '<span class="chip ' + esc(cls) + '">' + esc(text) + '</span>';
+  const sigText = c => t({ ok: 'sigOk', warn: 'sigWarn', bad: 'sigBad', na: 'sigNa' }[c]);
+  const sigDot = c => '<span class="dot ' + c + '"></span>' + esc(sigText(c));
+  const clsLabel = c => t(c);
+  const ynText = v => v === 'O' ? t('yes') : v === 'X' ? t('no') : v === '미확인' ? t('unknown') : '—';
+  const issueText = i => t(i.code, i.params);
+  const ccyList = obj => Object.keys(obj).sort().map(c => '<div class="kv"><span>' + esc(c) + '</span><span class="num">' + fmt(obj[c], c) + '</span></div>').join('') || '<span class="muted">—</span>';
+  const dLeft = n => n === null || n === undefined ? '' : n > 0 ? t('dLeft', { n }) : n === 0 ? t('dToday') : t('dPast', { n: -n });
+
+  /* ---------- 표 ---------- */
+  function tbl(id, cols, rows, opt) {
+    opt = opt || {}; const st = S.tables[id] || (S.tables[id] = { key: opt.sort || null, dir: opt.dir || 'asc', page: 0, size: opt.size || 50 });
+    let list = rows.slice(); const col = cols.find(c => c.k === st.key);
+    if (col && col.s) { const f = col.s; list.sort((a, b) => { const x = f(a), y = f(b); if (blank(x) && blank(y)) return 0; if (blank(x)) return 1; if (blank(y)) return -1; const c = typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y), 'ko'); return st.dir === 'asc' ? c : -c; }); }
+    const pages = Math.max(1, Math.ceil(list.length / st.size)); if (st.page >= pages) st.page = pages - 1;
+    const from = st.page * st.size, view = list.slice(from, from + st.size);
+    const head = cols.map(c => '<th class="' + (c.cls || '') + '" data-act="sort" data-tbl="' + id + '" data-key="' + c.k + '"' + (st.key === c.k ? ' data-dir="' + st.dir + '"' : '') + '>' + esc(c.h()) + '</th>').join('');
+    const body = view.map(r => '<tr class="' + (opt.rowClass ? opt.rowClass(r) : '') + '"' + (opt.click ? ' data-act="' + opt.click + '" data-id="' + esc(r.id) + '"' : '') + '>' + cols.map(c => '<td class="' + (c.cls || '') + '">' + c.v(r) + '</td>').join('') + '</tr>').join('');
+    const pager = pages > 1 ? '<div class="pager"><span class="muted small">' + esc(t('rowsOf', { from: from + 1, to: Math.min(from + st.size, list.length), n: list.length })) + '</span><button class="sm" data-act="page" data-tbl="' + id + '" data-d="-1"' + (st.page === 0 ? ' disabled' : '') + '>' + esc(t('prev')) + '</button><button class="sm" data-act="page" data-tbl="' + id + '" data-d="1"' + (st.page >= pages - 1 ? ' disabled' : '') + '>' + esc(t('next')) + '</button></div>' : '';
+    return '<div class="tw"><table><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table></div>' + pager;
+  }
+  const sel = (scope, key, label, options, cur) => '<label>' + esc(label) + '<select data-f="' + scope + '.' + key + '"><option value="">' + esc(t('all')) + '</option>' + options.map(o => '<option value="' + esc(o.v) + '"' + (String(cur) === String(o.v) ? ' selected' : '') + '>' + esc(o.t) + '</option>').join('') + '</select></label>';
+  const uniq = (rows, f) => [...new Set(rows.map(f).filter(v => !blank(v)))].sort();
+  const bar = (parts, total) => '<div class="bar">' + parts.filter(p => p.n > 0).map(p => '<i class="' + p.cls + '" style="width:' + (total ? p.n / total * 100 : 0) + '%" title="' + esc(p.label + ' ' + p.n) + '"></i>').join('') + '</div>';
+  const prog = (label, done, total) => '<div class="prog"><div class="l"><span>' + esc(label) + '</span><span class="num">' + done + ' / ' + total + ' · ' + (total ? Math.round(done / total * 100) : 0) + '%</span></div><div class="bar"><i class="ok" style="width:' + (total ? done / total * 100 : 0) + '%"></i></div></div>';
+
+  /* ---------- 머리말 ---------- */
+  function banner() {
+    const dl = PROG.deadlines; const d = (k, key) => '<span class="chip ' + (dl[k].daysLeft !== null && dl[k].daysLeft < 0 ? 'bad' : dl[k].daysLeft !== null && dl[k].daysLeft <= 1 ? 'warn' : '') + '">' + esc(t(key)) + ' ' + esc(dl[k].date.slice(5)) + ' · ' + esc(dLeft(dl[k].daysLeft)) + '</span>';
+    return '<div class="banner ' + (META.synthetic ? 'syn' : 'int') + '"><b>' + esc(META.synthetic ? t('synthetic') : t('internal')) + '</b> · ' + esc(META.synthetic ? t('syntheticNote') : t('internalNote')) + '</div>' +
+      '<div class="chips">' + d('finance', 'deadlineFinance') + d('scm', 'deadlineScm') + d('approval', 'deadlineApproval') + '<span class="chip">' + esc(t('asOf')) + ' ' + esc(META.asOfMin === META.asOfMax ? META.asOfMax || '—' : (META.asOfMin || '—') + ' ~ ' + (META.asOfMax || '—')) + '</span><span class="chip">' + esc(t('built')) + ' ' + esc((META.builtAt || '').replace('T', ' ')) + '</span></div>';
+  }
+
+  /* ================= 보드 ================= */
+  function viewBoard() {
+    const tot = PAY.total; const due = tot.n - tot.PRE;
+    const countries = Object.keys(PAY.byCountry).sort();
+    const classBar = bar(['A1', 'A2', 'EXC', 'TBD'].map(c => ({ cls: c, n: tot[c], label: clsLabel(c) })), due);
+    const legend = '<div class="legend">' + ['A1', 'A2', 'EXC', 'TBD'].map(c => '<span><b class="' + c + '" style="background:var(--' + (c === 'EXC' ? 'exc' : c === 'TBD' ? 'tbd' : c.toLowerCase()) + ')"></b>' + esc(clsLabel(c)) + ' ' + tot[c] + '</span>').join('') + '</div>';
+    const payCard = '<div class="card"><div class="k">' + esc(t('boardPayTitle')) + '</div><div class="v">' + due.toLocaleString(loc()) + '</div><div class="small muted">' + esc(t('boardPayNote')) + '</div>' + countries.map(c => '<div class="kv"><span>' + esc(c) + '</span><span class="num">' + (PAY.byCountry[c].n - PAY.byCountry[c].PRE) + '</span></div>').join('') + '</div>';
+    const clsCard = '<div class="card"><div class="k">' + esc(t('boardClassTitle')) + '</div>' + classBar + legend + '<div class="small muted" style="margin-top:6px">' + esc(t('payCandNote')) + '</div><p><button class="sm" data-act="goto" data-tab="pay">' + esc(t('openPay')) + '</button></p></div>';
+    const preCard = '<div class="card"><div class="k">' + esc(t('boardPreTitle')) + '</div><div class="v">' + PRE.count + ' <span class="small muted">' + esc(t('hotels')) + '</span></div><div class="small muted">' + esc(t('boardPreNote')) + '</div>' + Object.keys(PRE.byCcy).sort().map(c => '<div class="kv"><span>' + esc(c) + '</span><span class="num">' + fmt(PRE.byCcy[c].ledger, c) + '</span></div>').join('') + '</div>';
+    const pp = PROG.payments, pr = PROG.prebuy;
+    const colCard = '<div class="card"><div class="k">' + esc(t('boardCollectTitle')) + '</div>' + prog(t('colPay'), pp.done + pp.unknown, pp.due) + prog(t('colPreFin'), pr.finance, pr.n) + prog(t('colPreScm'), pr.scmAnswered, pr.n) + '<p><button class="sm" data-act="goto" data-tab="collect">' + esc(t('openCollect')) + '</button></p></div>';
+    // 프리바이 처리 현황(통화별)
+    const lines = PACKET.lines; const clsRows = lines.map(l => '<tr><td>' + chip(l.cls, clsLabel(l.cls)) + '</td><td>' + esc(l.ccy) + '</td><td class="num">' + l.n + '</td><td class="num">' + fmt(l.ledger, l.ccy) + '</td><td class="num">' + fmt(l.hotel, l.ccy) + '</td><td class="num">' + (l.estKnown ? fmt(l.est, l.ccy) : '—') + '</td></tr>').join('');
+    const preTable = '<div class="tw"><table><thead><tr><th>' + esc(t('cls')) + '</th><th>' + esc(t('colCcy')) + '</th><th class="num">' + esc(t('count')) + '</th><th class="num">' + esc(t('ledger')) + '</th><th class="num">' + esc(t('hotelBal')) + '</th><th class="num">' + esc(t('est1231')) + '</th></tr></thead><tbody>' + clsRows + '</tbody></table></div><div class="small muted">' + esc(t('perCurrencyNote')) + '</div>';
+    // 나라별 후불 분류
+    const cRows = countries.map(c => { const x = PAY.byCountry[c]; const n = x.n - x.PRE; return '<div class="prog"><div class="l"><span><b>' + esc(c) + '</b></span><span class="num">' + n + '</span></div>' + bar(['A1', 'A2', 'EXC', 'TBD'].map(k => ({ cls: k, n: x[k], label: clsLabel(k) })), n) + '</div>'; }).join('');
+    // 신호 빨강
+    const watch = PRE.rows.filter(r => r.sig.color === 'bad').sort((a, b) => (b.ledger || 0) - (a.ledger || 0)).slice(0, 8);
+    const watchHtml = watch.length ? '<div class="tw"><table><tbody>' + watch.map(r => '<tr class="click" data-act="openPre" data-id="' + r.id + '"><td>' + esc(r.country) + '</td><td>' + esc(r.hotel) + '</td><td class="num">' + money(r.ledger, r.ccy) + '</td><td class="num">' + (r.cover === null ? '—' : r.cover + L('개월', ' mo')) + '</td><td>' + chip(r.cls, clsLabel(r.cls)) + '</td></tr>').join('') + '</tbody></table></div>' : '<span class="muted">—</span>';
+    const sev = { error: 0, warn: 0, info: 0 }; ISSUES.forEach(i => sev[i.sev]++);
+    const issueHtml = ISSUES.length ? '<div class="chips">' + chip('bad', t('sevError') + ' ' + sev.error) + chip('warn', t('sevWarn') + ' ' + sev.warn) + chip('', t('sevInfo') + ' ' + sev.info) + '</div>' : '<span class="muted">' + esc(t('boardIssuesNone')) + '</span>';
+    return banner() + '<div class="grid g4">' + payCard + clsCard + preCard + colCard + '</div>' +
+      '<h2>' + esc(t('boardPreByClass')) + '</h2>' + preTable +
+      '<div class="grid g2"><div><h2>' + esc(t('boardClassByCountry')) + '</h2><div class="card">' + cRows + '</div></div><div><h2>' + esc(t('boardWatch')) + '</h2><div class="small muted">' + esc(t('boardWatchNote')) + '</div>' + watchHtml + '<h2>' + esc(t('boardIssues')) + '</h2>' + issueHtml + '<p><button class="sm" data-act="goto" data-tab="collect">' + esc(t('openCollect')) + '</button></p></div></div>';
+  }
+
+  /* ================= 후불 지급 ================= */
+  function payFiltered() {
+    const f = S.f.pay; const q = (f.q || '').toLowerCase();
+    return PAY.rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE' && (!f.country || r.country === f.country) && (!f.cls || r.cls === f.cls) && (!f.method || r.method === f.method) && (!f.entity || r.entity === f.entity) && (!f.fill || r.fill === f.fill) &&
+      (!q || String(r.hotel).toLowerCase().includes(q) || String(r.code || '').toLowerCase().includes(q)));
+  }
+  function viewPay() {
+    const f = S.f.pay; const base = PAY.rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE'); const rows = payFiltered();
+    const chips = '<div class="chips">' + ['A1', 'A2', 'EXC', 'TBD'].map(c => '<button class="chip ' + c + '" data-act="flt" data-scope="pay" data-key="cls" data-val="' + c + '" aria-pressed="' + (f.cls === c) + '">' + esc(clsLabel(c)) + ' ' + base.filter(r => r.cls === c).length + '</button>').join('') + '</div><div class="small muted">' + esc(t(f.cls ? f.cls + 'd' : 'A1d')) + (f.cls ? '' : ' · ' + esc(t('A2d'))) + '</div>';
+    const tools = '<div class="tools">' + sel('pay', 'country', t('country'), uniq(base, r => r.country).map(v => ({ v, t: v })), f.country) + sel('pay', 'method', t('method'), uniq(base, r => r.method).map(v => ({ v, t: v })), f.method) + sel('pay', 'entity', t('entity'), uniq(base, r => r.entity).map(v => ({ v, t: v })), f.entity) +
+      sel('pay', 'fill', t('fill'), ['DONE', 'UNKNOWN', 'PARTIAL', 'EMPTY'].map(v => ({ v, t: t('fill' + v) })), f.fill) + '<label>' + esc(t('search')) + '<input id="q-pay" data-f="pay.q" value="' + esc(f.q || '') + '" autocomplete="off"></label><button class="sm" data-act="reset" data-scope="pay">' + esc(t('reset')) + '</button><span class="muted small">' + esc(t('payCount', { n: rows.length })) + ' · ' + esc(t('sortHint')) + '</span></div>';
+    const cols = [
+      { k: 'country', h: () => t('colCountry'), v: r => esc(r.country), s: r => r.country }, { k: 'code', h: () => t('colCode'), v: r => esc(r.code || '—'), s: r => r.code },
+      { k: 'hotel', h: () => t('colHotel'), v: r => esc(r.hotel), s: r => r.hotel }, { k: 'entity', h: () => t('colEntity'), v: r => esc(r.entity || '—'), s: r => r.entity }, { k: 'method', h: () => t('colMethod'), v: r => esc(r.method || '—'), s: r => r.method },
+      { k: 'ccy', h: () => t('colCcy'), v: r => esc(r.ccy || '—'), s: r => r.ccy }, { k: 'avg', h: () => t('colAvgPay'), cls: 'num', v: r => fmt(r.avg, r.ccy), s: r => r.avg },
+      { k: 'card', h: () => t('colCard'), v: r => r.card === 'O' ? t('yes') : r.card === 'X' ? t('no') : r.card === '미확인' ? t('unknown') : '<span class="muted">—</span>', s: r => r.card },
+      { k: 'account', h: () => t('colAccount'), v: r => esc(r.account || '—'), s: r => r.account }, { k: 'cls', h: () => t('colClass'), v: r => chip(r.cls, clsLabel(r.cls)), s: r => r.cls },
+      { k: 'note', h: () => t('colNote'), cls: 'note', v: r => esc((r.note || '').slice(0, 110)) },
+      { k: 'pick', h: () => t('colPick'), v: r => (r.cls === 'A1' || r.cls === 'A2') ? '<input type="checkbox" data-act="pick" data-id="' + r.id + '"' + (S.picks.has(r.id) ? ' checked' : '') + ' aria-label="pick">' : '' },
+    ];
+    // 후보
+    const cand = CALC.testCandidates(base, f.country, 12);
+    const candHtml = cand.length ? '<div class="tw"><table><tbody>' + cand.map(r => '<tr><td>' + esc(r.country) + '</td><td>' + esc(r.hotel) + '</td><td>' + chip(r.cls, clsLabel(r.cls)) + '</td><td class="num">' + money(r.avg, r.ccy) + '</td><td><input type="checkbox" data-act="pick" data-id="' + r.id + '"' + (S.picks.has(r.id) ? ' checked' : '') + ' aria-label="pick"></td></tr>').join('') + '</tbody></table></div>' : '<div class="muted">' + esc(t('payCandEmpty')) + '</div>';
+    const picked = PAY.rows.filter(r => S.picks.has(r.id));
+    const pickHtml = '<h3 style="margin-top:12px">' + esc(t('pickList')) + ' (' + picked.length + ')</h3>' + (picked.length ? '<div class="small">' + picked.map(r => esc(r.country + ' · ' + r.hotel)).join('<br>') + '</div><div class="tools"><button class="sm" data-act="pickcopy">' + esc(t('pickCopy')) + '</button><button class="sm" data-act="pickcsv">' + esc(t('pickCsv')) + '</button><button class="sm" data-act="pickclear">' + esc(t('pickClear')) + '</button></div>' : '<div class="muted small">' + esc(t('pickNone')) + '</div>') + '<div class="muted small">' + esc(t('pickSaved')) + '</div>';
+    return '<h2>' + esc(t('payTitle')) + '</h2>' + chips + tools + tbl('pay', cols, rows, { sort: 'avg', dir: 'desc' }) +
+      '<h2>' + esc(t('payCand')) + '</h2><div class="small muted">' + esc(t('payCandNote')) + '</div><div class="grid g2"><div>' + candHtml + '</div><div class="card">' + pickHtml + '</div></div>';
+  }
+
+  /* ================= 프리바이 ================= */
+  function preFiltered() {
+    const f = S.f.pre; const q = (f.q || '').toLowerCase();
+    return PRE.rows.filter(r => (!f.country || r.country === f.country) && (!f.type || r.type === f.type) && (!f.cls || r.cls === f.cls) && (!f.sig || r.sig.color === f.sig) && (!q || String(r.hotel).toLowerCase().includes(q) || String(r.code || '').toLowerCase().includes(q)));
+  }
+  function preDetail(r) {
+    const cfg = CFG; const lines = [];
+    if (r.cover !== null) lines.push(t('calcCover', { ledger: fmt(r.ledger, r.ccy), avg: fmt(r.avg, r.ccy), months: r.cover })); else lines.push(t(blank(r.ledger) || blank(r.avg) ? 'calcNoData' : 'calcNoAvg'));
+    if (r.daysLeft !== null && !blank(r.avg) && !blank(r.ledger)) { const use = r.avg * r.daysLeft / 30; lines.push(t('calcDays', { days: r.daysLeft, asOf: r.asOf, yearEnd: cfg.yearEnd })); lines.push(t('calcEst', { use: fmt(use, r.ccy), est: fmt(r.est, r.ccy) })); lines.push(t('calcCanUse', { r: r.canUse === '가능' ? t('canUseYes') : t('canUseNo') })); }
+    const iss = ISSUES.filter(i => i.sheet === 'pre' && i.row === r.sourceRow);
+    return '<div class="detail"><div class="row"><div class="col"><h3>' + esc(r.hotel) + ' <span class="muted small">' + esc(r.country + ' · ' + (r.type || '') + ' · ' + r.ccy) + '</span></h3>' + chip(r.cls, clsLabel(r.cls)) + ' ' + sigDot(r.sig.color) +
+      '<div class="small" style="margin-top:6px">' + esc(t(r.cls === 'NONE' ? '' : 'act' + ({ B1: 'TRANSFER', B2_USE: 'CONSUME', B2_REFUND: 'REFUND', B2_TALK: 'NEGOTIATE', TBD: 'CONFIRM' })[r.cls])) + '</div>' +
+      '<h3 style="margin-top:10px">' + esc(t('calcTitle')) + '</h3><ul class="rules">' + lines.map(l => '<li>' + esc(l) + '</li>').join('') + '</ul>' +
+      '<div class="small muted">' + esc(t('reconMATCH').length ? t('recon' + r.recon) : '') + (r.gapPct !== null ? ' · ' + pct(r.gapPct, 1) : '') + '</div></div>' +
+      '<div class="col">' + (r.note ? '<h3>' + esc(t('noteLabel')) + '</h3><div class="small">' + esc(r.note) + '</div>' : '') + (r.transferNote ? '<h3 style="margin-top:8px">' + esc(t('transferNote')) + '</h3><div class="small">' + esc(r.transferNote) + '</div>' : '') + (r.refundNote ? '<h3 style="margin-top:8px">' + esc(t('refundNote')) + '</h3><div class="small">' + esc(r.refundNote) + '</div>' : '') +
+      (r.owner ? '<div class="small muted" style="margin-top:8px">' + esc(t('ownerLabel')) + ': ' + esc(r.owner) + '</div>' : '') + (iss.length ? '<h3 style="margin-top:8px">' + esc(t('colIssues')) + '</h3><ul class="rules">' + iss.map(i => '<li>' + chip(i.sev === 'error' ? 'bad' : i.sev === 'warn' ? 'warn' : '', t(i.sev === 'error' ? 'sevError' : i.sev === 'warn' ? 'sevWarn' : 'sevInfo')) + ' ' + esc(issueText(i)) + '</li>').join('') + '</ul>' : '') + '</div></div><button class="sm" data-act="closeDetail">' + esc(t('detailClose')) + '</button></div>';
+  }
+  function viewPre() {
+    const f = S.f.pre; const rows = preFiltered();
+    const chips = '<div class="chips">' + ['B1', 'B2_USE', 'B2_REFUND', 'B2_TALK', 'TBD'].map(c => '<button class="chip ' + c + '" data-act="flt" data-scope="pre" data-key="cls" data-val="' + c + '" aria-pressed="' + (f.cls === c) + '">' + esc(clsLabel(c)) + ' ' + PRE.rows.filter(r => r.cls === c).length + '</button>').join('') + '</div><div class="small muted">' + esc(f.cls ? t(f.cls + 'd') : '') + '</div>';
+    const tools = '<div class="tools">' + sel('pre', 'country', t('country'), uniq(PRE.rows, r => r.country).map(v => ({ v, t: v })), f.country) + sel('pre', 'type', t('preType'), uniq(PRE.rows, r => r.type).map(v => ({ v, t: v })), f.type) + sel('pre', 'sig', t('preSignal'), ['bad', 'warn', 'ok', 'na'].map(v => ({ v, t: sigText(v) })), f.sig) +
+      '<label>' + esc(t('search')) + '<input id="q-pre" data-f="pre.q" value="' + esc(f.q || '') + '" autocomplete="off"></label><button class="sm" data-act="reset" data-scope="pre">' + esc(t('reset')) + '</button><span class="muted small">' + esc(t('payCount', { n: rows.length })) + ' · ' + esc(t('sortHint')) + '</span></div>';
+    const cols = [
+      { k: 'country', h: () => t('colEntityPre'), v: r => esc(r.country), s: r => r.country }, { k: 'hotel', h: () => t('colHotel'), v: r => '<b>' + esc(r.hotel) + '</b>', s: r => r.hotel }, { k: 'type', h: () => t('colType'), v: r => esc(r.type || '—'), s: r => r.type },
+      { k: 'ccy', h: () => t('colCcy'), v: r => esc(r.ccy), s: r => r.ccy }, { k: 'ledger', h: () => t('colLedger'), cls: 'num', v: r => fmt(r.ledger, r.ccy), s: r => r.ledger }, { k: 'hotelBal', h: () => t('colHotelBal'), cls: 'num', v: r => fmt(r.hotelBal, r.ccy), s: r => r.hotelBal },
+      { k: 'gap', h: () => t('colGap'), cls: 'num', v: r => r.gap === null ? '—' : fmt(r.gap, r.ccy) + (r.recon === 'MAJOR' ? ' <span class="chip bad">' + pct(r.gapPct, 1) + '</span>' : r.recon === 'MINOR' ? ' <span class="chip warn">' + pct(r.gapPct, 1) + '</span>' : ''), s: r => r.gap },
+      { k: 'avg', h: () => t('colAvgUse'), cls: 'num', v: r => fmt(r.avg, r.ccy), s: r => r.avg }, { k: 'cover', h: () => t('colCover'), cls: 'num', v: r => r.cover === null ? '—' : String(r.cover), s: r => r.cover },
+      { k: 'canUse', h: () => t('colCanUse'), v: r => r.canUse === '가능' ? t('canUseYes') : r.canUse === '불가' ? t('canUseNo') : '—', s: r => r.canUse }, { k: 'est', h: () => t('colEst'), cls: 'num', v: r => fmt(r.est, r.ccy), s: r => r.est },
+      { k: 'transfer', h: () => t('colTransfer'), v: r => esc(ynText(r.transfer)), s: r => r.transfer }, { k: 'refund', h: () => t('colRefund'), v: r => esc(ynText(r.refund)), s: r => r.refund },
+      { k: 'cls', h: () => t('colClass'), v: r => chip(r.cls, clsLabel(r.cls)), s: r => r.cls }, { k: 'sig', h: () => t('colSignal'), v: r => sigDot(r.sig.color), s: r => ({ bad: 3, warn: 2, ok: 1, na: 0 })[r.sig.color] }, { k: 'asOf', h: () => t('colAsOf'), v: r => esc(r.asOf || '—'), s: r => r.asOf },
+    ];
+    const open = S.open ? PRE.rows.find(r => r.id === S.open) : null;
+    return '<h2>' + esc(t('preTitle')) + '</h2>' + chips + tools + (open ? preDetail(open) : '') + tbl('pre', cols, rows, { sort: 'ledger', dir: 'desc', click: 'detail', rowClass: r => r.id === S.open ? 'click sel' : 'click', size: 40 }) + '<div class="small muted">' + esc(t('perCurrencyNote')) + '</div>';
+  }
+
+  /* ================= 결재 준비 ================= */
+  function apText() {
+    const lines = []; const asOf = META.asOfMax || TODAY; const tot = PAY.total; const due = tot.n - tot.PRE;
+    lines.push(L('[프리바이·SG 지급 처리 안 초안] 기준일 ' + asOf, '[Prebuy and SG payment proposal, draft] as of ' + asOf));
+    lines.push(L('■ 프리바이 ' + PRE.count + '곳', '■ Prebuy: ' + PRE.count + ' hotels'));
+    for (const cls of ['B1', 'B2_USE', 'B2_REFUND', 'B2_TALK', 'TBD']) {
+      const c = PRE.byClass[cls]; if (!c) continue; const amt = Object.keys(c.byCcy).sort().map(k => fmt(c.byCcy[k].ledger, k) + ' ' + k).join(', ');
+      const est = (cls === 'B2_REFUND' || cls === 'B2_USE') ? ' / ' + t('est1231') + ' ' + Object.keys(c.byCcy).sort().filter(k => c.byCcy[k].estKnown).map(k => fmt(c.byCcy[k].est, k) + ' ' + k).join(', ') : '';
+      lines.push('- ' + clsLabel(cls) + ': ' + c.n + L('곳', ' hotels') + ' (' + amt + ')' + est + ' → ' + t('act' + CALC.ACTION[cls]));
+    }
+    lines.push(L('■ 후불 지급 ' + due + '곳: A1 ' + tot.A1 + ', A2 ' + tot.A2 + ', 예외 검토 ' + tot.EXC + ', 확인 필요 ' + tot.TBD, '■ Post-paid: ' + due + ' hotels: A1 ' + tot.A1 + ', A2 ' + tot.A2 + ', exception review ' + tot.EXC + ', to confirm ' + tot.TBD));
+    lines.push(L('※ 금액은 통화 그대로입니다(환산 없음). 이관·소진·반환·협의는 대표 결재에서 정합니다.', '※ Amounts are in their own currencies (no conversion). Transfer, use-up, refund and talks are decided at the CEO approval.'));
+    return lines.join('\n');
+  }
+  function viewApproval() {
+    const pp = PROG.payments, pr = PROG.prebuy; const sev = ISSUES.filter(i => i.sev === 'error').length; const tbd = (PRE.byClass.TBD || { n: 0 }).n;
+    const chk = (ok, label, detail) => '<div class="ready"><span class="tick ' + (ok ? 'ok' : 'no') + '">' + (ok ? '✓' : '✗') + '</span><span>' + esc(label) + '</span><span class="muted small">' + esc(detail) + '</span></div>';
+    const ready = '<div class="card">' + chk(pr.finance === pr.n, t('apReadyFinance'), pr.finance + ' / ' + pr.n) + chk(pr.scm === pr.n, t('apReadyScm'), pr.scm + ' / ' + pr.n) + chk(pp.done === pp.due, t('apReadyPay'), pp.done + ' / ' + pp.due) + chk(sev === 0, t('apReadyIssues'), String(sev)) + chk(tbd === 0, t('apReadyClass'), String(tbd)) + '</div>';
+    const rows = PACKET.lines.map(l => '<tr><td>' + chip(l.cls, clsLabel(l.cls)) + '</td><td>' + esc(l.ccy) + '</td><td class="num">' + l.n + '</td><td class="num">' + fmt(l.ledger, l.ccy) + '</td><td class="num">' + (l.estKnown ? fmt(l.est, l.ccy) : '—') + '</td><td class="small">' + esc(t('act' + CALC.ACTION[l.cls])) + '</td></tr>').join('');
+    const packet = '<div class="tw"><table><thead><tr><th>' + esc(t('cls')) + '</th><th>' + esc(t('colCcy')) + '</th><th class="num">' + esc(t('count')) + '</th><th class="num">' + esc(t('ledger')) + '</th><th class="num">' + esc(t('est1231')) + '</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div><div class="small muted">' + esc(t('perCurrencyNote')) + '</div>';
+    // 결정 필요
+    const need = [];
+    for (const r of PRE.rows) {
+      const why = [];
+      if (r.cls === 'B2_TALK') why.push(t('apTalkWhy'));
+      if (r.cls === 'TBD') { const miss = []; if (blank(r.ledger)) miss.push(t('fldLedger')); if (blank(r.asOf)) miss.push(t('fldAsOf')); if (blank(r.avg)) miss.push(t('fldAvg')); if (blank(r.hotelBal)) miss.push(t('fldHotelBal')); if (blank(r.transfer) || r.transfer === '미확인') miss.push(t('fldTransfer')); if (miss.length) why.push(t('apMissing', { f: miss.join(', ') })); }
+      if (r.recon === 'MAJOR') why.push(t('apGapWhy', { pct: CALC.round1(r.gapPct) }));
+      if (r.sig.critical) why.push(t('apCritWhy'));
+      if (why.length) need.push({ r, why });
+    }
+    const needHtml = need.length ? '<div class="tw"><table><tbody>' + need.map(x => '<tr class="click" data-act="openPre" data-id="' + x.r.id + '"><td>' + esc(x.r.country) + '</td><td><b>' + esc(x.r.hotel) + '</b></td><td>' + chip(x.r.cls, clsLabel(x.r.cls)) + '</td><td class="num">' + money(x.r.ledger, x.r.ccy) + '</td><td class="small">' + x.why.map(esc).join('<br>') + '</td></tr>').join('') + '</tbody></table></div>' : '<div class="muted">' + esc(t('apDecideNone')) + '</div>';
+    return '<h2>' + esc(t('apTitle')) + '</h2><div class="small muted">' + esc(t('apNote')) + '</div>' + banner() + '<div class="grid g2"><div><h3>' + esc(t('apReady')) + '</h3>' + ready + '</div><div><h3>' + esc(t('apText')) + '</h3><pre class="text" id="aptext">' + esc(apText()) + '</pre><p><button class="primary" data-act="apcopy">' + esc(t('apCopy')) + '</button> <span id="apmsg" class="muted small"></span></p></div></div>' +
+      '<h2>' + esc(t('apPacket')) + '</h2>' + packet + '<h2>' + esc(t('apDecide')) + ' (' + need.length + ')</h2>' + needHtml;
+  }
+
+  /* ================= 수집·점검 ================= */
+  function missingRows() {
+    const out = [];
+    for (const r of PAY.rows) { if (r.cls === 'NONE' || r.cls === 'PRE' || r.fill === 'DONE') continue; const m = []; if (r.fill === 'EMPTY') m.push(t('colCard')); if (r.fill === 'PARTIAL') m.push(t('colAccount')); if (r.fill === 'UNKNOWN') m.push(t('unknown')); out.push({ sheet: 'pay', row: r.sourceRow, country: r.country, hotel: r.hotel, what: m.join(', ') }); }
+    for (const h of DATA.prebuy) {
+      if (blank(h.hotel)) continue; const m = []; if (blank(h.ledger)) m.push(t('fldLedger')); if (blank(h.asOf)) m.push(t('fldAsOf')); if (blank(h.avg)) m.push(t('fldAvg')); const s = CALC.scmFill(h); s.missing.forEach(k => m.push(t({ hotelBal: 'fldHotelBal', transfer: 'fldTransfer', refund: 'fldRefund' }[k]))); s.unknown.forEach(k => m.push(t(k === 'transfer' ? 'fldTransfer' : 'fldRefund') + ' (' + t('unknown') + ')'));
+      if (m.length) out.push({ sheet: 'pre', row: h.sourceRow, country: h.country, hotel: h.hotel, what: m.join(', ') });
+    }
+    return out;
+  }
+  function viewCollect() {
+    const pp = PROG.payments, pr = PROG.prebuy; const f = S.f.col;
+    const payBars = Object.keys(pp.byCountry).sort().map(c => { const x = pp.byCountry[c]; return prog(c, x.done + x.unknown, x.due); }).join('');
+    const preBars = Object.keys(pr.byCountry).sort().map(c => { const x = pr.byCountry[c]; return prog(c + ' · ' + t('colPreFin'), x.finance, x.n) + prog(c + ' · ' + t('colPreScm'), x.scmAnswered, x.n); }).join('');
+    const miss = missingRows().filter(m => (!f.mcountry || m.country === f.mcountry) && (!f.msheet || m.sheet === f.msheet));
+    const missCols = [{ k: 'sheet', h: () => t('colSheet'), v: r => esc(r.sheet === 'pay' ? t('sheetPay') : t('sheetPre')), s: r => r.sheet }, { k: 'country', h: () => t('colCountry'), v: r => esc(r.country), s: r => r.country }, { k: 'row', h: () => t('colRow'), cls: 'num', v: r => r.row, s: r => r.row }, { k: 'hotel', h: () => t('colHotel'), v: r => esc(r.hotel), s: r => r.hotel }, { k: 'what', h: () => t('colMissing'), v: r => esc(r.what) }];
+    const missTools = '<div class="tools">' + sel('col', 'mcountry', t('country'), uniq(miss.concat(missingRows()), r => r.country).map(v => ({ v, t: v })), f.mcountry) + sel('col', 'msheet', t('colSheet'), [{ v: 'pay', t: t('sheetPay') }, { v: 'pre', t: t('sheetPre') }], f.msheet) + '<span class="muted small">' + miss.length + '</span></div>';
+    const issues = ISSUES.filter(i => !f.sev || i.sev === f.sev); const sevBtn = (v, label) => '<button class="chip ' + (v === 'error' ? 'bad' : v === 'warn' ? 'warn' : '') + '" data-act="flt" data-scope="col" data-key="sev" data-val="' + v + '" aria-pressed="' + (f.sev === v) + '">' + esc(label) + ' ' + ISSUES.filter(i => i.sev === v).length + '</button>';
+    const issCols = [{ k: 'sev', h: () => t('colSeverity'), v: i => chip(i.sev === 'error' ? 'bad' : i.sev === 'warn' ? 'warn' : '', t(i.sev === 'error' ? 'sevError' : i.sev === 'warn' ? 'sevWarn' : 'sevInfo')), s: i => ({ error: 0, warn: 1, info: 2 })[i.sev] }, { k: 'sheet', h: () => t('colSheet'), v: i => esc(i.sheet === 'pay' ? t('sheetPay') : t('sheetPre')), s: i => i.sheet }, { k: 'row', h: () => t('colRow'), cls: 'num', v: i => i.row === null ? '—' : i.row, s: i => i.row }, { k: 'hotel', h: () => t('colHotel'), v: i => esc(i.hotel), s: i => i.hotel }, { k: 'what', h: () => t('colWhat'), v: i => esc(issueText(i)) }];
+    const parse = META.parseIssues && META.parseIssues.length ? '<ul class="rules">' + META.parseIssues.slice(0, 30).map(p => '<li>' + esc((p.sheet || '') + ' ' + (p.row ? p.row + ' ' : '') + (p.field || '') + ' ' + (p.raw || '') + ' ' + (p.msg || '')) + '</li>').join('') + '</ul>' : '<span class="muted">' + esc(t('parseNone')) + '</span>';
+    return '<h2>' + esc(t('colTitle')) + '</h2>' + banner() + '<div class="grid g2"><div><h3>' + esc(t('colProgress')) + '</h3><div class="card">' + prog(t('colPay'), pp.done + pp.unknown, pp.due) + payBars + '</div></div><div><h3>&nbsp;</h3><div class="card">' + preBars + '</div></div></div>' +
+      '<h2>' + esc(t('colMissing')) + '</h2>' + missTools + (miss.length ? tbl('miss', missCols, miss, { sort: 'sheet', size: 30 }) : '<div class="muted">' + esc(t('colMissingNone')) + '</div>') +
+      '<h2>' + esc(t('colIssues')) + '</h2><div class="chips">' + sevBtn('error', t('sevError')) + sevBtn('warn', t('sevWarn')) + sevBtn('info', t('sevInfo')) + '</div>' + (issues.length ? tbl('iss', issCols, issues, { size: 30 }) : '<div class="muted">' + esc(t('boardIssuesNone')) + '</div>') +
+      '<h2>' + esc(t('parseIssues')) + '</h2>' + parse;
+  }
+
+  /* ================= 기준 ================= */
+  function viewRules() {
+    const li = keys => '<ul class="rules">' + keys.map(k => '<li>' + esc(t(k)) + '</li>').join('') + '</ul>';
+    const terms = ['A1', 'A2', 'EXC', 'TBD', 'B1', 'B2_USE', 'B2_REFUND', 'B2_TALK'].map(c => '<tr><td>' + chip(c, clsLabel(c)) + '</td><td>' + esc(t(c + 'd')) + '</td></tr>').join('');
+    const srcs = META.sources.map(s => '<li>' + esc(s.name) + ' — ' + esc(t('rowsPay', { n: s.payRows })) + ', ' + esc(t('rowsPre', { n: s.preRows })) + '</li>').join('');
+    return '<h2>' + esc(t('rulesTitle')) + '</h2><div class="grid g2"><div><h3>' + esc(t('rulesTerms')) + '</h3><div class="tw"><table><tbody>' + terms + '</tbody></table></div><h3 style="margin-top:14px">' + esc(t('rulesFormulas')) + '</h3>' + li(['fPay', 'fCls', 'fS1', 'fCan', 'fEst', 'fGap']) + '<h3 style="margin-top:14px">' + esc(t('rulesSignals')) + '</h3>' + li(['sigRule1', 'sigRule2', 'sigRule3']) + '</div>' +
+      '<div><h3>' + esc(t('rulesCeo')) + '</h3>' + li(['ceo1', 'ceo2', 'ceo3', 'ceo4', 'ceo5', 'ceo6']) + '<h3 style="margin-top:14px">' + esc(t('rulesData')) + '</h3>' + li(['dataH1', 'dataH2', 'dataH3', 'dataH4', 'dataH5']) + '<h3 style="margin-top:14px">' + esc(t('rulesBuild')) + '</h3><ul class="rules">' + srcs + '</ul><div class="small muted">' + esc(t('built')) + ' ' + esc(META.builtAt) + ' · ' + esc(META.synthetic ? t('synthetic') : t('internal')) + '</div></div></div>';
+  }
+
+  /* ================= 틀 ================= */
+  const TABS = [['board', 'tabBoard', viewBoard], ['pay', 'tabPay', viewPay], ['pre', 'tabPre', viewPre], ['approval', 'tabApproval', viewApproval], ['collect', 'tabCollect', viewCollect], ['rules', 'tabRules', viewRules]];
+  function render() {
+    document.documentElement.lang = S.lang; document.getElementById('h-title').textContent = t('appTitle'); document.getElementById('h-sub').textContent = t('appSub');
+    document.querySelectorAll('#lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === S.lang)));
+    document.getElementById('tabs').innerHTML = TABS.map(x => '<button role="tab" data-act="tab" data-tab="' + x[0] + '" aria-selected="' + (S.tab === x[0]) + '">' + esc(t(x[1])) + '</button>').join('');
+    const cur = TABS.find(x => x[0] === S.tab) || TABS[0]; const view = document.getElementById('view'); view.innerHTML = cur[2]();
+    if (S.focus) { const el = document.getElementById(S.focus.id); if (el) { el.focus(); try { el.setSelectionRange(S.focus.pos, S.focus.pos); } catch (e) { /* not a text input */ } } S.focus = null; }
+  }
+  const go = (tab) => { S.tab = tab; safe(() => { history.replaceState(null, '', '#' + tab); }); render(); window.scrollTo(0, 0); };
+  function copyText(text, msgEl) {
+    const done = ok => { if (msgEl) msgEl.textContent = ok ? t('apCopied') : t('apCopyFail'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); else { try { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); done(document.execCommand('copy')); ta.remove(); } catch (e) { done(false); } }
+  }
+  const pickRows = () => PAY.rows.filter(r => S.picks.has(r.id));
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-act]'); if (!a) return; const act = a.dataset.act;
+    if (act === 'tab') return go(a.dataset.tab);
+    if (act === 'goto') return go(a.dataset.tab);
+    if (act === 'sort') { const st = S.tables[a.dataset.tbl]; if (st.key === a.dataset.key) st.dir = st.dir === 'asc' ? 'desc' : 'asc'; else { st.key = a.dataset.key; st.dir = 'asc'; } st.page = 0; return render(); }
+    if (act === 'page') { S.tables[a.dataset.tbl].page += +a.dataset.d; return render(); }
+    if (act === 'flt') { const f = S.f[a.dataset.scope]; f[a.dataset.key] = f[a.dataset.key] === a.dataset.val ? '' : a.dataset.val; if (S.tables[a.dataset.scope]) S.tables[a.dataset.scope].page = 0; return render(); }
+    if (act === 'reset') { S.f[a.dataset.scope] = {}; if (S.tables[a.dataset.scope]) S.tables[a.dataset.scope].page = 0; return render(); }
+    if (act === 'detail') { S.open = S.open === a.dataset.id ? null : a.dataset.id; return render(); }
+    if (act === 'openPre') { S.open = a.dataset.id; S.f.pre = {}; return go('pre'); }
+    if (act === 'closeDetail') { S.open = null; return render(); }
+    if (act === 'pick') { const id = a.dataset.id; if (S.picks.has(id)) S.picks.delete(id); else S.picks.add(id); savePicks(); return render(); }
+    if (act === 'pickclear') { S.picks.clear(); savePicks(); return render(); }
+    if (act === 'pickcopy') { const txt = pickRows().map(r => [r.country, r.code || '', r.hotel, r.ccy, r.avg === null ? '' : r.avg, r.cls].join('\t')).join('\n'); return copyText(txt, null); }
+    if (act === 'pickcsv') { const q = v => '"' + String(v === null || v === undefined ? '' : v).replace(/"/g, '""') + '"'; const csv = '﻿' + ['country,vendor_code,hotel,currency,avg_monthly_payment,class'].concat(pickRows().map(r => [r.country, r.code, r.hotel, r.ccy, r.avg, r.cls].map(q).join(','))).join('\n'); const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const l = document.createElement('a'); l.href = url; l.download = 'sg_test_candidates.csv'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); return; }
+    if (act === 'apcopy') return copyText(document.getElementById('aptext').textContent, document.getElementById('apmsg'));
+  });
+  const onInput = e => {
+    const el = e.target; const key = el.dataset && el.dataset.f; if (!key) return; const [scope, k] = key.split('.'); S.f[scope][k] = el.value; if (S.tables[scope]) S.tables[scope].page = 0;
+    if (el.tagName === 'INPUT') S.focus = { id: el.id, pos: el.selectionStart }; render();
+  };
+  document.addEventListener('input', e => { if (e.target.tagName === 'INPUT' && e.target.dataset.f) onInput(e); });
+  document.addEventListener('change', e => { if (e.target.tagName === 'SELECT' && e.target.dataset.f) onInput(e); });
+  document.getElementById('lang').addEventListener('click', e => { const b = e.target.closest('button[data-lang]'); if (!b) return; S.lang = b.dataset.lang; safe(() => localStorage.setItem('omh_lang', S.lang)); render(); });
+  document.getElementById('theme').addEventListener('click', () => { const r = document.documentElement; const cur = r.getAttribute('data-theme'); r.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark'); });
+  const initial = (location.hash || '').replace('#', ''); if (TABS.some(x => x[0] === initial)) S.tab = initial;
+  render();
+  window.__OMH = { S, PAY, PRE, PROG, ISSUES, PACKET, render, go };
+})();
+</script>
 </body>
 </html>
