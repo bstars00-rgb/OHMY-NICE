@@ -67,7 +67,7 @@ function sgPayRows() {
 function sgViewPay() {
   const f = SGS.f.pay; const base = SGC.pay.rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE'); const rows = sgPayRows().sort((a, b) => (b.avg || -1) - (a.avg || -1));
   const legend = '<div class="legend">' + ['A1', 'A2', 'EXC', 'TBD'].map(c => '<span><button type="button" class="pill ' + SGCLS_TONE[c] + '" data-sg="flt" data-scope="pay" data-key="cls" data-val="' + c + '" aria-pressed="' + (f.cls === c) + '" style="' + (f.cls === c ? 'outline:2px solid var(--accent)' : '') + '">' + sgE(sgClsText(c)) + ' ' + base.filter(r => r.cls === c).length + '</button></span>').join('') + '</div><p class="muted">' + sgE(sgTx(f.cls ? f.cls + 'd' : 'A1d')) + (f.cls ? '' : ' · ' + sgE(sgTx('A2d'))) + '</p>';
-  const filters = '<div class="filters">' + sgSel('pay', 'country', sgTx('country'), sgUniq(base, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pay', 'method', sgTx('method'), sgUniq(base, r => r.method).map(v => ({ v, t: v })), f.method) + sgSel('pay', 'fill', sgTx('fill'), ['DONE', 'UNKNOWN', 'PARTIAL', 'EMPTY'].map(v => ({ v, t: sgTx('fill' + v) })), f.fill) +
+  const filters = '<div class="filters" data-side="1">' + sgSel('pay', 'country', sgTx('country'), sgUniq(base, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pay', 'method', sgTx('method'), sgUniq(base, r => r.method).map(v => ({ v, t: v })), f.method) + sgSel('pay', 'fill', sgTx('fill'), ['DONE', 'UNKNOWN', 'PARTIAL', 'EMPTY'].map(v => ({ v, t: sgTx('fill' + v) })), f.fill) +
     '<input id="sgq-pay" data-sgf="pay.q" type="search" value="' + sgE(f.q || '') + '" placeholder="' + sgE(sgTx('search')) + '" aria-label="search"><button type="button" data-sg="reset" data-scope="pay">' + sgE(sgTx('reset')) + '</button><span class="muted">' + sgE(sgTx('payCount', { n: rows.length })) + '</span></div>';
   const size = 40; const page = rows.slice(SGS.page.pay * size, SGS.page.pay * size + size);
   const body = page.map(r => '<tr><td>' + sgE(r.country) + '</td><td>' + sgE(r.code || '—') + '</td><td><b>' + sgE(r.hotel) + '</b></td><td>' + sgE(r.entity || '—') + '</td><td>' + sgE(r.method || '—') + '</td><td>' + sgE(r.ccy || '—') + '</td><td class="r">' + sgE(sgNum(r.avg)) + '</td><td>' + (r.card === 'O' ? T('수용', 'Yes') : r.card === 'X' ? T('미수용', 'No') : r.card === '미확인' ? T('미확인', 'Unknown') : '—') + '</td><td>' + sgE(r.account || '—') + '</td><td>' + sgPill(SGCLS_TONE[r.cls], sgClsText(r.cls)) + '</td><td class="muted">' + sgE((r.note || '').slice(0, 90)) + '</td><td>' + ((r.cls === 'A1' || r.cls === 'A2') ? '<input type="checkbox" data-sg="pick" data-id="' + sgE(r.id) + '"' + (SGS.picks.has(r.id) ? ' checked' : '') + ' aria-label="pick">' : '') + '</td></tr>').join('');
@@ -96,7 +96,7 @@ function sgPreDetail(r) {
 function sgViewPre() {
   const f = SGS.f.pre; const rows = sgPreRows().sort((a, b) => (b.ledger || 0) - (a.ledger || 0));
   const legend = '<div class="legend">' + ['B1', 'B2_USE', 'B2_REFUND', 'B2_TALK', 'TBD'].map(c => '<span><button type="button" class="pill ' + SGCLS_TONE[c] + '" data-sg="flt" data-scope="pre" data-key="cls" data-val="' + c + '" aria-pressed="' + (f.cls === c) + '" style="' + (f.cls === c ? 'outline:2px solid var(--accent)' : '') + '">' + sgE(sgClsText(c)) + ' ' + SGC.pre.rows.filter(r => r.cls === c).length + '</button></span>').join('') + '</div><p class="muted">' + sgE(f.cls ? sgTx(f.cls + 'd') : '') + '</p>';
-  const filters = '<div class="filters">' + sgSel('pre', 'country', sgTx('country'), sgUniq(SGC.pre.rows, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pre', 'type', sgTx('preType'), sgUniq(SGC.pre.rows, r => r.type).map(v => ({ v, t: v })), f.type) + sgSel('pre', 'sig', sgTx('preSignal'), ['bad', 'warn', 'ok', 'na'].map(v => ({ v, t: sgTx({ ok: 'sigOk', warn: 'sigWarn', bad: 'sigBad', na: 'sigNa' }[v]) })), f.sig) +
+  const filters = '<div class="filters" data-side="1">' + sgSel('pre', 'country', sgTx('country'), sgUniq(SGC.pre.rows, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pre', 'type', sgTx('preType'), sgUniq(SGC.pre.rows, r => r.type).map(v => ({ v, t: v })), f.type) + sgSel('pre', 'sig', sgTx('preSignal'), ['bad', 'warn', 'ok', 'na'].map(v => ({ v, t: sgTx({ ok: 'sigOk', warn: 'sigWarn', bad: 'sigBad', na: 'sigNa' }[v]) })), f.sig) +
     '<input id="sgq-pre" data-sgf="pre.q" type="search" value="' + sgE(f.q || '') + '" placeholder="' + sgE(sgTx('search')) + '" aria-label="search"><button type="button" data-sg="reset" data-scope="pre">' + sgE(sgTx('reset')) + '</button><span class="muted">' + sgE(sgTx('payCount', { n: rows.length })) + '</span></div>';
   const size = 30; const page = rows.slice(SGS.page.pre * size, SGS.page.pre * size + size);
   const body = page.map(r => '<tr class="hrow" data-sg="detail" data-id="' + sgE(r.id) + '"><td>' + sgE(r.country) + '</td><td><b>' + sgE(r.hotel) + '</b></td><td>' + sgE(r.type || '—') + '</td><td>' + sgE(r.ccy) + '</td><td class="r">' + sgE(sgNum(r.ledger)) + '</td><td class="r">' + sgE(sgNum(r.hotelBal)) + '</td><td class="r">' + (r.gap === null ? '—' : sgE(sgNum(r.gap)) + (r.recon === 'MAJOR' ? ' ' + sgPill('bad', sgPct(r.gapPct, 1)) : r.recon === 'MINOR' ? ' ' + sgPill('warn', sgPct(r.gapPct, 1)) : '')) + '</td><td class="r">' + sgE(sgNum(r.avg)) + '</td><td class="r">' + (r.cover === null ? '—' : r.cover) + '</td><td>' + (r.canUse === '가능' ? sgE(sgTx('canUseYes')) : r.canUse === '불가' ? sgE(sgTx('canUseNo')) : '—') + '</td><td class="r">' + sgE(sgNum(r.est)) + '</td><td>' + sgE(sgYN(r.transfer)) + '</td><td>' + sgE(sgYN(r.refund)) + '</td><td>' + sgPill(SGCLS_TONE[r.cls], sgClsText(r.cls)) + '</td><td>' + sgSig(r.sig.color) + '</td><td>' + (r.ceo ? sgSig(r.ceo) : '<span class="muted">—</span>') + '</td><td class="muted">' + sgE(r.asOf || '—') + '</td></tr>' + (SGS.open === r.id ? sgPreDetail(r) : '')).join('');
@@ -155,12 +155,21 @@ function sgViewCol() {
 }
 
 /* ---------- 틀 ---------- */
+/** 왼쪽 칸(#sgSide, 화면 배치가 만든다)이 있으면 거르기 줄을 그리로 옮긴다. 없으면 표 위에 그대로 둔다. */
+function sgMoveFilters(root) {
+  const slot = document.getElementById('sgSide');
+  if (!slot || typeof slot.replaceChildren !== 'function' || typeof root.querySelector !== 'function') return;
+  const f = root.querySelector('.filters[data-side]');
+  if (f) slot.replaceChildren(f); else slot.replaceChildren();
+  if (!slot._sgWired) { slot._sgWired = true; slot.addEventListener('click', sgOnClick); slot.addEventListener('input', sgOnInput); slot.addEventListener('change', sgOnChange); }
+}
 function renderSG() {
   const root = document.getElementById('v-sg'); if (!root) return;
   const tab = document.querySelector('nav.tabs button[data-v="sg"]'); if (tab) tab.textContent = T('SG 전환', 'SG transition', 'SG移行');
   sgCompute();
   const body = SGS.view === 'pre' ? sgViewPre() : SGS.view === 'ap' ? sgViewAp() : SGS.view === 'col' ? sgViewCol() : sgViewPay();
   root.innerHTML = sgHeadNote() + sgTiles() + sgSubnav() + body;
+  sgMoveFilters(root);
   if (SGS.focus) { const el = document.getElementById(SGS.focus.id); if (el) { el.focus(); try { el.setSelectionRange(SGS.focus.pos, SGS.focus.pos); } catch (e) { /* 글 칸이 아님 */ } } SGS.focus = null; }
 }
 function sgSavePicks() { try { localStorage.setItem(SGPICK_KEY, JSON.stringify([...SGS.picks])); } catch (e) { /* 저장소를 못 쓰는 환경 */ } }
@@ -180,9 +189,7 @@ function sgLoadFile(kind, file) {
   };
   rd.readAsText(file, 'utf-8');
 }
-(function sgWire() {
-  const root = document.getElementById('v-sg'); if (!root) return;
-  root.addEventListener('click', e => {
+function sgOnClick(e) {
     const a = e.target.closest('[data-sg]'); if (!a || a.dataset.sg === 'file') return; const act = a.dataset.sg;
     if (act === 'view') { SGS.view = a.dataset.v; return renderSG(); }
     if (act === 'flt') { const f = SGS.f[a.dataset.scope]; f[a.dataset.key] = f[a.dataset.key] === a.dataset.val ? '' : a.dataset.val; SGS.page[a.dataset.scope] = 0; return renderSG(); }
@@ -197,7 +204,10 @@ function sgLoadFile(kind, file) {
     if (act === 'apcopy') return copyText(document.getElementById('sgaptext').textContent);
     if (act === 'sev') { SGS.sev = SGS.sev === a.dataset.v ? '' : a.dataset.v; SGS.page.iss = 0; return renderSG(); }
     if (act === 'seed') { SGDATA = JSON.parse(JSON.stringify(SGDATA0)); SGS.msg = T('처음 자료로 되돌렸습니다', 'Restored original data'); return renderSG(); }
-  });
-  root.addEventListener('input', e => { const el = e.target; const key = el.dataset && el.dataset.sgf; if (!key || el.tagName === 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; SGS.focus = { id: el.id, pos: el.selectionStart }; renderSG(); });
-  root.addEventListener('change', e => { const el = e.target; if (el.dataset && el.dataset.sg === 'file') { const f = el.files[0]; if (f) sgLoadFile(el.dataset.k, f); return; } const key = el.dataset && el.dataset.sgf; if (!key || el.tagName !== 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; renderSG(); });
+}
+function sgOnInput(e) { const el = e.target; const key = el.dataset && el.dataset.sgf; if (!key || el.tagName === 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; SGS.focus = { id: el.id, pos: el.selectionStart }; renderSG(); }
+function sgOnChange(e) { const el = e.target; if (el.dataset && el.dataset.sg === 'file') { const f = el.files[0]; if (f) sgLoadFile(el.dataset.k, f); return; } const key = el.dataset && el.dataset.sgf; if (!key || el.tagName !== 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; renderSG(); }
+(function sgWire() {
+  const root = document.getElementById('v-sg'); if (!root) return;
+  root.addEventListener('click', sgOnClick); root.addEventListener('input', sgOnInput); root.addEventListener('change', sgOnChange);
 })();

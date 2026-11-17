@@ -126,8 +126,99 @@ h2{font-size:16px;margin:18px 0 8px;text-wrap:balance}
 .rulebody h2{font-size:16px;margin:22px 0 8px}.rulebody h3{font-size:14px;margin:16px 0 6px}.rulebody p,.rulebody li{line-height:1.6;max-width:880px}.rulebody table{min-width:560px}.rulebody td,.rulebody th{vertical-align:top}
 button.pill{border:0;cursor:pointer;font:inherit}
 .hrow.detail td{cursor:default}
-.tile.bad{background:var(--bad-bg)} .tile.warn{background:var(--warn-bg)} .tile.ok{background:var(--ok-bg)} .tile.na{background:var(--na-bg)}
+/* ===== 화면 배치(조립 단계에서 대표님 스타일 뒤에 붙인다): 왼쪽 메뉴·필터, 큰 카드, 다크/화이트 ===== */
+[hidden]{display:none!important}
+:root{--shadow:0 1px 2px rgba(38,34,29,.06),0 6px 18px rgba(38,34,29,.05)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--shadow:none}}
+:root[data-theme="dark"]{--shadow:none}
+body{font-size:15px}
+
+/* 위 막대 */
+header{padding:12px 24px;gap:14px}
+header h1{font-size:19px}
+.themebtn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 14px;font-weight:700}
+.themebtn svg{width:16px;height:16px;flex:none}
+
+/* 왼쪽 메뉴와 필터, 오른쪽 내용 */
+.shell{display:grid;grid-template-columns:272px minmax(0,1fr);align-items:start;min-height:calc(100vh - var(--hh,64px))}
+.side{position:sticky;top:var(--hh,64px);height:calc(100vh - var(--hh,64px));overflow:auto;padding:18px 14px 28px;border-right:1px solid var(--line);background:var(--surface)}
+.content{min-width:0}
+.content main{max-width:1640px;margin:0 auto;padding:24px 28px 80px}
+.sgroup{margin-bottom:22px}
+.sgroup>.sh{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin:0 6px 8px}
+.side nav.tabs{display:flex;flex-direction:column;gap:2px;padding:0}
+.side nav.tabs button{text-align:left;border:0;border-left:4px solid transparent;border-radius:8px;padding:10px 12px;background:transparent;color:var(--muted);font-weight:500;font-size:15px}
+.side nav.tabs button:hover{background:var(--na-bg);color:var(--ink)}
+.side nav.tabs button[aria-selected="true"]{background:var(--na-bg);color:var(--ink);border-left-color:var(--accent);font-weight:700}
+.side .corpbar{display:flex;flex-direction:column;gap:4px;padding:0}
+.side .corpbar button{display:flex;justify-content:space-between;align-items:center;text-align:left;padding:8px 12px;border-radius:8px;border-color:transparent;background:transparent}
+.side .corpbar button:hover{background:var(--na-bg)}
+.side .corpbar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.chips{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.chip{display:flex;align-items:center;gap:10px;text-align:left;width:100%;padding:8px 12px;border-radius:8px;border-color:transparent;background:transparent}
+.chip:hover{background:var(--na-bg)}
+.chip .nm{flex:1}
+.chip .ct{color:var(--muted);font-size:13px}
+.chip[aria-pressed="true"]{background:var(--na-bg);border-color:var(--accent);font-weight:700}
+.dot.all{background:linear-gradient(90deg,var(--bad) 33%,var(--warn) 33% 66%,var(--ok) 66%)}
+.side .filters{display:flex;flex-direction:column;align-items:stretch;gap:10px;margin:0}
+.side .filters label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.side .filters select,.side .filters input{width:100%;padding:8px 10px;font-size:14px}
+.side .filters button{width:100%}
+.side .filters .muted{font-size:12px}
+
+/* 큰 카드 */
+#tiles{display:block}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+#tiles .tiles{margin-bottom:14px}
+.tile{padding:18px 20px;border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;min-height:148px;text-align:left;font:inherit;color:var(--ink)}
+button.tile{cursor:pointer;width:100%}
+button.tile:hover{border-color:var(--accent)}
+.tile .k{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--ink)}
+.tile .v{font-size:32px;line-height:1.05;font-weight:700;letter-spacing:-.02em}
+.sigtile .v{font-size:52px}
+.tile .s{font-size:13px;color:var(--muted)}
+.tile.bad{background:var(--bad-bg);border-left:6px solid var(--bad)} .tile.warn{background:var(--warn-bg);border-left:6px solid var(--warn)} .tile.ok{background:var(--ok-bg);border-left:6px solid var(--ok)} .tile.na{background:var(--na-bg);border-left:6px solid var(--na)}
+.tile.bad .v{color:var(--bad)} .tile.warn .v{color:var(--warn)} .tile.ok .v{color:var(--ok)}
+.tile .bar{height:8px;border-radius:99px;background:rgba(127,127,127,.22);overflow:hidden}
+.tile .bar i{display:block;height:100%;border-radius:99px;background:var(--muted)}
+.tile.bad .bar i{background:var(--bad)} .tile.warn .bar i{background:var(--warn)} .tile.ok .bar i{background:var(--ok)}
+.sigtile[aria-pressed="true"]{outline:3px solid var(--accent);outline-offset:2px}
+.tile .curs{display:flex;flex-direction:column;gap:2px}
+.tile .cur{font-size:22px;font-weight:700;line-height:1.3}
+
+/* 구역 */
+.panel{margin:0 0 32px}
+.panel>h2{font-size:19px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+.panel>.muted{margin:0 0 10px}
+.legend{margin:4px 0 12px}
+.note{font-size:14px}
+
+/* 표: 엑셀보다 읽기 편하게 */
+th,td{padding:11px 12px}
+th{font-size:12px;font-weight:700;z-index:1;border-bottom:2px solid var(--line)}
+.tablewrap{border-radius:12px;box-shadow:var(--shadow)}
+.tablewrap.tall,#v-sg .tablewrap{max-height:calc(100vh - var(--hh,64px) - 32px);overflow:auto}
+tr.hrow:hover td{background:var(--na-bg)}
+
+@media (max-width:980px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 14px}
+  header{position:static;padding:10px 14px;gap:8px}
+  header .spacer{display:none}
+  header .langs{flex:1 0 100%;flex-wrap:nowrap;overflow-x:auto}
+  header .langs button{flex:none;white-space:nowrap}
+  .sgroup{margin-bottom:12px}
+  .side nav.tabs,.side .corpbar{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .side nav.tabs button,.side .corpbar button{flex:none;white-space:nowrap;border-left:0;border-bottom:3px solid transparent;border-radius:8px}
+  .side nav.tabs button[aria-selected="true"]{border-left-color:transparent;border-bottom-color:var(--accent)}
+  .chips{flex-direction:row;flex-wrap:wrap}
+  .chip{width:auto}
+  .content main{padding:16px 14px 60px}
+  .sigtile .v{font-size:44px}
+}
 </style>
+<script>try{var t=localStorage.getItem('omh_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
 <body>
 <header>
@@ -820,7 +911,7 @@ function sgPayRows() {
 function sgViewPay() {
   const f = SGS.f.pay; const base = SGC.pay.rows.filter(r => r.cls !== 'NONE' && r.cls !== 'PRE'); const rows = sgPayRows().sort((a, b) => (b.avg || -1) - (a.avg || -1));
   const legend = '<div class="legend">' + ['A1', 'A2', 'EXC', 'TBD'].map(c => '<span><button type="button" class="pill ' + SGCLS_TONE[c] + '" data-sg="flt" data-scope="pay" data-key="cls" data-val="' + c + '" aria-pressed="' + (f.cls === c) + '" style="' + (f.cls === c ? 'outline:2px solid var(--accent)' : '') + '">' + sgE(sgClsText(c)) + ' ' + base.filter(r => r.cls === c).length + '</button></span>').join('') + '</div><p class="muted">' + sgE(sgTx(f.cls ? f.cls + 'd' : 'A1d')) + (f.cls ? '' : ' · ' + sgE(sgTx('A2d'))) + '</p>';
-  const filters = '<div class="filters">' + sgSel('pay', 'country', sgTx('country'), sgUniq(base, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pay', 'method', sgTx('method'), sgUniq(base, r => r.method).map(v => ({ v, t: v })), f.method) + sgSel('pay', 'fill', sgTx('fill'), ['DONE', 'UNKNOWN', 'PARTIAL', 'EMPTY'].map(v => ({ v, t: sgTx('fill' + v) })), f.fill) +
+  const filters = '<div class="filters" data-side="1">' + sgSel('pay', 'country', sgTx('country'), sgUniq(base, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pay', 'method', sgTx('method'), sgUniq(base, r => r.method).map(v => ({ v, t: v })), f.method) + sgSel('pay', 'fill', sgTx('fill'), ['DONE', 'UNKNOWN', 'PARTIAL', 'EMPTY'].map(v => ({ v, t: sgTx('fill' + v) })), f.fill) +
     '<input id="sgq-pay" data-sgf="pay.q" type="search" value="' + sgE(f.q || '') + '" placeholder="' + sgE(sgTx('search')) + '" aria-label="search"><button type="button" data-sg="reset" data-scope="pay">' + sgE(sgTx('reset')) + '</button><span class="muted">' + sgE(sgTx('payCount', { n: rows.length })) + '</span></div>';
   const size = 40; const page = rows.slice(SGS.page.pay * size, SGS.page.pay * size + size);
   const body = page.map(r => '<tr><td>' + sgE(r.country) + '</td><td>' + sgE(r.code || '—') + '</td><td><b>' + sgE(r.hotel) + '</b></td><td>' + sgE(r.entity || '—') + '</td><td>' + sgE(r.method || '—') + '</td><td>' + sgE(r.ccy || '—') + '</td><td class="r">' + sgE(sgNum(r.avg)) + '</td><td>' + (r.card === 'O' ? T('수용', 'Yes') : r.card === 'X' ? T('미수용', 'No') : r.card === '미확인' ? T('미확인', 'Unknown') : '—') + '</td><td>' + sgE(r.account || '—') + '</td><td>' + sgPill(SGCLS_TONE[r.cls], sgClsText(r.cls)) + '</td><td class="muted">' + sgE((r.note || '').slice(0, 90)) + '</td><td>' + ((r.cls === 'A1' || r.cls === 'A2') ? '<input type="checkbox" data-sg="pick" data-id="' + sgE(r.id) + '"' + (SGS.picks.has(r.id) ? ' checked' : '') + ' aria-label="pick">' : '') + '</td></tr>').join('');
@@ -849,7 +940,7 @@ function sgPreDetail(r) {
 function sgViewPre() {
   const f = SGS.f.pre; const rows = sgPreRows().sort((a, b) => (b.ledger || 0) - (a.ledger || 0));
   const legend = '<div class="legend">' + ['B1', 'B2_USE', 'B2_REFUND', 'B2_TALK', 'TBD'].map(c => '<span><button type="button" class="pill ' + SGCLS_TONE[c] + '" data-sg="flt" data-scope="pre" data-key="cls" data-val="' + c + '" aria-pressed="' + (f.cls === c) + '" style="' + (f.cls === c ? 'outline:2px solid var(--accent)' : '') + '">' + sgE(sgClsText(c)) + ' ' + SGC.pre.rows.filter(r => r.cls === c).length + '</button></span>').join('') + '</div><p class="muted">' + sgE(f.cls ? sgTx(f.cls + 'd') : '') + '</p>';
-  const filters = '<div class="filters">' + sgSel('pre', 'country', sgTx('country'), sgUniq(SGC.pre.rows, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pre', 'type', sgTx('preType'), sgUniq(SGC.pre.rows, r => r.type).map(v => ({ v, t: v })), f.type) + sgSel('pre', 'sig', sgTx('preSignal'), ['bad', 'warn', 'ok', 'na'].map(v => ({ v, t: sgTx({ ok: 'sigOk', warn: 'sigWarn', bad: 'sigBad', na: 'sigNa' }[v]) })), f.sig) +
+  const filters = '<div class="filters" data-side="1">' + sgSel('pre', 'country', sgTx('country'), sgUniq(SGC.pre.rows, r => r.country).map(v => ({ v, t: v })), f.country) + sgSel('pre', 'type', sgTx('preType'), sgUniq(SGC.pre.rows, r => r.type).map(v => ({ v, t: v })), f.type) + sgSel('pre', 'sig', sgTx('preSignal'), ['bad', 'warn', 'ok', 'na'].map(v => ({ v, t: sgTx({ ok: 'sigOk', warn: 'sigWarn', bad: 'sigBad', na: 'sigNa' }[v]) })), f.sig) +
     '<input id="sgq-pre" data-sgf="pre.q" type="search" value="' + sgE(f.q || '') + '" placeholder="' + sgE(sgTx('search')) + '" aria-label="search"><button type="button" data-sg="reset" data-scope="pre">' + sgE(sgTx('reset')) + '</button><span class="muted">' + sgE(sgTx('payCount', { n: rows.length })) + '</span></div>';
   const size = 30; const page = rows.slice(SGS.page.pre * size, SGS.page.pre * size + size);
   const body = page.map(r => '<tr class="hrow" data-sg="detail" data-id="' + sgE(r.id) + '"><td>' + sgE(r.country) + '</td><td><b>' + sgE(r.hotel) + '</b></td><td>' + sgE(r.type || '—') + '</td><td>' + sgE(r.ccy) + '</td><td class="r">' + sgE(sgNum(r.ledger)) + '</td><td class="r">' + sgE(sgNum(r.hotelBal)) + '</td><td class="r">' + (r.gap === null ? '—' : sgE(sgNum(r.gap)) + (r.recon === 'MAJOR' ? ' ' + sgPill('bad', sgPct(r.gapPct, 1)) : r.recon === 'MINOR' ? ' ' + sgPill('warn', sgPct(r.gapPct, 1)) : '')) + '</td><td class="r">' + sgE(sgNum(r.avg)) + '</td><td class="r">' + (r.cover === null ? '—' : r.cover) + '</td><td>' + (r.canUse === '가능' ? sgE(sgTx('canUseYes')) : r.canUse === '불가' ? sgE(sgTx('canUseNo')) : '—') + '</td><td class="r">' + sgE(sgNum(r.est)) + '</td><td>' + sgE(sgYN(r.transfer)) + '</td><td>' + sgE(sgYN(r.refund)) + '</td><td>' + sgPill(SGCLS_TONE[r.cls], sgClsText(r.cls)) + '</td><td>' + sgSig(r.sig.color) + '</td><td>' + (r.ceo ? sgSig(r.ceo) : '<span class="muted">—</span>') + '</td><td class="muted">' + sgE(r.asOf || '—') + '</td></tr>' + (SGS.open === r.id ? sgPreDetail(r) : '')).join('');
@@ -908,12 +999,21 @@ function sgViewCol() {
 }
 
 /* ---------- 틀 ---------- */
+/** 왼쪽 칸(#sgSide, 화면 배치가 만든다)이 있으면 거르기 줄을 그리로 옮긴다. 없으면 표 위에 그대로 둔다. */
+function sgMoveFilters(root) {
+  const slot = document.getElementById('sgSide');
+  if (!slot || typeof slot.replaceChildren !== 'function' || typeof root.querySelector !== 'function') return;
+  const f = root.querySelector('.filters[data-side]');
+  if (f) slot.replaceChildren(f); else slot.replaceChildren();
+  if (!slot._sgWired) { slot._sgWired = true; slot.addEventListener('click', sgOnClick); slot.addEventListener('input', sgOnInput); slot.addEventListener('change', sgOnChange); }
+}
 function renderSG() {
   const root = document.getElementById('v-sg'); if (!root) return;
   const tab = document.querySelector('nav.tabs button[data-v="sg"]'); if (tab) tab.textContent = T('SG 전환', 'SG transition', 'SG移行');
   sgCompute();
   const body = SGS.view === 'pre' ? sgViewPre() : SGS.view === 'ap' ? sgViewAp() : SGS.view === 'col' ? sgViewCol() : sgViewPay();
   root.innerHTML = sgHeadNote() + sgTiles() + sgSubnav() + body;
+  sgMoveFilters(root);
   if (SGS.focus) { const el = document.getElementById(SGS.focus.id); if (el) { el.focus(); try { el.setSelectionRange(SGS.focus.pos, SGS.focus.pos); } catch (e) { /* 글 칸이 아님 */ } } SGS.focus = null; }
 }
 function sgSavePicks() { try { localStorage.setItem(SGPICK_KEY, JSON.stringify([...SGS.picks])); } catch (e) { /* 저장소를 못 쓰는 환경 */ } }
@@ -933,9 +1033,7 @@ function sgLoadFile(kind, file) {
   };
   rd.readAsText(file, 'utf-8');
 }
-(function sgWire() {
-  const root = document.getElementById('v-sg'); if (!root) return;
-  root.addEventListener('click', e => {
+function sgOnClick(e) {
     const a = e.target.closest('[data-sg]'); if (!a || a.dataset.sg === 'file') return; const act = a.dataset.sg;
     if (act === 'view') { SGS.view = a.dataset.v; return renderSG(); }
     if (act === 'flt') { const f = SGS.f[a.dataset.scope]; f[a.dataset.key] = f[a.dataset.key] === a.dataset.val ? '' : a.dataset.val; SGS.page[a.dataset.scope] = 0; return renderSG(); }
@@ -950,9 +1048,12 @@ function sgLoadFile(kind, file) {
     if (act === 'apcopy') return copyText(document.getElementById('sgaptext').textContent);
     if (act === 'sev') { SGS.sev = SGS.sev === a.dataset.v ? '' : a.dataset.v; SGS.page.iss = 0; return renderSG(); }
     if (act === 'seed') { SGDATA = JSON.parse(JSON.stringify(SGDATA0)); SGS.msg = T('처음 자료로 되돌렸습니다', 'Restored original data'); return renderSG(); }
-  });
-  root.addEventListener('input', e => { const el = e.target; const key = el.dataset && el.dataset.sgf; if (!key || el.tagName === 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; SGS.focus = { id: el.id, pos: el.selectionStart }; renderSG(); });
-  root.addEventListener('change', e => { const el = e.target; if (el.dataset && el.dataset.sg === 'file') { const f = el.files[0]; if (f) sgLoadFile(el.dataset.k, f); return; } const key = el.dataset && el.dataset.sgf; if (!key || el.tagName !== 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; renderSG(); });
+}
+function sgOnInput(e) { const el = e.target; const key = el.dataset && el.dataset.sgf; if (!key || el.tagName === 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; SGS.focus = { id: el.id, pos: el.selectionStart }; renderSG(); }
+function sgOnChange(e) { const el = e.target; if (el.dataset && el.dataset.sg === 'file') { const f = el.files[0]; if (f) sgLoadFile(el.dataset.k, f); return; } const key = el.dataset && el.dataset.sgf; if (!key || el.tagName !== 'SELECT') return; const [scope, k] = key.split('.'); SGS.f[scope][k] = el.value; SGS.page[scope] = 0; renderSG(); }
+(function sgWire() {
+  const root = document.getElementById('v-sg'); if (!root) return;
+  root.addEventListener('click', sgOnClick); root.addEventListener('input', sgOnInput); root.addEventListener('change', sgOnChange);
 })();
 
 </script>
@@ -1124,14 +1225,25 @@ function renderBoard(){
   const cnt = c=>evs.filter(e=>e.color===c).length;
   const redBal = showCur(sumCur(krw.filter(e=>e.color==='bad'),pos));
   const turnOk = krw.filter(e=>e.bal<=0||(e.sig.S1.v!=null&&e.sig.S1.v<=RULE.turnMonths)).length;
+  const sigTot = cnt('bad')+cnt('warn')+cnt('ok')+cnt('na');
+  const share = c => sigTot ? Math.round(cnt(c)/sigTot*100) : 0;
+  const lines = s => String(s).split(' · ').map(x=>`<div class="cur num">${x}</div>`).join('');
+  const fSel = document.getElementById('fColor').value;
+  const sigTile = (c,ko,en,ja,sub) => `<button type="button" class="tile sigtile ${c}" data-sigf="${c}" aria-pressed="${fSel===c}"><div class="k"><span class="dot ${c}"></span>${cn(c)} · ${T(ko,en,ja)}</div><div class="v num">${cnt(c)}</div><div class="bar"><i style="width:${share(c)}%"></i></div><div class="s">${share(c)}% · ${sub}</div></button>`;
+  const turnPct = krw.length ? Math.round(turnOk/krw.length*100) : 0;
+  document.getElementById('tiles').dataset.cnt = JSON.stringify({all:evs.length,bad:cnt('bad'),warn:cnt('warn'),ok:cnt('ok'),na:cnt('na'),off:evs.filter(e=>e.color==='off').length});
   document.getElementById('tiles').innerHTML = `
-   <div class="tile"><div class="k">${T('선급 잔액 (자료 있는 호텔)','Prepaid balance (hotels with data)','前払残高(データあり)')}</div><div class="v num" style="font-size:${sumK.includes('·')?'15px':''}">${sumK}</div><div class="s">${krw.length}${T('곳 · 나라별 통화','hotels · local currency','施設 · 各国通貨')}</div></div>
-   <div class="tile bad"><div class="k">${cn('bad')} · ${T('충전 차단 호텔 수','hotels blocked for top-ups','追加不可の施設数')}</div><div class="v num">${cnt('bad')}</div><div class="s">${T('잔액','balance','残高')} ${redBal}</div></div>
-   <div class="tile warn"><div class="k">${cn('warn')} · ${T('충전 보류 호텔 수','hotels on hold for top-ups','追加保留の施設数')}</div><div class="v num">${cnt('warn')}</div><div class="s">${T('충전 보류·확인','hold top-ups, check','追加保留・確認')}</div></div>
-   <div class="tile ok"><div class="k">${cn('ok')} · ${T('정상 호텔 수','healthy hotels','正常な施設数')}</div><div class="v num">${cnt('ok')}</div><div class="s">${T('월 점검','monthly check','月次点検')}</div></div>
-   <div class="tile"><div class="k">${T('자금 회전 1개월 이내','Turnover within 1 month','資金回転 1か月以内')}</div><div class="v num">${turnOk}/${krw.length}</div><div class="s">${T('잔액 ÷ 최근 3개월 월평균 소진','Balance ÷ 3-mo avg usage','残高 ÷ 直近3か月平均消化')}</div></div>
-   <div class="tile"><div class="k">${T('보증금 잔액 (별도 관리)','Guarantee deposits (managed separately)')}</div><div class="v num" style="font-size:${depK.includes('·')?'15px':''}">${depK}</div><div class="s">${depList.length}${T('곳 · 소진 없음','hotels · not consumed')}</div></div>
-   <div class="tile na"><div class="k">${cn('na')} · ${T('자료 없는 호텔 수','hotels without data','データなしの施設数')}</div><div class="v num">${cnt('na')}</div><div class="s">${T('잔액·소진 자료가 없는 곳','No balance or usage data')}</div></div>`;
+   <div class="tiles">
+    ${sigTile('bad','충전 차단 호텔 수','hotels blocked for top-ups','追加不可の施設数',`${T('잔액','balance','残高')} ${redBal}`)}
+    ${sigTile('warn','충전 보류 호텔 수','hotels on hold for top-ups','追加保留の施設数',T('충전 보류·확인','hold top-ups, check','追加保留・確認'))}
+    ${sigTile('ok','정상 호텔 수','healthy hotels','正常な施設数',T('월 점검','monthly check','月次点検'))}
+    ${sigTile('na','자료 없는 호텔 수','hotels without data','データなしの施設数',T('잔액·소진 자료가 없는 곳','No balance or usage data'))}
+   </div>
+   <div class="tiles">
+    <div class="tile"><div class="k">${T('선급 잔액 (자료 있는 호텔)','Prepaid balance (hotels with data)','前払残高(データあり)')}</div><div class="curs">${lines(sumK)}</div><div class="s">${krw.length}${T('곳 · 나라별 통화','hotels · local currency','施設 · 各国通貨')}</div></div>
+    <div class="tile"><div class="k">${T('자금 회전 1개월 이내','Turnover within 1 month','資金回転 1か月以内')}</div><div class="v num">${turnOk}/${krw.length}</div><div class="bar"><i style="width:${turnPct}%"></i></div><div class="s">${turnPct}% · ${T('잔액 ÷ 최근 3개월 월평균 소진','Balance ÷ 3-mo avg usage','残高 ÷ 直近3か月平均消化')}</div></div>
+    <div class="tile"><div class="k">${T('보증금 잔액 (별도 관리)','Guarantee deposits (managed separately)')}</div><div class="curs">${lines(depK)}</div><div class="s">${depList.length}${T('곳 · 소진 없음','hotels · not consumed')}</div></div>
+   </div>`;
   // filters
   const fcol=document.getElementById('fColor');
   const keepK=fcol.value;
@@ -1724,6 +1836,105 @@ document.getElementById('kCopy').onclick=()=>copyText(document.getElementById('c
 const h0=(location.hash||'').slice(1); if(['board','credit','check','monitor','deposit','sg','data','rule','hard'].includes(h0)) show(h0);
 window.addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(['board','credit','check','monitor','deposit','sg','data','rule','hard'].includes(h))show(h)});
 applyLang();
+</script>
+<script>
+/* 화면 배치: 왼쪽에 메뉴·나라·필터를 두고, 위 막대에 다크/화이트 단추를 더한다.
+   대표님 스크립트가 끝난 뒤 실려, 이미 있는 요소(nav.tabs, #corpBar, #fColor, #fText, main)를 옮기기만 한다.
+   요소를 새로 만들어 바꾸지 않으므로 대표님 쪽 id와 이벤트는 그대로 동작한다. */
+(function () {
+  'use strict';
+  if (window.__omhLayout) return; window.__omhLayout = true;
+  const q = (s, r) => (r || document).querySelector(s), qa = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const el = (t, c) => { const e = document.createElement(t); if (c) e.className = c; return e; };
+  const tx = (ko, en, ja) => (typeof T === 'function' ? T(ko, en, ja) : ko);
+  const header = q('header'), nav = q('nav.tabs'), corp = q('#corpBar'), main = q('main');
+  if (!header || !nav || !corp || !main) return;
+  const root = document.documentElement;
+
+  /* ---------- 다크 / 화이트 ---------- */
+  const isDark = () => { const a = root.getAttribute('data-theme'); if (a) return a === 'dark'; try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } };
+  const ICON = {
+    sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'
+  };
+  const themeBtn = el('button', 'themebtn'); themeBtn.type = 'button'; themeBtn.id = 'themeBtn';
+  function paintTheme() {
+    const d = isDark(); themeBtn.setAttribute('aria-pressed', String(d));
+    themeBtn.innerHTML = (d ? ICON.sun : ICON.moon) + '<span>' + (d ? tx('화이트 모드', 'Light mode', 'ライトモード') : tx('다크 모드', 'Dark mode', 'ダークモード')) + '</span>';
+    themeBtn.title = d ? tx('화이트 모드로 바꿉니다', 'Switch to light mode', 'ライトモードに切り替え') : tx('다크 모드로 바꿉니다', 'Switch to dark mode', 'ダークモードに切り替え');
+  }
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark'; root.setAttribute('data-theme', next);
+    try { localStorage.setItem('omh_theme', next); } catch (e) { /* 저장소를 못 쓰는 환경 */ }
+    paintTheme();
+  });
+  header.insertBefore(themeBtn, q('#lang') || null);
+
+  /* ---------- 왼쪽 칸 ---------- */
+  const shell = el('div', 'shell'), side = el('aside', 'side'), content = el('div', 'content');
+  side.setAttribute('aria-label', 'menu and filters');
+  nav.parentNode.insertBefore(shell, nav);
+  const groups = [];
+  const group = (id, label) => { const g = el('div', 'sgroup'); g.id = id; const h = el('div', 'sh'); g.appendChild(h); g._h = h; g._l = label; groups.push(g); side.appendChild(g); return g; };
+  const gMenu = group('sideMenu', () => tx('메뉴', 'MENU', 'メニュー')); gMenu.appendChild(nav); nav.setAttribute('aria-orientation', 'vertical');
+  const gCorp = group('sideCorp', () => tx('나라', 'COUNTRY', '国')); gCorp.appendChild(corp);
+  const gBoard = group('sideBoard', () => tx('호텔 신호 거르기', 'HOTEL SIGNALS', 'ホテルのシグナル')); gBoard.hidden = true;
+  const gSg = group('sideSg', () => tx('SG 전환 거르기', 'SG FILTERS', 'SGの絞り込み')); gSg.hidden = true;
+  const sgSlot = el('div'); sgSlot.id = 'sgSide'; gSg.appendChild(sgSlot);
+  shell.appendChild(side); shell.appendChild(content); content.appendChild(main);
+
+  /* ---------- 현황판: 신호 칩과 검색을 왼쪽으로, 구역을 카드로 묶어 순서를 바꾼다 ---------- */
+  const fColor = q('#fColor'), fText = q('#fText'), vb = q('#v-board');
+  const chips = el('div', 'chips'); chips.id = 'sigChips'; gBoard.appendChild(chips);
+  const bf = q('.filters', vb);
+  if (bf) { gBoard.appendChild(bf); if (fColor && fColor.closest('label')) fColor.closest('label').hidden = true; }
+  function setSignal(v) { if (!fColor) return; fColor.value = v; fColor.dispatchEvent(new Event('input', { bubbles: true })); }
+  function paintChips() {
+    if (!fColor) return; let cnt = {}; try { cnt = JSON.parse((q('#tiles') || { dataset: {} }).dataset.cnt || '{}'); } catch (e) { cnt = {}; }
+    chips.textContent = '';
+    qa('option', fColor).forEach(o => {
+      const b = el('button', 'chip'); b.type = 'button'; b.dataset.sigv = o.value; b.setAttribute('aria-pressed', String(fColor.value === o.value));
+      const d = el('span', 'dot ' + (o.value || 'all')); const n = el('span', 'nm'); n.textContent = o.textContent; const c = el('span', 'ct num'); const k = o.value || 'all'; c.textContent = cnt[k] === undefined ? '' : String(cnt[k]);
+      b.appendChild(d); b.appendChild(n); b.appendChild(c); chips.appendChild(b);
+    });
+  }
+  if (vb) {
+    const map = {};
+    qa(':scope > h2', vb).forEach(h => {
+      const p = el('section', 'panel'); p.dataset.k = h.dataset.i || ''; h.parentNode.insertBefore(p, h);
+      let n = h; while (n && !(n !== h && n.tagName === 'H2')) { const nx = n.nextSibling; p.appendChild(n); n = nx; }
+      map[p.dataset.k] = p;
+    });
+    ['riskH', 'listH', 'floatH', 'prodH', 'pendingH'].forEach(k => { if (map[k]) vb.appendChild(map[k]); });
+    const tw = q('#hotelTable'); if (tw && tw.parentNode) tw.parentNode.classList.add('tall');
+  }
+
+  /* ---------- 이벤트: 칩, 신호 카드 ---------- */
+  document.addEventListener('click', e => {
+    const chip = e.target.closest && e.target.closest('.chip[data-sigv]'); if (chip) { setSignal(chip.dataset.sigv); return; }
+    const tile = e.target.closest && e.target.closest('[data-sigf]'); if (tile && fColor) { setSignal(fColor.value === tile.dataset.sigf ? '' : tile.dataset.sigf); }
+  });
+
+  /* ---------- 동기화: 지금 탭에 맞는 필터만 보이게, 글을 현재 언어로 ---------- */
+  function activeView() { const s = q('section.view.on', main); return s ? s.id.replace(/^v-/, '') : 'board'; }
+  function sync() {
+    const v = activeView(); gBoard.hidden = v !== 'board'; gSg.hidden = v !== 'sg' || !sgSlot.childElementCount;
+    groups.forEach(g => { g._h.textContent = g._l(); }); paintTheme(); paintChips();
+  }
+  qa('section.view', main).forEach(s => new MutationObserver(sync).observe(s, { attributes: true, attributeFilter: ['class'] }));
+  new MutationObserver(sync).observe(sgSlot, { childList: true });
+  const tiles = q('#tiles'); if (tiles) new MutationObserver(sync).observe(tiles, { childList: true });
+  new MutationObserver(sync).observe(corp, { childList: true });
+
+  /* ---------- 위 막대 높이(왼쪽 칸이 막대 아래에 붙도록) ---------- */
+  function measure() { root.style.setProperty('--hh', header.offsetHeight + 'px'); }
+  measure(); window.addEventListener('resize', measure);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(measure).observe(header);
+  /* SG 탭은 대표님 스크립트가 처음 그릴 때 왼쪽 칸이 아직 없었으므로, 칸을 만든 뒤 한 번 더 그려 거르기 줄을 옮긴다 */
+  if (typeof renderSG === 'function') renderSG();
+  sync();
+})();
+
 </script>
 </body>
 </html>

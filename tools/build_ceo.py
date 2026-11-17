@@ -65,17 +65,17 @@ def merge_csv(seed, key, path):
 
 
 def inject_sg(tpl, sg_data):
-    css = ('button.pill{border:0;cursor:pointer;font:inherit}\n.hrow.detail td{cursor:default}\n'
-           '.tile.bad{background:var(--bad-bg)} .tile.warn{background:var(--warn-bg)} .tile.ok{background:var(--ok-bg)} .tile.na{background:var(--na-bg)}\n')
-    tpl = once(tpl, '</style>', css + '</style>', '</style>')
-    # 현황판 위 신호등 카드: 색 이름만 있으면 다른 담당자가 무엇을 센 숫자인지 모른다. 제목에 뜻을 덧붙인다(대표님 코드 줄 그대로 찾아 바꾼다).
-    for color, ko, en, ja in (('bad', '충전 차단 호텔 수', 'hotels blocked for top-ups', '追加不可の施設数'),
-                              ('warn', '충전 보류 호텔 수', 'hotels on hold for top-ups', '追加保留の施設数'),
-                              ('ok', '정상 호텔 수', 'healthy hotels', '正常な施設数'),
-                              ('na', '자료 없는 호텔 수', 'hotels without data', 'データなしの施設数')):
-        old = '<div class="k">${cn(\'%s\')}</div><div class="v num">${cnt(\'%s\')}</div>' % (color, color)
-        new = ('<div class="k">${cn(\'%s\')} · ${T(\'%s\',\'%s\',\'%s\')}</div><div class="v num">${cnt(\'%s\')}</div>' % (color, ko, en, ja, color))
-        tpl = once(tpl, old, new, '현황판 %s 카드' % color)
+    css = 'button.pill{border:0;cursor:pointer;font:inherit}\n.hrow.detail td{cursor:default}\n' + read(os.path.join(ROOT, 'src', 'layout.css'))
+    # 저장된 다크/화이트 선택을 첫 화면 그리기 전에 적용한다(깜빡임 방지)
+    theme_boot = "<script>try{var t=localStorage.getItem('omh_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>"
+    tpl = once(tpl, '</style>', css + '</style>\n' + theme_boot, '</style>')
+    # 현황판 위 카드: 색 이름만 있으면 다른 담당자가 무엇을 센 숫자인지 모른다. 뜻을 붙이고 크게, 누르면 그 색만 거른다(대표님 코드 블록을 통째로 바꾼다).
+    start_a = "document.getElementById('tiles').innerHTML = `"
+    end_a = "`;\n  // filters"
+    if tpl.count(start_a) != 1 or tpl.count(end_a) != 1:
+        raise SystemExit('틀에서 현황판 카드 블록 위치를 찾지 못했습니다. 대표님 대시보드 버전이 바뀌었는지 확인하세요.')
+    i0 = tpl.index(start_a); i1 = tpl.index(end_a) + 2
+    tpl = tpl[:i0] + read(os.path.join(ROOT, 'src', 'tiles.js')).rstrip('\n') + tpl[i1:]
     tpl = once(tpl, '<button role="tab" data-v="data" aria-selected="false" data-i="tData">데이터</button>', '<button role="tab" data-v="sg" aria-selected="false">SG 전환</button>\n  <button role="tab" data-v="data" aria-selected="false" data-i="tData">데이터</button>', '데이터 탭 단추')
     tpl = once(tpl, '<!-- ===== 데이터 ===== -->', '<!-- ===== SG 전환 ===== -->\n<section class="view" id="v-sg"></section>\n\n<!-- ===== 데이터 ===== -->', '데이터 탭 구역')
     old_tabs = "['board','credit','check','monitor','deposit','data','rule','hard']"
@@ -88,7 +88,10 @@ def inject_sg(tpl, sg_data):
     ui = read(os.path.join(ROOT, 'src', 'sg_ui.js'))
     payload = json.dumps(sg_data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     ui = once(ui, '/*__SGDATA__*/null', payload, 'sg_ui.js 자료 표시')
-    return once(tpl, '<script>\n/* ---------- 기준값', scripts + '\n<script>\n' + ui + '\n</script>\n<script>\n/* ---------- 기준값', '대표님 스크립트 시작')
+    tpl = once(tpl, '<script>\n/* ---------- 기준값', scripts + '\n<script>\n' + ui + '\n</script>\n<script>\n/* ---------- 기준값', '대표님 스크립트 시작')
+    # 화면 배치는 대표님 스크립트가 끝난 뒤에 실어, 이미 있는 요소를 옮긴다
+    layout = read(os.path.join(ROOT, 'src', 'layout.js'))
+    return once(tpl, '</script>\n</body>', '</script>\n<script>\n' + layout + '\n</script>\n</body>', '대표님 스크립트 끝')
 
 
 def main():

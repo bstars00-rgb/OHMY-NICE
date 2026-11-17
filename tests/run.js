@@ -191,6 +191,19 @@ test('C28', '내부용 SG 자료(내 컴퓨터에서만): 실제 엑셀에서 �
   for (const lang of ['ko', 'en']) { const sb = sgSandbox(real, lang); for (const v of ['pay', 'pre', 'ap', 'col']) { sb.run("SGS.view = '" + v + "'; renderSG();"); const h = sb.html(); ok(h.length > 800, lang + '/' + v); ok(!/undefined|NaN|\[object|Infinity/.test(h), lang + '/' + v + ' -> ' + (h.match(/.{25}(undefined|NaN|\[object|Infinity).{25}/) || [''])[0]); } }
 });
 
+test('C29', '화면 배치: 왼쪽 메뉴·필터, 큰 카드, 다크/화이트가 빌드에 들어가고, 배치 스크립트가 붙잡는 대표님 요소가 틀에 있다', () => {
+  const html = readLF('index.html');
+  for (const f of ['src/layout.js', 'src/tiles.js']) { const code = fs.readFileSync(path.join(ROOT, f), 'utf8'); new vm.Script(f === 'src/tiles.js' ? '(function(){const cnt=()=>0,evs=[],krw=[],depList=[],redBal="",sumK="",depK="",turnOk=0,T=a=>a,cn=a=>a;' + code + '})' : code, { filename: f }); ok(!/\beval\s*\(|new Function|XMLHttpRequest|fetch\s*\(/.test(code), f + ': 외부 통신·eval 없음'); }
+  const head = html.slice(0, html.indexOf('</head>')); ok(head.includes("localStorage.getItem('omh_theme')") && head.includes('.shell{display:grid'), '다크/화이트 첫 화면 적용과 배치 CSS');
+  ok(html.includes('window.__omhLayout') && html.includes("sgSlot.id = 'sgSide'"), '배치 스크립트');
+  ok(html.includes('data-sigf=') && html.includes('const sigTot') && !html.includes("<div class=\"tile bad\"><div class=\"k\">${cn('bad')}"), '현황판 카드 교체');
+  const tpl = readLF('src/template_public.html');
+  for (const id of ['tiles', 'fColor', 'fText', 'corpBar', 'v-board', 'hotelTable', 'floatBody', 'prodBody', 'riskBody', 'pendingBody']) ok(tpl.includes('id="' + id + '"'), '틀에 id=' + id);
+  for (const k of ['riskH', 'listH', 'floatH', 'prodH', 'pendingH']) ok(tpl.includes('<h2 data-i="' + k + '">'), '틀에 구역 제목 ' + k);
+  ok(tpl.includes('<nav class="tabs"') && tpl.includes('<header>') && tpl.includes('<main>') && tpl.includes('id="lang"'), '틀의 header·nav·main·언어 단추');
+  ok(html.indexOf('window.__omhLayout') > html.indexOf('applyLang();'), '배치 스크립트는 대표님 스크립트가 끝난 뒤에 실린다');
+});
+
 (async () => {
   for (const t of TESTS) { try { await t.fn(); pass++; } catch (e) { fail++; failures.push(t.id + ' ' + t.name + '\n     ' + e.message); } }
   console.log('dashboard tests: ' + pass + '/' + (pass + fail) + ' passed');
