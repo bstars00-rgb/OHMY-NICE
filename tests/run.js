@@ -157,7 +157,7 @@ test('C23', '대표님 코드 보존(내 컴퓨터에서만): 내부용 틀과 �
 function sgSandbox(sg, lang) {
   const els = {}; const mkEl = id => els[id] || (els[id] = { id, innerHTML: '', textContent: '', dataset: {}, listeners: {}, addEventListener(ev, fn) { this.listeners[ev] = fn; }, focus() { }, setSelectionRange() { } });
   const tplText = readLF('src/template_public.html'); const pm = /function parseCSV\(text\)\{[\s\S]*?\n/.exec(tplText);
-  const ctx = { console, Intl, JSON, Math, Object, String, Number, Array, Set, Date, Blob: function () { }, URL: { createObjectURL: () => '', revokeObjectURL() { } }, setTimeout, LANG: lang, CORP: '', TODAY_S: '2026-11-17', DATA: { hotels: [{ code: 'S10001', corp: 'KR', name: 'Sample Maple Resort' }, { code: 'S10002', corp: 'KR', name: 'Sample Harbor Inn' }, { code: 'ZZ-NAME', corp: 'KR', name: 'sample  CORAL suites', type: 'Floating' }] }, evalHotel: h => ({ color: h.code === 'S10001' ? 'warn' : 'ok' }), copied: null };
+  const ctx = { console, Intl, JSON, Math, Object, String, Number, Array, Set, Date, Blob: function () { }, URL: { createObjectURL: () => '', revokeObjectURL() { } }, setTimeout, LANG: lang, CORP: '', TODAY_S: '2026-11-17', DATA: { hotels: [{ code: 'S10001', corp: 'KR', name: 'Sample Maple Resort' }, { code: 'S10002', corp: 'KR', name: 'Sample Harbor Inn' }, { code: 'ZZ-NAME', corp: 'KR', name: 'sample  BIRCH resort  pyeongchang', type: 'Floating' }] }, evalHotel: h => ({ color: h.code === 'S10001' ? 'warn' : 'ok' }), copied: null };
   ctx.T = (ko, en) => ctx.LANG === 'ko' ? ko : en; ctx.toast = () => { }; ctx.copyText = t => { ctx.copied = t; };
   ctx.localStorage = { getItem: () => null, setItem() { } }; ctx.document = { getElementById: id => mkEl(id), querySelector: () => null, createElement: () => ({ click() { }, remove() { } }), body: { appendChild() { } } };
   ctx.FileReader = class { readAsText(f) { this.result = f.text; setTimeout(() => this.onload(), 0); } }; ctx.self = ctx; ctx.globalThis = ctx; vm.createContext(ctx);
@@ -173,7 +173,7 @@ test('C25', 'SG 탭 화면: 거르기, 상세, 후보 선택, 결재 문안, 대
   const sb = sgSandbox(SAMPLE, 'ko'); sb.run('renderSG();'); ok(sb.html().includes('후불 지급 호텔'), 'tile');
   clickOn(sb, { sg: 'flt', scope: 'pay', key: 'cls', val: 'A1' }); ok(sb.run('sgPayRows().every(r => r.cls === "A1") && sgPayRows().length > 0'), 'A1 거르기'); clickOn(sb, { sg: 'reset', scope: 'pay' }); ok(sb.run('sgPayRows().length') > 50, '거르기 해제');
   const id = sb.run('SGC.pay.rows.find(r => r.cls === "A1").id'); clickOn(sb, { sg: 'pick', id }); eq(sb.run('SGS.picks.size'), 1); ok(sb.html().includes('선택한 후보 (1)'), '선택 목록'); clickOn(sb, { sg: 'pickcopy' }); ok(sb.ctx.copied && sb.ctx.copied.includes('\t'), '복사'); clickOn(sb, { sg: 'pickclear' }); eq(sb.run('SGS.picks.size'), 0);
-  sb.run("SGS.view = 'pre'; renderSG();"); const pid = sb.run('SGC.pre.rows.find(r => r.code === "S10001").id'); clickOn(sb, { sg: 'detail', id: pid }); ok(sb.html().includes('계산 과정') && sb.html().includes('대표님 현황판'), '상세와 현황판 신호'); eq(sb.run('SGC.pre.rows.find(r => r.code === "S10001").ceo'), 'warn', '같은 코드의 현황판 신호'); eq(sb.run('SGC.pre.rows.find(r => r.code === "S10002").ceo'), 'ok'); eq(sb.run('SGC.pre.rows.find(r => r.code === "S10003").ceo'), 'ok', '코드가 달라도 이름이 같으면 연결'); ok(sb.html().includes('원장 합계 잔액') === false || true, '표시');
+  sb.run("SGS.view = 'pre'; renderSG();"); const pid = sb.run('SGC.pre.rows.find(r => r.code === "S10001").id'); clickOn(sb, { sg: 'detail', id: pid }); ok(sb.html().includes('계산 과정') && sb.html().includes('대표님 현황판'), '상세와 현황판 신호'); eq(sb.run('SGC.pre.rows.find(r => r.code === "S10001").ceo'), 'warn', '같은 코드의 현황판 신호'); eq(sb.run('SGC.pre.rows.find(r => r.code === "S10002").ceo'), 'ok'); eq(sb.run('SGC.pre.rows.find(r => r.hotel === "Sample Birch Resort Pyeongchang").ceo'), 'ok', '코드가 비어 있어도 이름이 같으면 연결'); ok(sb.html().includes('원장 합계 잔액') === false || true, '표시');
   sb.run("SGS.view = 'ap'; renderSG();"); const txt = sb.run('sgApText()'); ok(txt.includes('B1 이관') && txt.includes('후불 지급') && txt.includes('환산 없음'), '문안'); clickOn(sb, { sg: 'apcopy' });
 });
 test('C26', 'SG 탭: 나라 단추(CORP)에 따라 줄어들고, CSV를 올리면 그 나라 줄만 바뀌며, 처음 자료로 되돌릴 수 있다', () => {
@@ -202,6 +202,20 @@ test('C29', '화면 배치: 왼쪽 메뉴·필터, 큰 카드, 다크/화이트�
   for (const k of ['riskH', 'listH', 'floatH', 'prodH', 'pendingH']) ok(tpl.includes('<h2 data-i="' + k + '">'), '틀에 구역 제목 ' + k);
   ok(tpl.includes('<nav class="tabs"') && tpl.includes('<header>') && tpl.includes('<main>') && tpl.includes('id="lang"'), '틀의 header·nav·main·언어 단추');
   ok(html.indexOf('window.__omhLayout') > html.indexOf('applyLang();'), '배치 스크립트는 대표님 스크립트가 끝난 뒤에 실린다');
+});
+
+test('C30', '가상 호텔 50곳 페르소나: 법인별 수, 이름·코드 중복 없음, 메모, 대표님 신호 계산이 만든 색이 의도한 색과 같고, 샘플 날짜가 고정된다', () => {
+  const seed = JSON.parse(readLF('sample/seed_public.json')), want = JSON.parse(readLF('sample/persona_expected.json'));
+  const board = seed.hotels.filter(h => !/保証金|보증금/.test(h.type)); eq(board.length, 50, '현황판 호텔 수'); eq(seed.hotels.length - board.length, 4, '보증금 호텔 수');
+  const by = {}; for (const h of board) by[h.corp] = (by[h.corp] || 0) + 1; eq(by, { KR: 14, JP: 12, VN: 14, TH: 6, SG: 4 }, '법인별 호텔');
+  eq(new Set(seed.hotels.map(h => h.code)).size, seed.hotels.length, '코드 중복'); eq(new Set(seed.hotels.map(h => h.name)).size, seed.hotels.length, '이름 중복');
+  ok(board.every(h => h.memo.startsWith('샘플 · ') && h.memo.length > 12), '페르소나 메모'); eq(Object.keys(want).sort(), board.map(h => h.code).sort(), '기대 색이 호텔마다 있다');
+  const tpl = readLF('src/template_public.html'), cut = (a, b) => { const i = tpl.indexOf(a), j = tpl.indexOf(b, i); ok(i >= 0 && j > i, a); return tpl.slice(i, j); };
+  const code = [cut('const RULE = {', 'const FX_TO_KRW'), cut('const FLAGS = {', '/* ---------- 처음 자료'), cut('const pad2=', 'const today ='), cut('function monthEnd', '/* ---------- 현황판')].join('\n');
+  const ctx = { Math, Object, String, Number, Array, Set, Date, JSON, DATA: seed, CORP: '', today: new Date('2026-11-17T00:00:00'), curYM: '2026-11' }; vm.createContext(ctx); vm.runInContext(code, ctx);
+  const got = vm.runInContext('Object.fromEntries(DATA.hotels.map(h => [h.code, evalHotel(h).color]))', ctx), bad = []; for (const c of Object.keys(want)) if (got[c] !== want[c]) bad.push(c + ' 기대 ' + want[c] + ' 실제 ' + got[c]); ok(!bad.length, bad.join(' / '));
+  const tally = {}; for (const c of Object.keys(want)) tally[got[c]] = (tally[got[c]] || 0) + 1; eq(tally, { ok: 17, warn: 13, bad: 16, na: 2, off: 2 }, '색별 호텔 수');
+  ok(readLF('index.html').includes("const today = new Date('" + SAMPLE.meta.today + "T00:00:00');"), '샘플 화면의 오늘 날짜 고정'); ok(readLF('sample/hotel_personas.md').includes('| S10001 |'), '페르소나 표');
 });
 
 (async () => {

@@ -121,6 +121,8 @@ def main():
         if path:
             n, corps = merge_csv(seed, key, path); notes.append('%s CSV %d행 (법인 %s)' % (key, n, ','.join(corps)))
     tpl = once(tpl, 'const SEED = /*__SEED__*/{};', 'const SEED = ' + json.dumps(seed, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/') + ';', 'SEED')
+    if a.public:  # 가상 샘플은 기준일에 고정한다: 보는 날이 바뀌어도 가상 호텔의 신호 색이 그대로다
+        tpl = once(tpl, "const today = new Date(); today.setHours(0,0,0,0);", "const today = new Date('%sT00:00:00');" % a.today, '오늘 날짜')
     sg = {'meta': {'synthetic': bool(a.public), 'today': a.today, 'sources': [], 'asOfMin': None, 'asOfMax': None, 'config': {}, 'parseIssues': []}, 'payments': [], 'prebuy': []}
     if a.sg_in:
         d = sgb.build_data(a.sg_in, a.public, a.today); sg = {'meta': d['meta'], 'payments': d['payments'], 'prebuy': d['prebuy']}

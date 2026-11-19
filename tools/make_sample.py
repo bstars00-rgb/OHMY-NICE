@@ -8,6 +8,9 @@ import argparse, datetime as dt, os, random
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.worksheet.datavalidation import DataValidation
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import make_seed_public
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BLUE, ORANGE, GRAY = 'DCE6F1', 'FCE4D6', 'E7E6E6'
@@ -142,9 +145,27 @@ def make_pre(wb, rng):
                     r_note = '12/20까지 반환 가능 (가상)' if rng.random() < 0.7 else None
         ws.append([ent, ctry, nm, ('S%05d' % code) if rng.random() < 0.5 else None, typ, ccy, ledger, hotel_bal, dt.date.fromisoformat(asof), None, avg, None, None, transfer, t_note, refund, r_note, None, note, SCM_NAMES[ctry] if transfer else None, None])
         r += 1
-    # 공개용 처음 자료(tools/make_seed_public.py)와 같은 호텔로 맞춘다: 같은 ELLIS 호텔코드면 대표님 현황판 신호가 함께 보인다
-    for row, code, name in [(5, 'S10001', 'Sample Maple Resort'), (6, 'S10002', 'Sample Harbor Inn'), (7, 'S10003', 'Sample Coral Suites'), (8, 'S10004', 'Sample Willow Villa'), (9, 'S20001', 'Sample Cedar Hotel Tokyo'), (10, 'S20002', 'Sample Amber Hotel Osaka'), (11, 'S20003', 'Sample Jade Resort Okinawa'), (12, 'S20004', 'Sample Pearl Hotel Sapporo'), (19, 'S30001', 'Sample Lotus Resort Da Nang'), (20, 'S30002', 'Sample Bamboo Hotel Hanoi'), (21, 'S30003', 'Sample Orchid Resort Nha Trang')]:
-        ws.cell(row=row, column=4, value=code); ws.cell(row=row, column=3, value=name)
+    # 공개용 처음 자료(tools/make_seed_public.py)의 호텔 50곳 가운데 같은 호텔로 맞춘다: 같은 ELLIS 호텔코드면 대표님 현황판 신호가 함께 보인다.
+    # 대장 잔액과 월평균 소진액은 처음 자료에서 계산한 값을 그대로 쓰고, 아래 '의도한 결함'만 일부러 어긋나게 한다.
+    seed, _ = make_seed_public.build_seed()
+    sbal, savg = {}, {}
+    for d in seed['deposits']:
+        sbal[d['code']] = sbal.get(d['code'], 0) + (-1 if d['kind'] == '반환' else 1) * d['amt']
+    for u in seed['usage']:
+        sbal[u['code']] = sbal.get(u['code'], 0) - u['amt']
+    for h in seed['hotels']:
+        us = sorted([u for u in seed['usage'] if u['code'] == h['code'] and u['ym'] <= '2026-10'], key=lambda u: u['ym'])
+        savg[h['code']] = int(sum(u['amt'] for u in us[-3:]) / len(us[-3:])) if us else 0
+    byname = {h['code']: h for h in seed['hotels']}
+    for row, code in [(5, 'S10001'), (6, 'S10002'), (7, 'S10004'), (8, 'S10009'), (9, 'S20005'), (10, 'S20007'), (11, 'S20012'), (12, 'S20003'), (13, 'S20002'), (14, 'S29001'), (15, 'S29002'), (16, 'S20010'), (18, 'S20011'),
+                      (19, 'S30001'), (20, 'S30002'), (21, 'S30003'), (22, 'S30006'), (23, 'S39001'), (26, 'S30013')]:
+        h = byname[code]
+        ws.cell(row=row, column=4, value=code); ws.cell(row=row, column=3, value=h['name'])
+        if sbal.get(code, 0) > 0 and h['type'] != '買取':
+            ws.cell(row=row, column=7, value=int(sbal[code]))
+            ws.cell(row=row, column=11, value=savg[code] if h['type'] not in ('差入保証金', '보증금') else 0)
+            ws.cell(row=row, column=8, value=h['hotelBal'] if h['hotelBal'] != '' else None)
+    ws.cell(row=8, column=4, value=None)    # 호텔코드 칸이 빈 줄: 이름이 같으면 이름으로 현황판과 이어지는지 보여 준다
     # 분류가 골고루 보이도록 몇 줄을 맞춘다: (행, 잔액÷월평균 소진, 이관, 반환)
     for row, div, tr, rf in [(8, 1.2, 'X', 'O'), (12, 1.0, 'X', 'X'), (13, 20, 'X', 'X'), (20, 15, 'X', '미확인'), (21, 1.5, 'X', None), (22, 6, 'X', 'O'), (23, None, 'X', 'O'), (24, None, 'O', None)]:
         led = ws.cell(row=row, column=7).value
