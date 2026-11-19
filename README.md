@@ -52,7 +52,7 @@ python tests/test_build.py   # 엑셀 읽기, 조립, 실제 자료 쓰기 차�
 | `src/i18n.js` | SG 탭 글(한국어·영어) |
 | `tools/ceo_split.js` | 대표님 대시보드를 코드와 자료로 나눔 |
 | `tools/build_ceo.py`, `tools/build.py` | HTML 조립, 엑셀 읽기 |
-| `tools/make_sample.py`, `tools/make_seed_public.py` | 가상 샘플 엑셀·CSV, 가상 처음 자료 |
-| `sample/` | 가상 샘플(엑셀, CSV, JSON) |
+| `tools/make_sample.py`, `tools/make_seed_public.py` | 가상 샘플 엑셀·CSV, 가상 처음 자료(호텔 50곳과 페르소나). 공개용 빌드는 기준일(2026-11-17)에 오늘 날짜를 고정한다 |
+| `sample/` | 가상 샘플(엑셀, CSV, JSON). `hotel_personas.md`는 가상 호텔 50곳의 페르소나 표 |
 | `private/` | 실제 자료와 내부용 결과(저장소에 올리지 않음) |
 | `index.html` | 가상 샘플로 만든 화면(GitHub Pages가 보여 주는 파일) |
