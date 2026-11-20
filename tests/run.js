@@ -218,6 +218,20 @@ test('C30', '가상 호텔 50곳 페르소나: 법인별 수, 이름·코드 중
   ok(readLF('index.html').includes("const today = new Date('" + SAMPLE.meta.today + "T00:00:00');"), '샘플 화면의 오늘 날짜 고정'); ok(readLF('sample/hotel_personas.md').includes('| S10001 |'), '페르소나 표');
 });
 
+test('C31', '호텔 고르기: 후보 목록에서 고르면 법인·코드·잔액·객실 수·월평균 소진·직접 거래 개월 수가 채워지고, 대표님 칸 id가 틀에 있다', () => {
+  const src = readLF('src/hotel_pick.js'); new vm.Script(src); ok(!/\beval\(|fetch\(|XMLHttpRequest/.test(src), '외부 호출·eval 없음');
+  const tpl = readLF('src/template_public.html'); for (const id of ['kHotel', 'kAvg', 'kHist', 'kSalesBy', 'cHotel', 'cCode', 'cCorp', 'cBal', 'cRooms', 'cAvg', 'cHist']) ok(tpl.includes('id="' + id + '"'), '틀에 id=' + id);
+  const seed = JSON.parse(readLF('sample/seed_public.json')), cut = (a, b) => { const i = tpl.indexOf(a), j = tpl.indexOf(b, i); ok(i >= 0 && j > i, a); return tpl.slice(i, j); };
+  const code = [cut('const RULE = {', 'const FX_TO_KRW'), cut('const FLAGS = {', '/* ---------- 처음 자료'), cut('const pad2=', 'const today ='), cut('function monthEnd', '/* ---------- 현황판'), src].join('\n');
+  const ctx = { Math, Object, String, Number, Array, Set, Date, JSON, DATA: seed, CORP: '', today: new Date('2026-11-17T00:00:00'), curYM: '2026-11' }; vm.createContext(ctx); vm.runInContext(code, ctx);
+  const run = s => JSON.parse(vm.runInContext('JSON.stringify(' + s + ')', ctx));
+  eq(run('hpCandidates().length'), 49, '후보: 보증금 호텔 4곳과 買取 1곳을 뺀 현황판 호텔');
+  const f = run('hpFill(hpFind("sample  MAPLE resort jeju"))'); eq(f.c.cCode, 'S10001'); eq(f.c.cCorp, 'KR'); eq(f.c.cRooms, '120'); eq(f.c.cHist, 9); eq(f.k.kHist, 9); eq(f.k.kSalesBy, 'SCM-KR-A'); ok(f.c.cAvg > 0 && f.c.cAvg === f.k.kAvg && f.c.cBal > 0, '평균 소진과 잔액');
+  const n = run('hpFill(hpFind("S10013"))'); ok(!('cAvg' in n.c) && !('cBal' in n.c) && n.c.cCode === 'S10013', '자료 대기 호텔은 값이 없는 칸을 채우지 않는다');
+  eq(run('hpFind("S30003").name'), 'Sample Orchid Resort Nha Trang', '코드로 찾기'); eq(run('hpFind("")'), null); eq(run('hpFind("Sample Granite Hotel Group (3 sites)")'), null, '보증금 호텔은 후보가 아니다');
+  const htm = readLF('index.html'); ok(htm.includes('function hpFill(h)') && htm.indexOf('function hpFill(h)') > htm.indexOf('window.__omhLayout'), '호텔 고르기 스크립트가 배치 스크립트 뒤에 실린다');
+});
+
 (async () => {
   for (const t of TESTS) { try { await t.fn(); pass++; } catch (e) { fail++; failures.push(t.id + ' ' + t.name + '\n     ' + e.message); } }
   console.log('dashboard tests: ' + pass + '/' + (pass + fail) + ' passed');

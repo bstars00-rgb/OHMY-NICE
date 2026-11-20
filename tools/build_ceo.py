@@ -91,7 +91,8 @@ def inject_sg(tpl, sg_data):
     tpl = once(tpl, '<script>\n/* ---------- 기준값', scripts + '\n<script>\n' + ui + '\n</script>\n<script>\n/* ---------- 기준값', '대표님 스크립트 시작')
     # 화면 배치는 대표님 스크립트가 끝난 뒤에 실어, 이미 있는 요소를 옮긴다
     layout = read(os.path.join(ROOT, 'src', 'layout.js'))
-    return once(tpl, '</script>\n</body>', '</script>\n<script>\n' + layout + '\n</script>\n</body>', '대표님 스크립트 끝')
+    pick = read(os.path.join(ROOT, 'src', 'hotel_pick.js'))   # 호텔명 칸에 후보를 띄우고 값을 채운다(대표님 칸을 그대로 쓴다)
+    return once(tpl, '</script>\n</body>', '</script>\n<script>\n' + layout + '\n</script>\n<script>\n' + pick + '\n</script>\n</body>', '대표님 스크립트 끝')
 
 
 def main():
